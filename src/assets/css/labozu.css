@@ -1,0 +1,31 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* 
+    Table of Contents
+
+  1. Variables and Imports (variables.css)
+  2. Base Styles (base.css)
+  3. Colors (colors.css)
+  4. Header Styles (header.css)
+  5. Banner Slider (banner.css)
+  6. Buttons (buttons.css)
+  7. Footer (footer.css)
+  8. Components (components.css)
+  9. Utilities (utilities.css)
+  10. Responsive (responsive.css)
+*/
+
+/* Import all CSS modules */
+@import './variables.css';
+@import './base.css';
+@import './colors.css';
+@import './header.css';
+@import './banner.css';
+@import './buttons.css';
+@import './footer.css';
+@import './components.css';
+@import './utilities.css';
+@import './responsive.css';

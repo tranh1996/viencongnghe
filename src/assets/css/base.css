@@ -1,0 +1,129 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Base Styles - General, Typography, and Layout */
+
+/* ------------------------
+    General
+------------------------*/
+
+body {
+    scroll-behavior: smooth;
+    font-family: var(--themeht-typography-body-font-family);
+    font-weight: 500;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 30px;
+    color: var(--themeht-body-color);
+    overflow-x: hidden;
+}
+
+.page-wrapper {
+    overflow-x: hidden;
+}
+
+/* ------------------------
+    Typography
+------------------------*/
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--themeht-typography-secondary-font-family);
+    font-weight: normal;
+    margin-top: 0px;
+    font-style: normal;
+    margin-bottom: 20px;
+    color: var(--themeht-text-color);
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: inherit;
+}
+
+.h1, h1 {
+    font-size: 70px;
+    line-height: 80px;
+    font-weight: 600;
+}
+
+.h2, h2 {
+    font-size: 50px;
+    line-height: 58px;
+    font-weight: 600;
+}
+
+.h3, h3 {
+    font-size: 30px;
+    line-height: 38px;
+    font-weight: 500;
+}
+
+.h4, h4 {
+    font-size: 26px;
+    line-height: 34px;
+    font-weight: 500;
+}
+
+.h5, h5 {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 500;
+}
+
+.h6, h6 {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    color: var(--themeht-text-color);
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+.lead {
+    font-size: 18px;
+    line-height: 32px;
+    font-weight: 400;
+}
+
+.z-index-0 {
+    z-index: 0;
+}
+
+.z-index-1 {
+    z-index: 1;
+}
+
+section {
+    padding: 80px 0;
+    position: relative;
+}
+
+.rounded {
+    border-radius: 8px !important;
+}
+
+.img-border {
+    border: 1px solid var(--themeht-border-light-color);
+    border-radius: 8px;
+    overflow: hidden;
+}

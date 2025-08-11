@@ -1,0 +1,631 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Utility Classes and Animations */
+
+/* ------------------------
+    Animations
+------------------------*/
+@keyframes smoothScroll {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* ------------------------
+    Utility Classes
+------------------------*/
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-5 {
+    margin-bottom: 3rem;
+}
+
+.mt-0 {
+    margin-top: 0;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.mt-5 {
+    margin-top: 3rem;
+}
+
+.p-0 {
+    padding: 0;
+}
+
+.p-3 {
+    padding: 1rem;
+}
+
+.p-4 {
+    padding: 1.5rem;
+}
+
+.p-5 {
+    padding: 3rem;
+}
+
+/* ------------------------
+    Responsive Utilities
+------------------------*/
+
+/* Responsive Text Alignment */
+@media (max-width: 767px) {
+    .text-sm-center {
+        text-align: center !important;
+    }
+    
+    .text-sm-left {
+        text-align: left !important;
+    }
+    
+    .text-sm-right {
+        text-align: right !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .text-xs-center {
+        text-align: center !important;
+    }
+    
+    .text-xs-left {
+        text-align: left !important;
+    }
+    
+    .text-xs-right {
+        text-align: right !important;
+    }
+}
+
+/* Responsive Display */
+@media (max-width: 767px) {
+    .d-sm-none {
+        display: none !important;
+    }
+    
+    .d-sm-block {
+        display: block !important;
+    }
+    
+    .d-sm-flex {
+        display: flex !important;
+    }
+    
+    .d-sm-inline {
+        display: inline !important;
+    }
+    
+    .d-sm-inline-block {
+        display: inline-block !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .d-xs-none {
+        display: none !important;
+    }
+    
+    .d-xs-block {
+        display: block !important;
+    }
+    
+    .d-xs-flex {
+        display: flex !important;
+    }
+    
+    .d-xs-inline {
+        display: inline !important;
+    }
+    
+    .d-xs-inline-block {
+        display: inline-block !important;
+    }
+}
+
+/* Responsive Margins */
+@media (max-width: 767px) {
+    .mb-sm-0 {
+        margin-bottom: 0 !important;
+    }
+    
+    .mb-sm-3 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .mb-sm-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .mb-sm-5 {
+        margin-bottom: 3rem !important;
+    }
+    
+    .mt-sm-0 {
+        margin-top: 0 !important;
+    }
+    
+    .mt-sm-3 {
+        margin-top: 1rem !important;
+    }
+    
+    .mt-sm-4 {
+        margin-top: 1.5rem !important;
+    }
+    
+    .mt-sm-5 {
+        margin-top: 3rem !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .mb-xs-0 {
+        margin-bottom: 0 !important;
+    }
+    
+    .mb-xs-3 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .mb-xs-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .mb-xs-5 {
+        margin-bottom: 3rem !important;
+    }
+    
+    .mt-xs-0 {
+        margin-top: 0 !important;
+    }
+    
+    .mt-xs-3 {
+        margin-top: 1rem !important;
+    }
+    
+    .mt-xs-4 {
+        margin-top: 1.5rem !important;
+    }
+    
+    .mt-xs-5 {
+        margin-top: 3rem !important;
+    }
+}
+
+/* Responsive Padding */
+@media (max-width: 767px) {
+    .p-sm-0 {
+        padding: 0 !important;
+    }
+    
+    .p-sm-3 {
+        padding: 1rem !important;
+    }
+    
+    .p-sm-4 {
+        padding: 1.5rem !important;
+    }
+    
+    .p-sm-5 {
+        padding: 3rem !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .p-xs-0 {
+        padding: 0 !important;
+    }
+    
+    .p-xs-3 {
+        padding: 1rem !important;
+    }
+    
+    .p-xs-4 {
+        padding: 1.5rem !important;
+    }
+    
+    .p-xs-5 {
+        padding: 3rem !important;
+    }
+}
+
+/* Responsive Flex Utilities */
+@media (max-width: 767px) {
+    .flex-sm-column {
+        flex-direction: column !important;
+    }
+    
+    .flex-sm-row {
+        flex-direction: row !important;
+    }
+    
+    .align-sm-items-center {
+        align-items: center !important;
+    }
+    
+    .align-sm-items-start {
+        align-items: flex-start !important;
+    }
+    
+    .align-sm-items-end {
+        align-items: flex-end !important;
+    }
+    
+    .justify-sm-content-center {
+        justify-content: center !important;
+    }
+    
+    .justify-sm-content-between {
+        justify-content: space-between !important;
+    }
+    
+    .justify-sm-content-around {
+        justify-content: space-around !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .flex-xs-column {
+        flex-direction: column !important;
+    }
+    
+    .flex-xs-row {
+        flex-direction: row !important;
+    }
+    
+    .align-xs-items-center {
+        align-items: center !important;
+    }
+    
+    .align-xs-items-start {
+        align-items: flex-start !important;
+    }
+    
+    .align-xs-items-end {
+        align-items: flex-end !important;
+    }
+    
+    .justify-xs-content-center {
+        justify-content: center !important;
+    }
+    
+    .justify-xs-content-between {
+        justify-content: space-between !important;
+    }
+    
+    .justify-xs-content-around {
+        justify-content: space-around !important;
+    }
+}
+
+/* ------------------------
+    Responsive Grid Utilities
+------------------------*/
+
+/* Responsive Column Classes */
+@media (max-width: 767px) {
+    .col-sm-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    .col-sm-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    
+    .col-sm-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (max-width: 575px) {
+    .col-xs-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .col-xs-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    .col-xs-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    
+    .col-xs-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+/* ------------------------
+    Responsive Image Utilities
+------------------------*/
+
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 767px) {
+    .img-sm-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 575px) {
+    .img-xs-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* ------------------------
+    Responsive Text Utilities
+------------------------*/
+
+@media (max-width: 767px) {
+    .text-sm-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .text-sm-wrap {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 575px) {
+    .text-xs-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .text-xs-wrap {
+        white-space: normal;
+    }
+}
+
+/* ------------------------
+    Responsive Spacing Utilities
+------------------------*/
+
+/* Responsive Gap Utilities */
+@media (max-width: 767px) {
+    .gap-sm-0 {
+        gap: 0 !important;
+    }
+    
+    .gap-sm-1 {
+        gap: 0.25rem !important;
+    }
+    
+    .gap-sm-2 {
+        gap: 0.5rem !important;
+    }
+    
+    .gap-sm-3 {
+        gap: 1rem !important;
+    }
+    
+    .gap-sm-4 {
+        gap: 1.5rem !important;
+    }
+    
+    .gap-sm-5 {
+        gap: 3rem !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .gap-xs-0 {
+        gap: 0 !important;
+    }
+    
+    .gap-xs-1 {
+        gap: 0.25rem !important;
+    }
+    
+    .gap-xs-2 {
+        gap: 0.5rem !important;
+    }
+    
+    .gap-xs-3 {
+        gap: 1rem !important;
+    }
+    
+    .gap-xs-4 {
+        gap: 1.5rem !important;
+    }
+    
+    .gap-xs-5 {
+        gap: 3rem !important;
+    }
+}
+
+/* ------------------------
+    Responsive Visibility Utilities
+------------------------*/
+
+@media (max-width: 767px) {
+    .visible-sm {
+        visibility: visible !important;
+    }
+    
+    .invisible-sm {
+        visibility: hidden !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .visible-xs {
+        visibility: visible !important;
+    }
+    
+    .invisible-xs {
+        visibility: hidden !important;
+    }
+}
+
+/* ------------------------
+    Responsive Position Utilities
+------------------------*/
+
+@media (max-width: 767px) {
+    .position-sm-relative {
+        position: relative !important;
+    }
+    
+    .position-sm-absolute {
+        position: absolute !important;
+    }
+    
+    .position-sm-fixed {
+        position: fixed !important;
+    }
+    
+    .position-sm-static {
+        position: static !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .position-xs-relative {
+        position: relative !important;
+    }
+    
+    .position-xs-absolute {
+        position: absolute !important;
+    }
+    
+    .position-xs-fixed {
+        position: fixed !important;
+    }
+    
+    .position-xs-static {
+        position: static !important;
+    }
+}
+
+/* ------------------------
+    Responsive Overflow Utilities
+------------------------*/
+
+@media (max-width: 767px) {
+    .overflow-sm-auto {
+        overflow: auto !important;
+    }
+    
+    .overflow-sm-hidden {
+        overflow: hidden !important;
+    }
+    
+    .overflow-sm-visible {
+        overflow: visible !important;
+    }
+    
+    .overflow-sm-scroll {
+        overflow: scroll !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .overflow-xs-auto {
+        overflow: auto !important;
+    }
+    
+    .overflow-xs-hidden {
+        overflow: hidden !important;
+    }
+    
+    .overflow-xs-visible {
+        overflow: visible !important;
+    }
+    
+    .overflow-xs-scroll {
+        overflow: scroll !important;
+    }
+}

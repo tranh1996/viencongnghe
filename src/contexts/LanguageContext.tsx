@@ -1,0 +1,443 @@
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+
+type Language = 'vi' | 'en';
+
+interface LanguageContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: string) => string;
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+interface LanguageProviderProps {
+  children: ReactNode;
+}
+
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  const [language, setLanguage] = useState<Language>('vi');
+
+  // Translation function
+  const t = (key: string): string => {
+    const translations = language === 'vi' ? viTranslations : enTranslations;
+    return translations[key] || key;
+  };
+
+  const value = {
+    language,
+    setLanguage,
+    t,
+  };
+
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = (): LanguageContextType => {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};
+
+// Vietnamese translations
+const viTranslations: Record<string, string> = {
+  // Header
+  'nav.home': 'Trang chủ',
+  'nav.about': 'Về chúng tôi',
+  'nav.organization': 'Cơ cấu tổ chức',
+  'nav.products': 'Sản phẩm',
+  'nav.news': 'Tin tức',
+  'nav.library': 'Thư viện',
+  'nav.contact': 'Liên hệ',
+  'nav.about.overview': 'Tổng quan',
+  'nav.about.resources': 'Nguồn lực',
+  'nav.organization.units': 'Đơn vị đoàn thể',
+  'nav.organization.admin': 'Phòng Tổ chức – Hành chính',
+  'nav.organization.accounting': 'Phòng Kế toán – Tài chính',
+  'nav.organization.testing': 'Phòng Kiểm định Vật liệu',
+  'nav.organization.technology': 'Phòng Thí nghiệm công nghệ & các Hợp kim đúc',
+  'nav.organization.quality': 'Phòng Quản lý Chất lượng',
+  'nav.organization.mold': 'Trung tâm chế tạo khuôn mẫu',
+  'nav.organization.research': 'Phòng Nghiên cứu vật liệu, xử lý nhiệt và bề mặt',
+  'nav.organization.company': 'Công ty TNHH MTV Cơ khí Mê Linh',
+  'nav.news.activities': 'Tin hoạt động',
+  'nav.news.science': 'Tin khoa học công nghệ',
+  'nav.news.professional': 'Bài viết Chuyên môn',
+  'nav.news.training': 'Hoạt động Đào tạo & Tư vấn',
+  'header.freeConsultation': 'Tư vấn miễn phí',
+  'header.contactNow': 'Liên hệ ngay',
+  'header.mainOffice': 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội',
+  'header.branchOffice': 'Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội',
+  'header.workingHours': 'Thứ 2 - Thứ 6: 8:00 - 17:00',
+
+  // Home page
+  'home.hero.title': 'Giá trị trong từng hành động',
+  'home.hero.subtitle': 'Viện Công nghệ',
+  'home.hero.description': 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu.',
+  'home.hero.aboutButton': 'Về chúng tôi',
+  'home.hero.servicesButton': 'Dịch vụ',
+  'home.about.title': 'Về chúng tôi',
+  'home.about.heading': 'Hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim',
+  'home.about.description': 'Trong suốt hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim, Viện Công nghệ không ngừng đầu tư và phát triển các lĩnh vực thế mạnh của Viện nhằm đáp ứng được những yêu cầu khắt khe nhất của khách hàng trong nước và quốc tế.',
+  'home.about.readMore': 'Xem thêm',
+  'home.services.title': 'Lĩnh vực hoạt động',
+  'home.services.heading': 'Chuyên môn và dịch vụ của chúng tôi',
+  'home.services.description': 'Viện cũng triển khai nhiều nghiên cứu về lĩnh vực vật liệu mới, nhiệt luyện, cơ khí chế tạo khuôn mẫu với mục tiêu ứng dụng vào thực tế.',
+  'home.services.casting': 'Công nghệ đúc và vật liệu mới',
+  'home.services.heatTreatment': 'Công nghệ xử lý nhiệt',
+  'home.services.machining': 'Cơ khí chế tạo khuôn mẫu',
+  'home.services.testing': 'Kiểm định vật liệu',
+  'home.services.transfer': 'Chuyển giao thiết bị/công nghệ',
+  'home.services.training': 'Đào tạo, tư vấn công nghệ',
+  'home.services.viewDetails': 'Xem chi tiết',
+  'home.stats.years': 'Năm kinh nghiệm',
+  'home.stats.projects': 'Dự án nghiên cứu',
+  'home.stats.products': 'Sản phẩm chế tạo',
+  'home.stats.customers': 'Khách hàng tin tưởng',
+  'home.news.title': 'Tin tức',
+  'home.news.heading': 'Tin tức mới nhất',
+  'home.news.readMore': 'Đọc thêm',
+  'home.cta.title': 'Sẵn sàng hợp tác với chúng tôi?',
+  'home.cta.description': 'Liên hệ với đội ngũ chuyên gia của chúng tôi ngay hôm nay để thảo luận về nhu cầu nghiên cứu và khám phá cách chúng tôi có thể giúp bạn đạt được mục tiêu khoa học.',
+  'home.cta.contactNow': 'Liên hệ ngay',
+  'home.cta.viewServices': 'Xem dịch vụ',
+
+  // About page
+  'about.pageTitle': 'Về chúng tôi',
+  'about.breadcrumb.home': 'Trang chủ',
+  'about.breadcrumb.about': 'Về chúng tôi',
+  'about.title': 'Về Viện Công nghệ',
+  'about.heading': 'Hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim',
+  'about.description1': 'Trong suốt hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim, Viện Công nghệ không ngừng đầu tư và phát triển các lĩnh vực thế mạnh của Viện nhằm đáp ứng được những yêu cầu khắt khe nhất của khách hàng trong nước và quốc tế.',
+  'about.description2': 'Bên cạnh đó, Viện cũng triển khai nhiều nghiên cứu về lĩnh vực vật liệu mới, nhiệt luyện, cơ khí chế tạo khuôn mẫu với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu.',
+  'about.mission.title': 'Sứ mệnh',
+  'about.mission.description': 'Nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu.',
+  'about.vision.title': 'Tầm nhìn',
+  'about.vision.description': 'Trở thành viện nghiên cứu hàng đầu trong lĩnh vực cơ khí và luyện kim, được công nhận về sự xuất sắc, đổi mới và cam kết thúc đẩy sự phát triển của khoa học công nghệ.',
+  'about.values.title': 'Giá trị cốt lõi',
+  'about.values.quality': 'Chất lượng',
+  'about.values.innovation': 'Đổi mới',
+  'about.values.collaboration': 'Hợp tác',
+  'about.values.integrity': 'Uy tín',
+  'about.resources.title': 'Nguồn lực',
+  'about.resources.facilities': 'Cơ sở vật chất',
+  'about.resources.experts': 'Đội ngũ chuyên gia',
+  'about.resources.technology': 'Công nghệ tiên tiến',
+
+  // Services page
+  'services.pageTitle': 'Lĩnh vực hoạt động',
+  'services.breadcrumb.home': 'Trang chủ',
+  'services.breadcrumb.services': 'Lĩnh vực hoạt động',
+  'services.title': 'Lĩnh vực hoạt động',
+  'services.heading': 'Chuyên môn và dịch vụ của chúng tôi',
+  'services.description': 'Viện cũng triển khai nhiều nghiên cứu về lĩnh vực vật liệu mới, nhiệt luyện, cơ khí chế tạo khuôn mẫu với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu.',
+  'services.viewDetails': 'Xem chi tiết',
+  'services.additional.title': 'Dịch vụ bổ sung',
+  'services.additional.research.title': 'Nghiên cứu và phát triển',
+  'services.additional.research.description': 'Thực hiện các dự án nghiên cứu khoa học, phát triển công nghệ mới và ứng dụng vào thực tế sản xuất.',
+  'services.additional.training.title': 'Đào tạo và chuyển giao',
+  'services.additional.training.description': 'Cung cấp các khóa đào tạo chuyên sâu về công nghệ đúc, xử lý nhiệt, kiểm định vật liệu.',
+
+  // Products page
+  'products.pageTitle': 'Sản phẩm & Dịch vụ',
+  'products.breadcrumb.home': 'Trang chủ',
+  'products.breadcrumb.products': 'Sản phẩm & Dịch vụ',
+  'products.title': 'SẢN PHẨM & DỊCH VỤ',
+  'products.heading': 'Các sản phẩm và dịch vụ của chúng tôi',
+  'products.description': 'Viện Công nghệ cung cấp đa dạng các sản phẩm và dịch vụ trong lĩnh vực cơ khí, luyện kim và công nghệ vật liệu.',
+  'products.category.technology': 'Khoa học công nghệ',
+  'products.category.casting': 'Đúc',
+  'products.category.machining': 'Gia công cơ khí',
+  'products.viewDetails': 'Xem chi tiết',
+  'products.special.title': 'Sản phẩm đặc biệt',
+  'products.services.title': 'Dịch vụ của chúng tôi',
+
+  // Blog page
+  'blog.pageTitle': 'Tin tức',
+  'blog.breadcrumb.home': 'Trang chủ',
+  'blog.breadcrumb.news': 'Tin tức',
+  'blog.title': 'Tin tức',
+  'blog.heading': 'Tin tức mới nhất',
+  'blog.description': 'Cập nhật những tin tức mới nhất về hoạt động, nghiên cứu và phát triển của Viện Công nghệ.',
+  'blog.readMore': 'Đọc thêm',
+  'blog.categories.activities': 'Tin hoạt động',
+  'blog.categories.science': 'Tin khoa học công nghệ',
+  'blog.categories.training': 'Hoạt động đào tạo',
+  'blog.professional.title': 'Bài viết chuyên môn',
+
+  // Library page
+  'library.pageTitle': 'Thư viện',
+  'library.breadcrumb.home': 'Trang chủ',
+  'library.breadcrumb.library': 'Thư viện',
+  'library.title': 'Thư viện',
+  'library.heading': 'Hình ảnh hoạt động',
+  'library.description': 'Khám phá những hình ảnh về các hoạt động, dự án và sự kiện của Viện Công nghệ trong suốt quá trình hoạt động và phát triển.',
+  'library.activities.research': 'Hoạt động nghiên cứu',
+  'library.activities.laboratory': 'Phòng thí nghiệm',
+  'library.activities.production': 'Sản xuất',
+  'library.activities.training': 'Đào tạo',
+  'library.activities.seminar': 'Hội thảo',
+  'library.activities.exhibition': 'Triển lãm',
+  'library.video.title': 'Video hoạt động',
+  'library.video.introduction': 'Giới thiệu Viện Công nghệ',
+  'library.video.production': 'Quy trình sản xuất',
+  'library.video.watch': 'Xem video',
+  'library.gallery.title': 'Thư viện ảnh',
+
+  // Contact page
+  'contact.pageTitle': 'Liên hệ',
+  'contact.breadcrumb.home': 'Trang chủ',
+  'contact.breadcrumb.contact': 'Liên hệ',
+  'contact.title': 'Liên hệ với chúng tôi',
+  'contact.heading': 'Thông tin liên hệ',
+  'contact.description': 'Sẵn sàng hợp tác với chúng tôi? Liên hệ với đội ngũ chuyên gia ngay hôm nay để thảo luận về nhu cầu và khám phá cách chúng tôi có thể giúp bạn đạt được mục tiêu.',
+  'contact.form.title': 'Gửi tin nhắn cho chúng tôi',
+  'contact.form.fullName': 'Họ và tên',
+  'contact.form.company': 'Công ty',
+  'contact.form.email': 'Email',
+  'contact.form.phone': 'Điện thoại',
+  'contact.form.subject': 'Tiêu đề',
+  'contact.form.message': 'Nội dung',
+  'contact.form.sendMessage': 'Gửi tin nhắn',
+  'contact.info.title': 'Thông tin liên hệ',
+  'contact.info.mainOffice': 'Trụ sở chính',
+  'contact.info.branchOffice': 'Cơ sở 2',
+  'contact.info.phone': 'Điện thoại',
+  'contact.info.email': 'Email',
+  'contact.info.workingHours': 'Giờ làm việc',
+  'contact.location.title': 'Vị trí của chúng tôi',
+  'contact.location.getDirections': 'Chỉ đường',
+
+  // Footer
+  'footer.company.name': 'VIỆN CÔNG NGHỆ',
+  'footer.company.subtitle': 'Research Institute of Technology for Machinery',
+  'footer.company.description': 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế.',
+  'footer.introduction.title': 'GIỚI THIỆU',
+  'footer.introduction.about': 'Về chúng tôi',
+  'footer.introduction.organization': 'Cơ cấu tổ chức',
+  'footer.introduction.products': 'Sản phẩm & Dịch vụ',
+  'footer.introduction.activities': 'Hình ảnh hoạt động',
+  'footer.news.title': 'TIN TỨC',
+  'footer.news.activities': 'Tin hoạt động',
+  'footer.news.science': 'Tin khoa học công nghệ',
+  'footer.news.training': 'Hoạt động đào tạo và tư vấn',
+  'footer.news.professional': 'Bài viết chuyên môn',
+  'footer.companyInfo.title': 'THÔNG TIN CÔNG TY',
+  'footer.companyInfo.mainOffice': 'Trụ sở chính',
+  'footer.companyInfo.branchOffice': 'Cơ sở 2',
+  'footer.companyInfo.phone': 'Điện thoại',
+  'footer.companyInfo.email': 'Email',
+  'footer.companyInfo.workingHours': 'Giờ làm việc',
+  'footer.copyright': '© Copyright 2024 viencongnghe.vn - All rights reserved.',
+  'footer.privacy': 'Chính sách bảo mật',
+  'footer.terms': 'Điều khoản sử dụng',
+  'footer.sitemap': 'Sơ đồ trang',
+
+  // Language switcher
+  'language.vi': 'Tiếng Việt',
+  'language.en': 'English',
+};
+
+// English translations
+const enTranslations: Record<string, string> = {
+  // Header
+  'nav.home': 'Home',
+  'nav.about': 'About Us',
+  'nav.organization': 'Organization',
+  'nav.products': 'Products',
+  'nav.news': 'News',
+  'nav.library': 'Library',
+  'nav.contact': 'Contact',
+  'nav.about.overview': 'Overview',
+  'nav.about.resources': 'Resources',
+  'nav.organization.units': 'Units',
+  'nav.organization.admin': 'Administration Department',
+  'nav.organization.accounting': 'Accounting & Finance Department',
+  'nav.organization.testing': 'Material Testing Department',
+  'nav.organization.technology': 'Technology Laboratory & Casting Alloys Department',
+  'nav.organization.quality': 'Quality Management Department',
+  'nav.organization.mold': 'Mold Manufacturing Center',
+  'nav.organization.research': 'Material Research, Heat Treatment & Surface Department',
+  'nav.organization.company': 'Mechanical Engineering Company Limited',
+  'nav.news.activities': 'Activity News',
+  'nav.news.science': 'Science & Technology News',
+  'nav.news.professional': 'Professional Articles',
+  'nav.news.training': 'Training & Consulting Activities',
+  'header.freeConsultation': 'Free Consultation',
+  'header.contactNow': 'Contact Now',
+  'header.mainOffice': '8-story building, No. 25, Vu Ngoc Phan, Hanoi',
+  'header.branchOffice': 'Lot 27B, Quang Minh Industrial Park, Me Linh, Hanoi',
+  'header.workingHours': 'Mon - Fri: 8:00 - 17:00',
+
+  // Home page
+  'home.hero.title': 'Value in Every Action',
+  'home.hero.subtitle': 'Technology Institute',
+  'home.hero.description': 'The Technology Institute (RITM) is a research and technology development organization in the field of manufacturing special materials, mechanical engineering for mold making, heat treatment and surface treatment with the goal of practical application as well as localization of imported products.',
+  'home.hero.aboutButton': 'About Us',
+  'home.hero.servicesButton': 'Services',
+  'home.about.title': 'About Us',
+  'home.about.heading': 'Over 50 years of experience in mechanical engineering and metallurgy',
+  'home.about.description': 'Throughout more than 50 years of operation in the field of mechanical engineering and metallurgy, the Technology Institute has continuously invested and developed the Institute\'s strengths to meet the most stringent requirements of domestic and international customers.',
+  'home.about.readMore': 'Read More',
+  'home.services.title': 'Areas of Operation',
+  'home.services.heading': 'Our Expertise and Services',
+  'home.services.description': 'The Institute also implements many research projects in the field of new materials, heat treatment, mechanical engineering for mold making with the goal of practical application.',
+  'home.services.casting': 'Casting Technology and New Materials',
+  'home.services.heatTreatment': 'Heat Treatment Technology',
+  'home.services.machining': 'Mechanical Engineering for Mold Making',
+  'home.services.testing': 'Material Testing',
+  'home.services.transfer': 'Equipment/Technology Transfer',
+  'home.services.training': 'Training and Technology Consulting',
+  'home.services.viewDetails': 'View Details',
+  'home.stats.years': 'Years of Experience',
+  'home.stats.projects': 'Research Projects',
+  'home.stats.products': 'Manufactured Products',
+  'home.stats.customers': 'Trusted Customers',
+  'home.news.title': 'News',
+  'home.news.heading': 'Latest News',
+  'home.news.readMore': 'Read More',
+  'home.cta.title': 'Ready to Collaborate with Us?',
+  'home.cta.description': 'Contact our team of experts today to discuss your research needs and discover how we can help you achieve your scientific goals.',
+  'home.cta.contactNow': 'Contact Now',
+  'home.cta.viewServices': 'View Services',
+
+  // About page
+  'about.pageTitle': 'About Us',
+  'about.breadcrumb.home': 'Home',
+  'about.breadcrumb.about': 'About Us',
+  'about.title': 'About Technology Institute',
+  'about.heading': 'Over 50 years of experience in mechanical engineering and metallurgy',
+  'about.description1': 'Throughout more than 50 years of operation in the field of mechanical engineering and metallurgy, the Technology Institute has continuously invested and developed the Institute\'s strengths to meet the most stringent requirements of domestic and international customers.',
+  'about.description2': 'Additionally, the Institute also implements many research projects in the field of new materials, heat treatment, mechanical engineering for mold making with the goal of practical application as well as localization of imported products.',
+  'about.mission.title': 'Mission',
+  'about.mission.description': 'Research and develop technology in the field of manufacturing special materials, mechanical engineering for mold making, heat treatment and surface treatment with the goal of practical application as well as localization of imported products.',
+  'about.vision.title': 'Vision',
+  'about.vision.description': 'To become the leading research institute in the field of mechanical engineering and metallurgy, recognized for excellence, innovation and commitment to promoting the development of science and technology.',
+  'about.values.title': 'Core Values',
+  'about.values.quality': 'Quality',
+  'about.values.innovation': 'Innovation',
+  'about.values.collaboration': 'Collaboration',
+  'about.values.integrity': 'Integrity',
+  'about.resources.title': 'Resources',
+  'about.resources.facilities': 'Facilities',
+  'about.resources.experts': 'Expert Team',
+  'about.resources.technology': 'Advanced Technology',
+
+  // Services page
+  'services.pageTitle': 'Areas of Operation',
+  'services.breadcrumb.home': 'Home',
+  'services.breadcrumb.services': 'Areas of Operation',
+  'services.title': 'Areas of Operation',
+  'services.heading': 'Our Expertise and Services',
+  'services.description': 'The Institute also implements many research projects in the field of new materials, heat treatment, mechanical engineering for mold making with the goal of practical application as well as localization of imported products.',
+  'services.viewDetails': 'View Details',
+  'services.additional.title': 'Additional Services',
+  'services.additional.research.title': 'Research and Development',
+  'services.additional.research.description': 'Conduct scientific research projects, develop new technologies and apply them to practical production.',
+  'services.additional.training.title': 'Training and Transfer',
+  'services.additional.training.description': 'Provide intensive training courses on casting technology, heat treatment, material testing.',
+
+  // Products page
+  'products.pageTitle': 'Products & Services',
+  'products.breadcrumb.home': 'Home',
+  'products.breadcrumb.products': 'Products & Services',
+  'products.title': 'PRODUCTS & SERVICES',
+  'products.heading': 'Our Products and Services',
+  'products.description': 'The Technology Institute provides diverse products and services in the field of mechanical engineering, metallurgy and material technology.',
+  'products.category.technology': 'Science & Technology',
+  'products.category.casting': 'Casting',
+  'products.category.machining': 'Mechanical Processing',
+  'products.viewDetails': 'View Details',
+  'products.special.title': 'Special Products',
+  'products.services.title': 'Our Services',
+
+  // Blog page
+  'blog.pageTitle': 'News',
+  'blog.breadcrumb.home': 'Home',
+  'blog.breadcrumb.news': 'News',
+  'blog.title': 'News',
+  'blog.heading': 'Latest News',
+  'blog.description': 'Stay updated with the latest news about activities, research and development of the Technology Institute.',
+  'blog.readMore': 'Read More',
+  'blog.categories.activities': 'Activity News',
+  'blog.categories.science': 'Science & Technology News',
+  'blog.categories.training': 'Training Activities',
+  'blog.professional.title': 'Professional Articles',
+
+  // Library page
+  'library.pageTitle': 'Library',
+  'library.breadcrumb.home': 'Home',
+  'library.breadcrumb.library': 'Library',
+  'library.title': 'Library',
+  'library.heading': 'Activity Images',
+  'library.description': 'Explore images of activities, projects and events of the Technology Institute throughout its operation and development process.',
+  'library.activities.research': 'Research Activities',
+  'library.activities.laboratory': 'Laboratory',
+  'library.activities.production': 'Production',
+  'library.activities.training': 'Training',
+  'library.activities.seminar': 'Seminar',
+  'library.activities.exhibition': 'Exhibition',
+  'library.video.title': 'Activity Videos',
+  'library.video.introduction': 'Technology Institute Introduction',
+  'library.video.production': 'Production Process',
+  'library.video.watch': 'Watch Video',
+  'library.gallery.title': 'Photo Gallery',
+
+  // Contact page
+  'contact.pageTitle': 'Contact',
+  'contact.breadcrumb.home': 'Home',
+  'contact.breadcrumb.contact': 'Contact',
+  'contact.title': 'Contact Us',
+  'contact.heading': 'Contact Information',
+  'contact.description': 'Ready to collaborate with us? Contact our team of experts today to discuss your needs and discover how we can help you achieve your goals.',
+  'contact.form.title': 'Send us a Message',
+  'contact.form.fullName': 'Full Name',
+  'contact.form.company': 'Company',
+  'contact.form.email': 'Email',
+  'contact.form.phone': 'Phone',
+  'contact.form.subject': 'Subject',
+  'contact.form.message': 'Message',
+  'contact.form.sendMessage': 'Send Message',
+  'contact.info.title': 'Contact Information',
+  'contact.info.mainOffice': 'Main Office',
+  'contact.info.branchOffice': 'Branch Office',
+  'contact.info.phone': 'Phone',
+  'contact.info.email': 'Email',
+  'contact.info.workingHours': 'Working Hours',
+  'contact.location.title': 'Our Locations',
+  'contact.location.getDirections': 'Get Directions',
+
+  // Footer
+  'footer.company.name': 'TECHNOLOGY INSTITUTE',
+  'footer.company.subtitle': 'Research Institute of Technology for Machinery',
+  'footer.company.description': 'The Technology Institute (RITM) is a research and technology development organization in the field of manufacturing special materials, mechanical engineering for mold making, heat treatment and surface treatment with the goal of practical application.',
+  'footer.introduction.title': 'INTRODUCTION',
+  'footer.introduction.about': 'About Us',
+  'footer.introduction.organization': 'Organization',
+  'footer.introduction.products': 'Products & Services',
+  'footer.introduction.activities': 'Activity Images',
+  'footer.news.title': 'NEWS',
+  'footer.news.activities': 'Activity News',
+  'footer.news.science': 'Science & Technology News',
+  'footer.news.training': 'Training & Consulting Activities',
+  'footer.news.professional': 'Professional Articles',
+  'footer.companyInfo.title': 'COMPANY INFORMATION',
+  'footer.companyInfo.mainOffice': 'Main Office',
+  'footer.companyInfo.branchOffice': 'Branch Office',
+  'footer.companyInfo.phone': 'Phone',
+  'footer.companyInfo.email': 'Email',
+  'footer.companyInfo.workingHours': 'Working Hours',
+  'footer.copyright': '© Copyright 2024 viencongnghe.vn - All rights reserved.',
+  'footer.privacy': 'Privacy Policy',
+  'footer.terms': 'Terms of Use',
+  'footer.sitemap': 'Sitemap',
+
+  // Language switcher
+  'language.vi': 'Tiếng Việt',
+  'language.en': 'English',
+};

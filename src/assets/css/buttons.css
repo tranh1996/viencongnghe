@@ -1,0 +1,53 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Button Styles */
+
+/* ------------------------
+    Buttons
+------------------------*/
+.themeht-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.primary-btn {
+    background-color: var(--themeht-primary-color);
+    color: var(--themeht-white-color);
+}
+
+.primary-btn:hover {
+    background-color: var(--themeht-secondary-color);
+    color: var(--themeht-white-color);
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: var(--themeht-white-color);
+    border-color: var(--themeht-white-color);
+}
+
+.secondary-btn:hover {
+    background-color: var(--themeht-white-color);
+    color: var(--themeht-primary-color);
+}
+
+/* ------------------------
+    Button Box
+------------------------*/
+.btn-box {
+    margin-top: 30px;
+}
+
+.btn-box .themeht-btn {
+    margin-right: 15px;
+}

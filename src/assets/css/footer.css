@@ -1,0 +1,80 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Footer Styles */
+
+/* ------------------------
+    Footer
+------------------------*/
+.footer {
+    background-color: var(--themeht-secondary-color);
+    color: var(--themeht-white-color);
+    padding: 60px 0 0;
+}
+
+.footer .widget-title {
+    margin-bottom: 30px;
+}
+
+.footer h2 {
+    color: var(--themeht-white-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.footer-widget {
+    margin-bottom: 40px;
+}
+
+.footer-widget.widget ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-widget.widget ul li {
+    margin-bottom: 10px;
+}
+
+.primary-footer {
+    padding: 60px 0;
+}
+
+.secondary-footer {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copyright {
+    color: var(--themeht-white-color);
+    font-size: 14px;
+}
+
+.copyright a {
+    color: var(--themeht-primary-color);
+}
+
+.footer h5 {
+    color: var(--themeht-white-color);
+    margin-bottom: 20px;
+}
+
+.footer-menu li {
+    margin-bottom: 8px;
+}
+
+.footer-menu li:last-child {
+    margin-bottom: 0;
+}
+
+.footer-menu li a {
+    color: var(--themeht-white-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-menu li a:hover {
+    color: var(--themeht-primary-color);
+}

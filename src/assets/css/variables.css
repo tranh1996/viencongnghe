@@ -1,0 +1,23 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* CSS Variables and Imports */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap');
+
+:root {
+    --themeht-primary-color: #1253be;
+    --themeht-secondary-color: #001d2d;
+    --themeht-text-color: #000812;
+    --themeht-body-color: #4f4f4f;
+    --themeht-white-color: #FFFFFF;
+    --themeht-bg-dark-color: #010101;
+    --themeht-bg-light-color: #f6f7ff;
+    --themeht-border-light-color: #E5E5E5;
+    --themeht-rgba-color: rgba(255,255,255,0.9);
+    --themeht-typography-body-font-family: "Plus Jakarta Sans", sans-serif;
+    --themeht-typography-secondary-font-family: "Familjen Grotesk", sans-serif;
+}

@@ -1,0 +1,56 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Color Styles - Text and Background Colors */
+
+/* ------------------------
+    Text color
+------------------------*/
+.text-theme {
+    color: var(--themeht-primary-color) !important;
+}
+
+.text-black {
+    color: var(--themeht-text-color) !important;
+}
+
+.text-grey {
+    color: var(--themeht-body-color) !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* ------------------------
+    Background color
+------------------------*/
+.white-bg {
+    background-color: var(--themeht-white-color);
+}
+
+.dark-bg {
+    background-color: var(--themeht-bg-dark-color);
+}
+
+.light-bg {
+    background-color: var(--themeht-bg-light-color);
+}
+
+.primary-bg {
+    background-color: var(--themeht-primary-color);
+}
+
+.secondary-bg {
+    background-color: var(--themeht-secondary-color);
+}
+
+.transparent-bg {
+    background-color: transparent;
+}
+
+.border-light {
+    border: 1px solid var(--themeht-border-light-color);
+}

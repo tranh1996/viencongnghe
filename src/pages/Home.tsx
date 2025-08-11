@@ -1,0 +1,343 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useLanguage } from '../contexts/LanguageContext';
+import BannerSlider from '../components/BannerSlider';
+
+const Home: React.FC = () => {
+  const { t } = useLanguage();
+
+  // Banner slides for home page
+  const bannerSlides = [
+    {
+      id: 1,
+      image: '/images/banner/01.jpg',
+      title: 'High Laboratory <span>Quality Service</span>',
+      subtitle: 'Lab Research Excellence',
+      description: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.',
+      primaryButton: {
+        text: 'Explore More',
+        link: '/about'
+      },
+      secondaryButton: {
+        text: 'Contact Us',
+        link: '/contact'
+      }
+    },
+    {
+      id: 2,
+      image: '/images/banner/02.jpg',
+      title: 'Reliable & High <span>Quality Service</span>',
+      subtitle: 'Lab Research Excellence',
+      description: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.',
+      primaryButton: {
+        text: 'Explore More',
+        link: '/about'
+      },
+      secondaryButton: {
+        text: 'Contact Us',
+        link: '/contact'
+      }
+    },
+    {
+      id: 3,
+      image: '/images/banner/03.jpg',
+      title: 'Dịch vụ chất lượng cao',
+      subtitle: 'Chuyên môn & Uy tín',
+      description: 'Cung cấp các dịch vụ kỹ thuật chất lượng cao với đội ngũ chuyên gia giàu kinh nghiệm',
+      primaryButton: {
+        text: 'Xem dịch vụ',
+        link: '/services'
+      },
+      secondaryButton: {
+        text: 'Tìm hiểu thêm',
+        link: '/about'
+      }
+    },
+    {
+      id: 4,
+      image: '/images/banner/04.jpg',
+      title: 'Đào tạo & Chuyển giao',
+      subtitle: 'Kiến thức & Kinh nghiệm',
+      description: 'Đào tạo chuyên sâu và chuyển giao công nghệ trong các lĩnh vực chuyên môn',
+      primaryButton: {
+        text: 'Khóa học',
+        link: '/services'
+      },
+      secondaryButton: {
+        text: 'Liên hệ tư vấn',
+        link: '/contact'
+      }
+    }
+  ];
+
+  return (
+    <>
+      {/* Hero Section */}
+      <BannerSlider slides={bannerSlides} />
+
+      {/* About Section */}
+      <section className="light-bg">
+        <Container>
+          <Row className="align-items-center">
+            <Col lg={6} className="mb-4 mb-lg-0">
+              <div className="about-img-shape" style={{ backgroundImage: 'url(/images/about/01.jpg)' }}></div>
+            </Col>
+            <Col lg={6}>
+              <div className="ps-lg-5">
+                <h6 className="text-theme mb-3">{t('home.about.title')}</h6>
+                <h2 className="mb-4">{t('home.about.heading')}</h2>
+                <p className="mb-4">
+                  {t('home.about.description')}
+                </p>
+                <ul className="list-icon style-1">
+                  <li>
+                    <i className="bi bi-check-circle-fill"></i>
+                    <span>{t('home.services.casting')}</span>
+                  </li>
+                  <li>
+                    <i className="bi bi-check-circle-fill"></i>
+                    <span>{t('home.services.heatTreatment')}</span>
+                  </li>
+                  <li>
+                    <i className="bi bi-check-circle-fill"></i>
+                    <span>{t('home.services.machining')}</span>
+                  </li>
+                  <li>
+                    <i className="bi bi-check-circle-fill"></i>
+                    <span>{t('home.services.testing')}</span>
+                  </li>
+                </ul>
+                <div className="mt-4">
+                  <Link to="/about" className="themeht-btn primary-btn">
+                    {t('home.about.readMore')}
+                  </Link>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* Services Section */}
+      <section>
+        <Container>
+          <Row className="text-center mb-5">
+            <Col lg={8} className="mx-auto">
+              <h6 className="text-theme mb-3">{t('home.services.title')}</h6>
+              <h2 className="mb-4">{t('home.services.heading')}</h2>
+              <p>
+                {t('home.services.description')}
+              </p>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-item text-center p-4 rounded">
+                <div className="service-icon mb-4">
+                  <i className="bi bi-gear text-theme" style={{ fontSize: '3rem' }}></i>
+                </div>
+                <h5 className="mb-3">{t('home.services.casting')}</h5>
+                <p>
+                  {t('home.services.casting')} - Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh. 
+                  Mô phỏng thiết kế đúc bằng phần mềm MAGMASoft.
+                </p>
+                <Link to="/services" className="text-theme text-decoration-none">
+                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-item text-center p-4 rounded">
+                <div className="service-icon mb-4">
+                  <i className="bi bi-thermometer-half text-theme" style={{ fontSize: '3rem' }}></i>
+                </div>
+                <h5 className="mb-3">{t('home.services.heatTreatment')}</h5>
+                <p>
+                  {t('home.services.heatTreatment')} - Nghiên cứu, dịch vụ nhiệt luyện chân không, nhiệt luyện truyền thống và hóa nhiệt luyện 
+                  (thấm C, C-N, N) các loại khuôn và các sản phẩm cơ khí.
+                </p>
+                <Link to="/services" className="text-theme text-decoration-none">
+                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-item text-center p-4 rounded">
+                <div className="service-icon mb-4">
+                  <i className="bi bi-tools text-theme" style={{ fontSize: '3rem' }}></i>
+                </div>
+                <h5 className="mb-3">{t('home.services.machining')}</h5>
+                <p>
+                  {t('home.services.machining')} - Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại dùng trong các lĩnh vực 
+                  rèn, dập, ép và đúc áp lực.
+                </p>
+                <Link to="/services" className="text-theme text-decoration-none">
+                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-item text-center p-4 rounded">
+                <div className="service-icon mb-4">
+                  <i className="bi bi-clipboard-check text-theme" style={{ fontSize: '3rem' }}></i>
+                </div>
+                <h5 className="mb-3">{t('home.services.testing')}</h5>
+                <p>
+                  {t('home.services.testing')} - Thử nghiệm, kiểm định trong lĩnh vực hóa, cơ, không phá huỷ các loại vật liệu, 
+                  kết cấu hàn và chi tiết máy.
+                </p>
+                <Link to="/services" className="text-theme text-decoration-none">
+                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-item text-center p-4 rounded">
+                <div className="service-icon mb-4">
+                  <i className="bi bi-arrow-repeat text-theme" style={{ fontSize: '3rem' }}></i>
+                </div>
+                <h5 className="mb-3">{t('home.services.transfer')}</h5>
+                <p>
+                  {t('home.services.transfer')} - Cung cấp và chuyển giao công nghệ các thiết bị về xử lý nhiệt, Các dây chuyền/ 
+                  hệ thống kết cấu cơ khí.
+                </p>
+                <Link to="/services" className="text-theme text-decoration-none">
+                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-item text-center p-4 rounded">
+                <div className="service-icon mb-4">
+                  <i className="bi bi-mortarboard text-theme" style={{ fontSize: '3rem' }}></i>
+                </div>
+                <h5 className="mb-3">{t('home.services.training')}</h5>
+                <p>
+                  {t('home.services.training')} - Đào tạo, tư vấn trong lĩnh vực như Công nghệ Đúc; Xử lý nhiệt; Kiểm định vật liệu; 
+                  và các lĩnh vực khác.
+                </p>
+                <Link to="/services" className="text-theme text-decoration-none">
+                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* Stats Section */}
+      <section className="primary-bg text-white">
+        <Container>
+          <Row className="text-center">
+            <Col lg={3} md={6} className="mb-4">
+              <div className="counter">
+                <h3 className="mb-2">50+</h3>
+                <p>{t('home.stats.years')}</p>
+              </div>
+            </Col>
+            <Col lg={3} md={6} className="mb-4">
+              <div className="counter">
+                <h3 className="mb-2">100+</h3>
+                <p>{t('home.stats.projects')}</p>
+              </div>
+            </Col>
+            <Col lg={3} md={6} className="mb-4">
+              <div className="counter">
+                <h3 className="mb-2">500+</h3>
+                <p>{t('home.stats.products')}</p>
+              </div>
+            </Col>
+            <Col lg={3} md={6} className="mb-4">
+              <div className="counter">
+                <h3 className="mb-2">1000+</h3>
+                <p>{t('home.stats.customers')}</p>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* News Section */}
+      <section className="light-bg">
+        <Container>
+          <Row className="text-center mb-5">
+            <Col lg={8} className="mx-auto">
+              <h6 className="text-theme mb-3">{t('home.news.title')}</h6>
+              <h2 className="mb-4">{t('home.news.heading')}</h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="card h-100">
+                <img src="/images/blog/01.jpg" className="card-img-top" alt="Tin tức" />
+                <div className="card-body">
+                  <h6 className="text-muted mb-2">27/05/25</h6>
+                  <h5 className="card-title">Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn</h5>
+                  <p className="card-text">
+                    Hoạt động ý nghĩa trong tháng công nhân với nhiều hoạt động thiết thực...
+                  </p>
+                  <Link to="/blog" className="text-theme text-decoration-none">
+                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="card h-100">
+                <img src="/images/blog/02.jpg" className="card-img-top" alt="Tin tức" />
+                <div className="card-body">
+                  <h6 className="text-muted mb-2">20/12/24</h6>
+                  <h5 className="card-title">Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam</h5>
+                  <p className="card-text">
+                    Các hoạt động kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam...
+                  </p>
+                  <Link to="/blog" className="text-theme text-decoration-none">
+                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+            <Col lg={4} md={6} className="mb-4">
+              <div className="card h-100">
+                <img src="/images/blog/03.jpg" className="card-img-top" alt="Tin tức" />
+                <div className="card-body">
+                  <h6 className="text-muted mb-2">21/11/22</h6>
+                  <h5 className="card-title">Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022</h5>
+                  <p className="card-text">
+                    Viện Công nghệ tham gia triển lãm VIMEXPO 2022 với nhiều sản phẩm công nghệ...
+                  </p>
+                  <Link to="/blog" className="text-theme text-decoration-none">
+                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* CTA Section */}
+      <section className="primary-bg text-white">
+        <Container>
+          <Row className="text-center">
+            <Col lg={8} className="mx-auto">
+              <h2 className="mb-4">{t('home.cta.title')}</h2>
+              <p className="mb-4">
+                {t('home.cta.description')}
+              </p>
+              <Link to="/contact" className="themeht-btn secondary-btn me-3">
+                {t('home.cta.contactNow')}
+              </Link>
+              <Link to="/services" className="themeht-btn primary-btn">
+                {t('home.cta.viewServices')}
+              </Link>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+    </>
+  );
+};
+
+export default Home; 

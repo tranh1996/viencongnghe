@@ -1,0 +1,473 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+----------------------------------------------- */
+
+/* Banner Slider Styles */
+
+/* ------------------------
+    Banner Slider
+------------------------*/
+.banner-slider { 
+    background-color: var(--themeht-bg-dark-color); 
+    position: relative;
+    height: calc(100vh - 120px);
+    min-height: 500px;
+    overflow: hidden;
+}
+
+.swiper-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: all 0.8s ease-in-out;
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.swiper-slide-active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.banner-slider .slider-img { 
+    background-size: cover; 
+    background-position: top center; 
+    background-repeat: no-repeat; 
+    position: absolute; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    left: 0;
+}
+
+.banner-content { 
+    padding: 200px 0; 
+    position: relative; 
+    z-index: 9; 
+}
+
+.slider-img::before { 
+    position: absolute; 
+    content: ''; 
+    background: linear-gradient(90deg, #ffffff 42%, #ffffff80 50%, rgb(255 255 255 / 0%) 60%); 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    opacity: 0.80; 
+    z-index: 9; 
+}
+
+.banner-slider .swiper-button-next, 
+.banner-slider .swiper-button-prev { 
+    transform: scale(1); 
+    width: 40px; 
+    height: 40px; 
+    background-image: none !important; 
+    border-radius: 100%; 
+    line-height: inherit; 
+    background: var(--themeht-primary-color); 
+    border: none; 
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(1);
+    z-index: 10;
+    cursor: pointer;
+}
+
+.banner-slider .swiper-button-next:hover, 
+.banner-slider .swiper-button-prev:hover { 
+    background: var(--themeht-bg-dark-color); 
+}
+
+.banner-slider .swiper-button-next i, 
+.banner-slider .swiper-button-prev i { 
+    font-size: 16px; 
+    color: var(--themeht-white-color); 
+    line-height: 40px !important; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.banner-slider .swiper-button-next:hover i, 
+.banner-slider .swiper-button-prev:hover i { 
+    color: var(--themeht-white-color); 
+}
+
+.banner-slider .swiper-button-prev { 
+    left: 30px; 
+}
+
+.banner-slider .swiper-button-next { 
+    right: 30px; 
+}
+
+#banner-pagination { 
+    position: absolute !important; 
+    right: 150px; 
+    left: inherit; 
+    margin: 0; 
+    text-align: right; 
+    width: auto; 
+    bottom: 50px; 
+    font-size: 18px; 
+    color: var(--themeht-white-color); 
+}
+
+.swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background: var(--themeht-primary-color);
+    transform: scale(1.2);
+}
+
+.swiper-pagination-bullet:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.banner-slider .themeht-btn + .themeht-btn { 
+    margin-left: 20px; 
+}
+
+.banner-slider h6 { 
+    position: relative; 
+    opacity: 0; 
+    -webkit-transition: all 1000ms ease; 
+    -moz-transition: all 100ms ease; 
+    -ms-transition: all 1000ms ease; 
+    -o-transition: all 1000ms ease; 
+    transition: all 1000ms ease; 
+    -webkit-transform: translateY(80px); 
+    -moz-transform: translateY(80px); 
+    -ms-transform: translateY(80px); 
+    -o-transform: translateY(80px); 
+    transform: translateY(80px); 
+}
+
+.banner-slider h1 { 
+    position: relative; 
+    opacity: 0; 
+    -webkit-transition: all 1000ms ease; 
+    -moz-transition: all 100ms ease; 
+    -ms-transition: all 1000ms ease; 
+    -o-transition: all 1000ms ease; 
+    transition: all 1000ms ease; 
+    -webkit-transform: translateY(80px); 
+    -moz-transform: translateY(80px); 
+    -ms-transform: translateY(80px); 
+    -o-transform: translateY(80px); 
+    transform: translateY(80px); 
+}
+
+.banner-slider p { 
+    position: relative; 
+    opacity: 0; 
+    -webkit-transition: all 1000ms ease; 
+    -moz-transition: all 100ms ease; 
+    -ms-transition: all 1000ms ease; 
+    -o-transition: all 1000ms ease; 
+    transition: all 1000ms ease; 
+    -webkit-transform: translateY(80px); 
+    -moz-transform: translateY(80px); 
+    -ms-transform: translateY(80px); 
+    -o-transform: translateY(80px); 
+    transform: translateY(80px); 
+}
+
+.banner-slider .btn-box { 
+    position: relative; 
+    opacity: 0; 
+    -webkit-transition: all 1000ms ease; 
+    -moz-transition: all 100ms ease; 
+    -ms-transition: all 1000ms ease; 
+    -o-transition: all 1000ms ease; 
+    transition: all 1000ms ease; 
+    -webkit-transform: translateY(80px); 
+    -moz-transform: translateY(80px); 
+    -ms-transform: translateY(80px); 
+    -o-transform: translateY(80px); 
+    transform: translateY(80px); 
+}
+
+.banner-slider .swiper-slide-active h6 { 
+    opacity: 1; 
+    -webkit-transform: translateX(0); 
+    -moz-transform: translateX(0); 
+    -ms-transform: translateX(0); 
+    -o-transform: translateX(0); 
+    transform: translateX(0); 
+    transition-delay: 500ms; 
+}
+
+.banner-slider .swiper-slide-active h1 { 
+    opacity: 1; 
+    -webkit-transform: translateX(0); 
+    -moz-transform: translateX(0); 
+    -ms-transform: translateX(0); 
+    -o-transform: translateX(0); 
+    transform: translateX(0); 
+    transition-delay: 1000ms; 
+}
+
+.banner-slider .swiper-slide-active p { 
+    opacity: 1; 
+    -webkit-transform: translateX(0); 
+    -moz-transform: translateX(0); 
+    -ms-transform: translateX(0); 
+    -o-transform: translateX(0); 
+    transform: translateX(0); 
+    transition-delay: 1500ms; 
+}
+
+.banner-slider .swiper-slide-active .btn-box { 
+    opacity: 1; 
+    -webkit-transform: translateX(0); 
+    -moz-transform: translateX(0); 
+    -ms-transform: translateX(0); 
+    -o-transform: translateX(0); 
+    transform: translateX(0); 
+    transition-delay: 2000ms; 
+}
+
+.banner-content { 
+    padding: 200px 0 200px 150px; 
+    position: relative; 
+    z-index: 9; 
+}
+
+.banner-content .banner-text { 
+    width: 50%; 
+}
+
+.banner-slider h1 { 
+    font-weight: 700; 
+    font-size: 100px; 
+    line-height: 110px; 
+    color: var(--themeht-primary-color); 
+}
+
+.banner-slider h1 span { 
+    font-weight: 600; 
+    color: var(--themeht-text-color); 
+    display: block; 
+}
+
+.banner-content p { 
+    max-width: 80%; 
+    margin: 0; 
+}
+
+/* Button Styling */
+.btn-box {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.themeht-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+}
+
+.primary-btn {
+    background: var(--themeht-primary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background: var(--themeht-secondary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.dark-btn {
+    background: var(--themeht-text-color);
+    color: white;
+}
+
+.dark-btn:hover {
+    background: var(--themeht-primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive Banner Adjustments */
+@media (max-width: 1440px) {
+    .banner-content { 
+        padding: 150px 0 150px 100px; 
+    }
+    .banner-content .banner-text { 
+        width: 52%; 
+    }
+    .banner-slider h1 { 
+        font-size: 70px; 
+        line-height: 80px; 
+    }
+}
+
+@media (max-width: 1199px) {
+    .banner-content .banner-text { 
+        width: 60%; 
+    }
+    .banner-content { 
+        padding: 100px 0 100px 80px; 
+    }
+    .banner-slider h1 { 
+        font-size: 50px; 
+        line-height: 60px; 
+    }
+    .banner-content p { 
+        max-width: 100%; 
+        font-size: 14px; 
+    }
+}
+
+@media (max-width: 767px) {
+    .banner-content { 
+        padding: 80px 30px; 
+    }
+    .banner-content .banner-text { 
+        width: 100%; 
+    }
+    .banner-slider h1 { 
+        font-size: 45px; 
+        line-height: 55px; 
+    }
+    .banner-slider .slider-img { 
+        position: relative; 
+        height: 300px; 
+    }
+    .slider-img::before { 
+        display: none; 
+    }
+    .banner-content { 
+        background: var(--themeht-white-color); 
+    }
+    .btn-box {
+        flex-direction: row;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+    .themeht-btn {
+        padding: 12px 20px;
+        font-size: 12px;
+        white-space: nowrap;
+        min-width: 0;
+        flex: 1;
+    }
+}
+
+@media (max-width: 576px) {
+    .banner-content { 
+        padding: 60px 20px; 
+    }
+    .banner-slider h1 { 
+        font-size: 35px; 
+        line-height: 45px; 
+    }
+    .banner-content p { 
+        max-width: 100%; 
+        font-size: 13px; 
+    }
+    .btn-box {
+        flex-direction: row;
+        gap: 8px;
+        flex-wrap: nowrap;
+    }
+    .themeht-btn {
+        padding: 10px 16px;
+        font-size: 11px;
+        white-space: nowrap;
+        min-width: 0;
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-slider h1 { 
+        font-size: 28px; 
+        line-height: 38px; 
+    }
+    .btn-box {
+        flex-direction: row;
+        gap: 6px;
+        flex-wrap: nowrap;
+    }
+    .themeht-btn {
+        padding: 8px 12px;
+        font-size: 10px;
+        white-space: nowrap;
+        min-width: 0;
+        flex: 1;
+    }
+}
+
+@media (max-width: 400px) {
+    .banner-slider h1 { 
+        font-size: 24px; 
+        line-height: 34px; 
+    }
+    .btn-box {
+        flex-direction: row;
+        gap: 4px;
+        flex-wrap: nowrap;
+    }
+    .themeht-btn {
+        padding: 6px 8px;
+        font-size: 9px;
+        white-space: nowrap;
+        min-width: 0;
+        flex: 1;
+    }
+}
+
+@media (max-width: 350px) {
+    .banner-slider h1 { 
+        font-size: 20px; 
+        line-height: 30px; 
+    }
+    .btn-box {
+        flex-direction: row;
+        gap: 2px;
+        flex-wrap: nowrap;
+    }
+    .themeht-btn {
+        padding: 4px 6px;
+        font-size: 8px;
+        white-space: nowrap;
+        min-width: 0;
+        flex: 1;
+    }
+}
+

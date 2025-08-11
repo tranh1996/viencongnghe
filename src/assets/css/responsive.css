@@ -1,0 +1,822 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Responsive CSS - Media Queries */
+
+/* ------------------------
+    Responsive CSS
+------------------------*/
+
+/* Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+    
+    h1, .h1 {
+        font-size: 80px;
+        line-height: 90px;
+    }
+    
+    h2, .h2 {
+        font-size: 60px;
+        line-height: 68px;
+    }
+
+    .header-top {
+        padding: 0.5rem 10rem;
+    }
+
+    #header-wrap {
+        padding: 0 10rem;
+    }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+    h1, .h1 {
+        font-size: 60px;
+        line-height: 70px;
+    }
+
+    h2, .h2 {
+        font-size: 45px;
+        line-height: 53px;
+    }
+
+    h3, .h3 {
+        font-size: 32px;
+        line-height: 40px;
+    }
+
+    h4, .h4 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+}
+
+/* Large Tablets (992px - 1199px) */
+@media (max-width: 1199px) {
+    h1, .h1 {
+        font-size: 50px;
+        line-height: 60px;
+    }
+
+    h2, .h2 {
+        font-size: 40px;
+        line-height: 48px;
+    }
+
+    h3, .h3 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    h4, .h4 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    /* Header Responsive - Large Tablets */
+    .header-top {
+        margin: 0 20px;
+        padding: 10px 0;
+    }
+
+    #header-wrap {
+        margin: 0 20px;
+    }
+
+    .navbar {
+        padding: 20px 25px;
+    }
+
+    .navbar-nav .nav-item {
+        margin: 0;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 12px 15px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .logo img {
+        max-height: 55px;
+    }
+
+    .header-right {
+        gap: 15px;
+    }
+
+    .social-icons a {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .header-right .themeht-btn {
+        padding: 10px 20px;
+        font-size: 12px;
+    }
+
+    /* Banner Responsive */
+    .banner-content {
+        text-align: center;
+    }
+
+    .banner-content .banner-text {
+        max-width: 100%;
+    }
+
+    .banner-slider h1 {
+        font-size: 40px;
+        line-height: 50px;
+    }
+
+    .banner-content p {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    /* Service Items */
+    .service-item {
+        padding: 25px 20px !important;
+    }
+
+    .service-icon i {
+        font-size: 2.5rem !important;
+    }
+
+    /* Cards */
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        padding: 25px !important;
+    }
+
+    .contact-info {
+        padding: 25px !important;
+    }
+
+    /* Footer */
+    .footer h2 {
+        font-size: 20px;
+    }
+}
+
+/* Tablets (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    h1, .h1 {
+        font-size: 42px;
+        line-height: 52px;
+    }
+
+    h2, .h2 {
+        font-size: 32px;
+        line-height: 40px;
+    }
+
+    h3, .h3 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    h4, .h4 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    /* Header */
+    .navbar-toggler {
+        border: none;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        background: transparent;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+    .navbar-collapse {
+        background-color: var(--themeht-white-color);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--themeht-border-light-color);
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        border-bottom: none;
+    }
+
+    .navbar-nav .nav-item:last-child .nav-link {
+        border-bottom: none;
+    }
+
+    .navbar-nav .nav-item .nav-link.active,
+    .navbar-nav .nav-item .nav-link:hover {
+        background-color: transparent;
+        color: var(--themeht-primary-color);
+    }
+
+    /* Banner */
+    .banner {
+        height: 60vh;
+        min-height: 400px;
+    }
+
+    .banner-slider h1 {
+        font-size: 36px;
+        line-height: 44px;
+    }
+
+    .banner-content p {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    /* About Section */
+    .about-img-shape {
+        height: 300px;
+        margin-bottom: 30px;
+    }
+
+    .ps-lg-5 {
+        padding-left: 0 !important;
+    }
+
+    /* Service Items */
+    .service-item {
+        padding: 20px 15px !important;
+        margin-bottom: 20px;
+    }
+
+    .service-icon i {
+        font-size: 2rem !important;
+    }
+
+    /* Cards */
+    .card-body {
+        padding: 15px;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        padding: 20px !important;
+        margin-bottom: 30px;
+    }
+
+    .contact-info {
+        padding: 20px !important;
+    }
+
+    /* Stats Section */
+    .counter h3 {
+        font-size: 28px;
+    }
+
+    /* Blog */
+    .card-header {
+        padding: 15px;
+    }
+
+    /* Gallery */
+    .img-fluid {
+        margin-bottom: 15px;
+    }
+}
+
+/* Mobile Large (576px - 767px) */
+@media (max-width: 767px) {
+    h1, .h1 {
+        font-size: 36px;
+        line-height: 44px;
+    }
+
+    h2, .h2 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    h3, .h3 {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    h4, .h4 {
+        font-size: 18px;
+        line-height: 26px;
+    }
+
+    .theme-title h2 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    /* Header */
+    .header-top {
+        display: none;
+    }
+
+    .header-right {
+        display: none;
+    }
+
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    .logo img {
+        max-height: 45px;
+    }
+
+    /* Sections */
+    section {
+        padding: 60px 0;
+    }
+
+    /* Banner */
+    .banner {
+        height: 70vh;
+        min-height: 500px;
+    }
+
+    .banner-content {
+        padding: 0 20px;
+    }
+
+    .banner-content .banner-text {
+        text-align: center;
+    }
+
+    .banner-slider h1 {
+        font-size: 32px;
+        line-height: 40px;
+    }
+
+    .banner-slider .slider-img {
+        background-attachment: scroll;
+    }
+
+    .slider-img::before {
+        background: linear-gradient(135deg, rgba(0, 29, 45, 0.9) 0%, rgba(18, 83, 190, 0.8) 100%);
+    }
+
+    /* Container */
+    .container, .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* About Section */
+    .about-img-shape {
+        height: 250px;
+        margin-bottom: 25px;
+    }
+
+    /* Service Items */
+    .service-item {
+        padding: 20px 15px !important;
+        text-align: center;
+    }
+
+    .service-icon i {
+        font-size: 2.5rem !important;
+    }
+
+    /* Cards */
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        padding: 20px !important;
+        margin-bottom: 25px;
+    }
+
+    .contact-info {
+        padding: 20px !important;
+    }
+
+    /* Stats Section */
+    .counter {
+        margin-bottom: 30px;
+    }
+
+    .counter h3 {
+        font-size: 24px;
+    }
+
+    /* Blog */
+    .card-header {
+        padding: 12px 15px;
+    }
+
+    .card-header h5 {
+        font-size: 16px;
+    }
+
+    /* Gallery */
+    .img-fluid {
+        margin-bottom: 10px;
+    }
+
+    /* Buttons */
+    .themeht-btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 15px 20px;
+        font-size: 16px;
+    }
+
+    .btn-box {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 14px;
+    }
+
+    /* Media Icons */
+    .media-icon li {
+        margin-bottom: 15px;
+    }
+
+    .media-icon li i {
+        font-size: 18px;
+        margin-right: 12px;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    h1, .h1 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    h2, .h2 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    h3, .h3 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    h4, .h4 {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    /* Header */
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .logo img {
+        max-height: 40px;
+    }
+
+    /* Banner */
+    .banner {
+        height: 60vh;
+        min-height: 400px;
+    }
+
+    .banner-slider h1 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    .banner-content {
+        padding: 0 15px;
+    }
+
+    .banner-content p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    /* Sections */
+    section {
+        padding: 40px 0;
+    }
+
+    /* About Section */
+    .about-img-shape {
+        height: 200px;
+        margin-bottom: 20px;
+    }
+
+    /* Service Items */
+    .service-item {
+        padding: 15px 10px !important;
+    }
+
+    .service-icon i {
+        font-size: 2rem !important;
+    }
+
+    /* Cards */
+    .card-body {
+        padding: 12px;
+    }
+
+    .card-img-top {
+        height: 180px;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        padding: 15px !important;
+    }
+
+    .contact-info {
+        padding: 15px !important;
+    }
+
+    /* Stats Section */
+    .counter h3 {
+        font-size: 20px;
+    }
+
+    .counter p {
+        font-size: 14px;
+    }
+
+    /* Blog */
+    .card-header {
+        padding: 10px 12px;
+    }
+
+    .card-header h5 {
+        font-size: 14px;
+    }
+
+    /* Gallery */
+    .img-fluid {
+        margin-bottom: 8px;
+    }
+
+    /* Buttons */
+    .themeht-btn {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 12px;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        padding-right: 5px;
+    }
+
+    /* Media Icons */
+    .media-icon li {
+        margin-bottom: 12px;
+    }
+
+    .media-icon li i {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    /* List Icons */
+    .list-icon li {
+        margin-bottom: 10px;
+    }
+
+    .list-icon li i {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    /* Social Icons */
+    .social-icons a {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+        line-height: 30px;
+    }
+
+    /* Page Title */
+    .page-title {
+        padding: 40px 0;
+    }
+
+    .page-title h1 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    /* Form Elements */
+    .form-control {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    .form-label {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    /* Container */
+    .container, .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+/* Extra Small Mobile (up to 375px) */
+@media (max-width: 375px) {
+    h1, .h1 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    h2, .h2 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    h3, .h3 {
+        font-size: 18px;
+        line-height: 26px;
+    }
+
+    /* Banner */
+    .banner-slider h1 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .banner-content {
+        padding: 0 10px;
+    }
+
+    /* Service Items */
+    .service-item {
+        padding: 12px 8px !important;
+    }
+
+    .service-icon i {
+        font-size: 1.8rem !important;
+    }
+
+    /* Cards */
+    .card-body {
+        padding: 10px;
+    }
+
+    .card-img-top {
+        height: 160px;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        padding: 12px !important;
+    }
+
+    .contact-info {
+        padding: 12px !important;
+    }
+
+    /* Buttons */
+    .themeht-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    /* Container */
+    .container, .container-fluid {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .banner {
+        height: 50vh;
+        min-height: 300px;
+    }
+
+    .banner-slider h1 {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    section {
+        padding: 40px 0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .header-top,
+    .navbar,
+    .footer,
+    .btn-box,
+    .social-icons {
+        display: none !important;
+    }
+
+    .banner {
+        height: auto;
+        min-height: auto;
+    }
+
+    .banner-slider h1 {
+        color: #000 !important;
+        font-size: 24px !important;
+    }
+
+    .banner-content p {
+        color: #000 !important;
+    }
+
+    section {
+        padding: 20px 0;
+        page-break-inside: avoid;
+    }
+
+    .card {
+        page-break-inside: avoid;
+        border: 1px solid #ddd;
+    }
+
+    .service-item {
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    /* Add dark mode styles if needed */
+}
+
+/* Focus Styles for Accessibility */
+@media (prefers-reduced-motion: no-preference) {
+    .themeht-btn:focus,
+    .nav-link:focus,
+    .form-control:focus {
+        outline: 2px solid var(--themeht-primary-color);
+        outline-offset: 2px;
+    }
+}

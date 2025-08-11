@@ -1,46 +1,110 @@
-# Getting Started with Create React App
+# Viện Công nghệ - Website Chính thức
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Website chính thức của Viện Công nghệ (RITM) - Research Institute of Technology for Machinery, được xây dựng bằng React và TypeScript.
 
-## Available Scripts
+## Giới thiệu
 
-In the project directory, you can run:
+Viện Công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu.
 
-### `npm start`
+## Tính năng
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Trang chủ**: Giới thiệu tổng quan về Viện Công nghệ
+- **Về chúng tôi**: Thông tin chi tiết về lịch sử, sứ mệnh và tầm nhìn
+- **Lĩnh vực hoạt động**: Các dịch vụ và chuyên môn của viện
+- **Sản phẩm & Dịch vụ**: Danh mục sản phẩm và dịch vụ cung cấp
+- **Tin tức**: Cập nhật tin tức mới nhất về hoạt động của viện
+- **Thư viện**: Hình ảnh và video hoạt động
+- **Liên hệ**: Thông tin liên hệ và form liên hệ
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Công nghệ sử dụng
 
-### `npm test`
+- **React 19**: Framework JavaScript cho giao diện người dùng
+- **TypeScript**: Ngôn ngữ lập trình type-safe
+- **Bootstrap 5**: Framework CSS cho responsive design
+- **React Router**: Routing cho ứng dụng React
+- **Bootstrap Icons**: Thư viện icon
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Cài đặt và chạy
 
-### `npm run build`
+### Yêu cầu hệ thống
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js (phiên bản 16 trở lên)
+- npm hoặc yarn
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Cài đặt
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone repository:
+```bash
+git clone <repository-url>
+cd vien-cong-nghe-react
+```
 
-### `npm run eject`
+2. Cài đặt dependencies:
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. Chạy ứng dụng ở môi trường development:
+```bash
+npm start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Ứng dụng sẽ chạy tại `http://localhost:3000`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Build cho production
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+npm run build
+```
 
-## Learn More
+### Chạy build production
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run serve
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Cấu trúc thư mục
+
+```
+src/
+├── components/          # Các component chung
+│   ├── Header.tsx      # Header component
+│   └── Footer.tsx      # Footer component
+├── pages/              # Các trang của ứng dụng
+│   ├── Home.tsx        # Trang chủ
+│   ├── About.tsx       # Về chúng tôi
+│   ├── Services.tsx    # Lĩnh vực hoạt động
+│   ├── Products.tsx    # Sản phẩm & Dịch vụ
+│   ├── Blog.tsx        # Tin tức
+│   ├── Library.tsx     # Thư viện
+│   └── Contact.tsx     # Liên hệ
+├── assets/             # Tài nguyên tĩnh
+│   └── css/
+│       └── labozu.css  # CSS chính
+└── App.tsx             # Component chính
+```
+
+## Thông tin liên hệ
+
+- **Trụ sở chính**: Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội
+- **Cơ sở 2**: Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội
+- **Điện thoại**: +84 243 776 3322
+- **Email**: viencongnghe@ritm.vn
+- **Website**: https://viencongnghe.com/
+
+## Lĩnh vực hoạt động
+
+1. **Công nghệ đúc và vật liệu mới**
+2. **Công nghệ xử lý nhiệt**
+3. **Cơ khí chế tạo khuôn mẫu**
+4. **Kiểm định vật liệu**
+5. **Chuyển giao thiết bị/công nghệ**
+6. **Đào tạo, tư vấn công nghệ**
+
+## Giấy phép
+
+Dự án này được phát hành dưới giấy phép MIT.
+
+## Đóng góp
+
+Mọi đóng góp đều được chào đón. Vui lòng tạo issue hoặc pull request để đóng góp vào dự án. 
