@@ -57,21 +57,56 @@ const Header: React.FC = () => {
       {/* Main Header */}
       <div id="header-wrap" className={isScrolled ? 'fixed-header' : ''}>
         <Container fluid>
-          <div className="row">
-            <div className="col">
-              <Navbar expand="xl" className="navbar">
-                <Navbar.Brand as={Link} to="/" className="logo">
-                  <img 
-                    className="img-fluid" 
-                    src="/images/logo.svg" 
-                    alt="Viện Công nghệ" 
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/images/logo.png';
-                    }}
-                  />
-                </Navbar.Brand>
+          {/* Logo and Header Elements Row */}
+          <div className="row align-items-center">
+            <div className="col-lg-3 col-md-6">
+              <Navbar.Brand as={Link} to="/" className="logo">
+                <img 
+                  className="img-fluid" 
+                  src="/images/logo.svg" 
+                  alt="Viện Công nghệ" 
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/logo.png';
+                  }}
+                />
+              </Navbar.Brand>
+            </div>
+            <div className="col-lg-9 col-md-6">
+              <div className="header-right d-flex align-items-center justify-content-end">
+                {/* Desktop Search Icon */}
+                <div className="search-icon d-none d-lg-block">
+                  <a id="search" href="javascript:void(0)">
+                    <i className="bi bi-search"></i>
+                  </a>
+                </div>
+                <div className="social-icons mx-4 d-none d-lg-flex">
+                  <ul className="list-inline">
+                    <li>
+                      <a href="#">
+                        <i className="bi bi-facebook"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i className="bi bi-youtube"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i className="bi bi-linkedin"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          {/* Navigation Menu Row */}
+          <div className="row">
+            <div className="col-12">
+              <Navbar expand="xl" className="navbar-menu">
                 <Navbar.Toggle aria-controls="navbarNav" className="ht-toggler">
                   <svg width="100" height="100" viewBox="0 0 100 100">
                     <path className="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"></path>
@@ -81,6 +116,20 @@ const Header: React.FC = () => {
                 </Navbar.Toggle>
 
                 <Navbar.Collapse id="navbarNav">
+                  {/* Mobile Search Bar */}
+                  <div className="mobile-search d-lg-none">
+                    <div className="search-container">
+                      <input 
+                        type="text" 
+                        placeholder="Tìm kiếm..." 
+                        className="search-input"
+                      />
+                      <button className="search-btn">
+                        <i className="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </div>
+
                   <Nav className="navbar-nav">
                     <Nav.Link 
                       as={Link} 
@@ -149,37 +198,30 @@ const Header: React.FC = () => {
                       {t('nav.contact')}
                     </Nav.Link>
                   </Nav>
-                </Navbar.Collapse>
 
-                <div className="header-right d-flex align-items-center justify-content-end">
-                  <div className="search-icon">
-                    <a id="search" href="javascript:void(0)">
-                      <i className="bi bi-search"></i>
-                    </a>
+                  {/* Mobile Social Icons */}
+                  <div className="mobile-social d-lg-none">
+                    <div className="social-icons">
+                      <ul className="list-inline">
+                        <li>
+                          <a href="#">
+                            <i className="bi bi-facebook"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <i className="bi bi-youtube"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <i className="bi bi-linkedin"></i>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div className="social-icons mx-4">
-                    <ul className="list-inline">
-                      <li>
-                        <a href="#">
-                          <i className="bi bi-facebook"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <i className="bi bi-youtube"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <i className="bi bi-linkedin"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <Link className="themeht-btn primary-btn" to="/contact">
-                    {t('header.contactNow')}
-                  </Link>
-                </div>
+                </Navbar.Collapse>
               </Navbar>
             </div>
           </div>

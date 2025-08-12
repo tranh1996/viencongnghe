@@ -99,6 +99,17 @@ p {
     margin-bottom: 20px;
 }
 
+/* Remove focus borders for navigation elements */
+.nav-link:focus,
+.navbar-nav .nav-link:focus,
+.dropdown-toggle:focus,
+.navbar-nav .dropdown-toggle:focus,
+.navbar-toggler:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
 .lead {
     font-size: 18px;
     line-height: 32px;

@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useLanguage } from '../contexts/LanguageContext';
 import BannerSlider from '../components/BannerSlider';
+import SEO from '../components/SEO';
+import OptimizedImage from '../components/OptimizedImage';
+import { getSEOConfig } from '../utils/seo';
 
 const Home: React.FC = () => {
   const { t } = useLanguage();
@@ -71,8 +74,36 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Structured data for the home page
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Viện Công nghệ (RITM) - Trang chủ",
+    "description": "Trang chủ của Viện Công nghệ (RITM) - Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam",
+    "url": "https://viencongnghe.com",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Viện Công nghệ (RITM)",
+      "alternateName": "Research Institute of Technology for Machinery",
+      "description": "Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam",
+      "url": "https://viencongnghe.com",
+      "logo": "https://viencongnghe.com/images/logo.svg",
+      "foundingDate": "1970",
+      "areaServed": "Vietnam",
+      "serviceType": [
+        "Công nghệ đúc",
+        "Nhiệt luyện",
+        "Gia công cơ khí",
+        "Kiểm định vật liệu",
+        "Chuyển giao công nghệ"
+      ]
+    }
+  };
+
   return (
     <>
+      <SEO config={getSEOConfig('home')} structuredData={structuredData} />
+      
       {/* Hero Section */}
       <BannerSlider slides={bannerSlides} />
 
@@ -81,12 +112,18 @@ const Home: React.FC = () => {
         <Container>
           <Row className="align-items-center">
             <Col lg={6} className="mb-4 mb-lg-0">
-              <div className="about-img-shape" style={{ backgroundImage: 'url(/images/about/01.jpg)' }}></div>
+              <OptimizedImage 
+                src="/images/about/01.jpg" 
+                alt="Viện Công nghệ RITM - Nghiên cứu và phát triển"
+                context="Trang chủ - Giới thiệu"
+                className="about-img-shape"
+                style={{ backgroundImage: 'url(/images/about/01.jpg)' }}
+              />
             </Col>
             <Col lg={6}>
               <div className="ps-lg-5">
                 <h6 className="text-theme mb-3">{t('home.about.title')}</h6>
-                <h2 className="mb-4">{t('home.about.heading')}</h2>
+                <h1 className="mb-4">{t('home.about.heading')}</h1>
                 <p className="mb-4">
                   {t('home.about.description')}
                 </p>
@@ -137,7 +174,7 @@ const Home: React.FC = () => {
                 <div className="service-icon mb-4">
                   <i className="bi bi-gear text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5 className="mb-3">{t('home.services.casting')}</h5>
+                <h3 className="h5 mb-3">{t('home.services.casting')}</h3>
                 <p>
                   {t('home.services.casting')} - Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh. 
                   Mô phỏng thiết kế đúc bằng phần mềm MAGMASoft.
@@ -152,7 +189,7 @@ const Home: React.FC = () => {
                 <div className="service-icon mb-4">
                   <i className="bi bi-thermometer-half text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5 className="mb-3">{t('home.services.heatTreatment')}</h5>
+                <h3 className="h5 mb-3">{t('home.services.heatTreatment')}</h3>
                 <p>
                   {t('home.services.heatTreatment')} - Nghiên cứu, dịch vụ nhiệt luyện chân không, nhiệt luyện truyền thống và hóa nhiệt luyện 
                   (thấm C, C-N, N) các loại khuôn và các sản phẩm cơ khí.
@@ -167,7 +204,7 @@ const Home: React.FC = () => {
                 <div className="service-icon mb-4">
                   <i className="bi bi-tools text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5 className="mb-3">{t('home.services.machining')}</h5>
+                <h3 className="h5 mb-3">{t('home.services.machining')}</h3>
                 <p>
                   {t('home.services.machining')} - Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại dùng trong các lĩnh vực 
                   rèn, dập, ép và đúc áp lực.
@@ -182,7 +219,7 @@ const Home: React.FC = () => {
                 <div className="service-icon mb-4">
                   <i className="bi bi-clipboard-check text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5 className="mb-3">{t('home.services.testing')}</h5>
+                <h3 className="h5 mb-3">{t('home.services.testing')}</h3>
                 <p>
                   {t('home.services.testing')} - Thử nghiệm, kiểm định trong lĩnh vực hóa, cơ, không phá huỷ các loại vật liệu, 
                   kết cấu hàn và chi tiết máy.
@@ -197,7 +234,7 @@ const Home: React.FC = () => {
                 <div className="service-icon mb-4">
                   <i className="bi bi-arrow-repeat text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5 className="mb-3">{t('home.services.transfer')}</h5>
+                <h3 className="h5 mb-3">{t('home.services.transfer')}</h3>
                 <p>
                   {t('home.services.transfer')} - Cung cấp và chuyển giao công nghệ các thiết bị về xử lý nhiệt, Các dây chuyền/ 
                   hệ thống kết cấu cơ khí.
@@ -212,7 +249,7 @@ const Home: React.FC = () => {
                 <div className="service-icon mb-4">
                   <i className="bi bi-mortarboard text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5 className="mb-3">{t('home.services.training')}</h5>
+                <h3 className="h5 mb-3">{t('home.services.training')}</h3>
                 <p>
                   {t('home.services.training')} - Đào tạo, tư vấn trong lĩnh vực như Công nghệ Đúc; Xử lý nhiệt; Kiểm định vật liệu; 
                   và các lĩnh vực khác.
@@ -270,10 +307,15 @@ const Home: React.FC = () => {
           <Row>
             <Col lg={4} md={6} className="mb-4">
               <div className="card h-100">
-                <img src="/images/blog/01.jpg" className="card-img-top" alt="Tin tức" />
+                <OptimizedImage 
+                  src="/images/blog/01.jpg" 
+                  alt="Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn"
+                  context="Tin tức - Hoạt động"
+                  className="card-img-top"
+                />
                 <div className="card-body">
                   <h6 className="text-muted mb-2">27/05/25</h6>
-                  <h5 className="card-title">Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn</h5>
+                  <h3 className="h5 card-title">Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn</h3>
                   <p className="card-text">
                     Hoạt động ý nghĩa trong tháng công nhân với nhiều hoạt động thiết thực...
                   </p>
@@ -285,10 +327,15 @@ const Home: React.FC = () => {
             </Col>
             <Col lg={4} md={6} className="mb-4">
               <div className="card h-100">
-                <img src="/images/blog/02.jpg" className="card-img-top" alt="Tin tức" />
+                <OptimizedImage 
+                  src="/images/blog/02.jpg" 
+                  alt="Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam"
+                  context="Tin tức - Sự kiện"
+                  className="card-img-top"
+                />
                 <div className="card-body">
                   <h6 className="text-muted mb-2">20/12/24</h6>
-                  <h5 className="card-title">Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam</h5>
+                  <h3 className="h5 card-title">Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam</h3>
                   <p className="card-text">
                     Các hoạt động kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam...
                   </p>
@@ -300,10 +347,15 @@ const Home: React.FC = () => {
             </Col>
             <Col lg={4} md={6} className="mb-4">
               <div className="card h-100">
-                <img src="/images/blog/03.jpg" className="card-img-top" alt="Tin tức" />
+                <OptimizedImage 
+                  src="/images/blog/03.jpg" 
+                  alt="Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022"
+                  context="Tin tức - Triển lãm"
+                  className="card-img-top"
+                />
                 <div className="card-body">
                   <h6 className="text-muted mb-2">21/11/22</h6>
-                  <h5 className="card-title">Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022</h5>
+                  <h3 className="h5 card-title">Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022</h3>
                   <p className="card-text">
                     Viện Công nghệ tham gia triển lãm VIMEXPO 2022 với nhiều sản phẩm công nghệ...
                   </p>
