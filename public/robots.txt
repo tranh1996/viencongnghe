@@ -1,3 +1,8 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://viencongnghe.com/sitemap.xml
+Host: https://viencongnghe.com
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

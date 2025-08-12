@@ -85,9 +85,9 @@
         padding: 10px 0;
     }
 
-    #header-wrap {
+    /* #header-wrap {
         margin: 0 20px;
-    }
+    } */
 
     .navbar {
         padding: 20px 25px;
@@ -814,9 +814,17 @@
 /* Focus Styles for Accessibility */
 @media (prefers-reduced-motion: no-preference) {
     .themeht-btn:focus,
-    .nav-link:focus,
     .form-control:focus {
         outline: 2px solid var(--themeht-primary-color);
         outline-offset: 2px;
+    }
+    
+    /* Remove focus outline for navigation links to prevent border on click */
+    .nav-link:focus,
+    .navbar-nav .nav-link:focus,
+    .dropdown-toggle:focus,
+    .navbar-nav .dropdown-toggle:focus {
+        outline: none;
+        box-shadow: none;
     }
 }

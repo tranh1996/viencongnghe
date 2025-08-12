@@ -51,3 +51,37 @@
 .btn-box .themeht-btn {
     margin-right: 15px;
 }
+
+/* Mobile Button Improvements */
+@media (max-width: 767px) {
+    .themeht-btn {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+    
+    .themeht-btn:active {
+        transform: scale(0.98);
+    }
+    
+    .btn-box {
+        margin-top: 20px;
+    }
+    
+    .btn-box .themeht-btn {
+        margin-right: 0;
+    }
+}
+
+/* Ensure buttons are accessible on mobile */
+@media (max-width: 767px) {
+    .themeht-btn {
+        min-height: 44px; /* Minimum touch target size */
+        min-width: 44px;
+    }
+    
+    .themeht-btn:focus {
+        outline: 2px solid var(--themeht-primary-color);
+        outline-offset: 2px;
+    }
+}

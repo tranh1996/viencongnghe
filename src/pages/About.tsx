@@ -1,9 +1,35 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import SEO from '../components/SEO';
+import OptimizedImage from '../components/OptimizedImage';
+import { getSEOConfig } from '../utils/seo';
 
 const About: React.FC = () => {
+  // Structured data for the about page
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Giới thiệu - Viện Công nghệ (RITM)",
+    "description": "Tìm hiểu về lịch sử 50+ năm phát triển của Viện Công nghệ (RITM), sứ mệnh nghiên cứu và phát triển công nghệ cơ khí",
+    "url": "https://viencongnghe.com/about",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Viện Công nghệ (RITM)",
+      "alternateName": "Research Institute of Technology for Machinery",
+      "description": "Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam với hơn 50 năm kinh nghiệm",
+      "url": "https://viencongnghe.com",
+      "logo": "https://viencongnghe.com/images/logo.svg",
+      "foundingDate": "1970",
+      "areaServed": "Vietnam",
+      "mission": "Nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt",
+      "vision": "Trở thành viện nghiên cứu hàng đầu trong lĩnh vực cơ khí và luyện kim, được công nhận về sự xuất sắc, đổi mới và cam kết thúc đẩy sự phát triển của khoa học công nghệ"
+    }
+  };
+
   return (
     <>
+      <SEO config={getSEOConfig('about')} structuredData={structuredData} />
+      
       {/* Page Title */}
       <section className="page-title dark-bg">
         <Container>
@@ -30,7 +56,13 @@ const About: React.FC = () => {
         <Container>
           <Row className="align-items-center">
             <Col lg={6} className="mb-4 mb-lg-0">
-              <div className="about-img-shape" style={{ backgroundImage: 'url(/images/about/01.jpg)' }}></div>
+              <OptimizedImage 
+                src="/images/about/01.jpg" 
+                alt="Viện Công nghệ RITM - Hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim"
+                context="Trang giới thiệu - Lịch sử phát triển"
+                className="about-img-shape"
+                style={{ backgroundImage: 'url(/images/about/01.jpg)' }}
+              />
             </Col>
             <Col lg={6}>
               <div className="ps-lg-5">
@@ -76,7 +108,7 @@ const About: React.FC = () => {
           <Row>
             <Col lg={6} className="mb-4">
               <div className="p-4">
-                <h4 className="mb-3">Sứ mệnh</h4>
+                <h3 className="h4 mb-3">Sứ mệnh</h3>
                 <p>
                   Nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, 
                   gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào 
@@ -86,7 +118,7 @@ const About: React.FC = () => {
             </Col>
             <Col lg={6} className="mb-4">
               <div className="p-4">
-                <h4 className="mb-3">Tầm nhìn</h4>
+                <h3 className="h4 mb-3">Tầm nhìn</h3>
                 <p>
                   Trở thành viện nghiên cứu hàng đầu trong lĩnh vực cơ khí và luyện kim, được công nhận 
                   về sự xuất sắc, đổi mới và cam kết thúc đẩy sự phát triển của khoa học công nghệ. 
@@ -113,7 +145,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-award text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Chất lượng</h5>
+                <h3 className="h5">Chất lượng</h3>
                 <p>Chúng tôi duy trì tiêu chuẩn chất lượng cao nhất trong tất cả các nghiên cứu và dịch vụ.</p>
               </div>
             </Col>
@@ -122,7 +154,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-lightbulb text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Đổi mới</h5>
+                <h3 className="h5">Đổi mới</h3>
                 <p>Chúng tôi liên tục khám phá công nghệ và phương pháp mới để thúc đẩy nghiên cứu.</p>
               </div>
             </Col>
@@ -131,7 +163,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-people text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Hợp tác</h5>
+                <h3 className="h5">Hợp tác</h3>
                 <p>Chúng tôi tin vào sức mạnh của làm việc nhóm và đối tác để đạt được kết quả tốt.</p>
               </div>
             </Col>
@@ -140,7 +172,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-shield-check text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Uy tín</h5>
+                <h3 className="h5">Uy tín</h3>
                 <p>Chúng tôi thực hiện nghiên cứu với sự trung thực, minh bạch và tiêu chuẩn đạo đức.</p>
               </div>
             </Col>
@@ -162,7 +194,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-building text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Cơ sở vật chất</h5>
+                <h3 className="h5">Cơ sở vật chất</h3>
                 <p>
                   Hệ thống phòng thí nghiệm hiện đại với các thiết bị tiên tiến phục vụ nghiên cứu 
                   và phát triển công nghệ.
@@ -174,7 +206,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-person-badge text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Đội ngũ chuyên gia</h5>
+                <h3 className="h5">Đội ngũ chuyên gia</h3>
                 <p>
                   Đội ngũ cán bộ khoa học có trình độ cao, giàu kinh nghiệm trong các lĩnh vực 
                   chuyên môn khác nhau.
@@ -186,7 +218,7 @@ const About: React.FC = () => {
                 <div className="mb-3">
                   <i className="bi bi-gear-wide-connected text-theme" style={{ fontSize: '3rem' }}></i>
                 </div>
-                <h5>Công nghệ tiên tiến</h5>
+                <h3 className="h5">Công nghệ tiên tiến</h3>
                 <p>
                   Áp dụng các công nghệ mới nhất trong nghiên cứu và phát triển sản phẩm, 
                   đảm bảo tính cạnh tranh cao.
