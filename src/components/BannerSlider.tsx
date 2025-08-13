@@ -5,15 +5,30 @@ import { useLanguage } from '../contexts/LanguageContext';
 interface BannerSlide {
   id: number;
   image: string;
-  title?: string;
-  subtitle?: string;
-  description?: string;
+  title?: {
+    vi: string;
+    en: string;
+  };
+  subtitle?: {
+    vi: string;
+    en: string;
+  };
+  description?: {
+    vi: string;
+    en: string;
+  };
   primaryButton?: {
-    text: string;
+    text: {
+      vi: string;
+      en: string;
+    };
     link: string;
   };
   secondaryButton?: {
-    text: string;
+    text: {
+      vi: string;
+      en: string;
+    };
     link: string;
   };
 }
@@ -34,7 +49,7 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
   showIndicators = true
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { t } = useLanguage();
+  const { language } = useLanguage();
 
   // Auto-play is disabled by default
   useEffect(() => {
@@ -78,26 +93,26 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
             <div className="banner-content">
               <div className="banner-text">
                 {slide.subtitle && (
-                  <h6>{slide.subtitle}</h6>
+                  <h6>{slide.subtitle[language]}</h6>
                 )}
                 {slide.title && (
                   <h1 
                     className="mb-5"
-                    dangerouslySetInnerHTML={{ __html: slide.title }}
+                    dangerouslySetInnerHTML={{ __html: slide.title[language] }}
                   />
                 )}
                 {slide.description && (
-                  <p>{slide.description}</p>
+                  <p>{slide.description[language]}</p>
                 )}
                 <div className="btn-box mt-5">
                   {slide.primaryButton && (
                     <Link to={slide.primaryButton.link} className="themeht-btn primary-btn">
-                      {slide.primaryButton.text}
+                      {slide.primaryButton.text[language]}
                     </Link>
                   )}
                   {slide.secondaryButton && (
                     <Link to={slide.secondaryButton.link} className="themeht-btn dark-btn">
-                      {slide.secondaryButton.text}
+                      {slide.secondaryButton.text[language]}
                     </Link>
                   )}
                 </div>
