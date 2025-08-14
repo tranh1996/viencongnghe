@@ -11,48 +11,99 @@ const Organization: React.FC = () => {
     {
       id: 1,
       image: '/images/banner/01.jpg',
-      title: 'Cơ cấu tổ chức',
-      subtitle: 'Viện Công nghệ',
-      description: 'Tổ chức khoa học, hiện đại với các phòng ban chuyên môn cao',
+      title: {
+        vi: 'Cơ cấu tổ chức',
+        en: 'Organizational Structure'
+      },
+      subtitle: {
+        vi: 'Viện Công nghệ',
+        en: 'Technology Institute'
+      },
+      description: {
+        vi: 'Tổ chức khoa học, hiện đại với các phòng ban chuyên môn cao',
+        en: 'Scientific and modern organization with highly specialized departments'
+      },
       primaryButton: {
-        text: 'Tìm hiểu thêm',
+        text: {
+          vi: 'Tìm hiểu thêm',
+          en: 'Learn More'
+        },
         link: '/about'
       },
       secondaryButton: {
-        text: 'Liên hệ',
+        text: {
+          vi: 'Liên hệ',
+          en: 'Contact'
+        },
         link: '/contact'
       }
     },
     {
       id: 2,
       image: '/images/banner/02.jpg',
-      title: 'Ban Lãnh đạo',
-      subtitle: 'Đội ngũ quản lý',
-      description: 'Ban lãnh đạo giàu kinh nghiệm, tầm nhìn chiến lược',
+      title: {
+        vi: 'Ban Lãnh đạo',
+        en: 'Leadership Board'
+      },
+      subtitle: {
+        vi: 'Đội ngũ quản lý',
+        en: 'Management Team'
+      },
+      description: {
+        vi: 'Ban lãnh đạo giàu kinh nghiệm, tầm nhìn chiến lược',
+        en: 'Experienced leadership with strategic vision'
+      },
       primaryButton: {
-        text: 'Xem chi tiết',
+        text: {
+          vi: 'Xem chi tiết',
+          en: 'View Details'
+        },
         link: '#admin'
       }
     },
     {
       id: 3,
       image: '/images/banner/03.jpg',
-      title: 'Các Phòng Ban',
-      subtitle: 'Chuyên môn hóa',
-      description: 'Các phòng ban chuyên môn với đội ngũ kỹ sư, chuyên gia hàng đầu',
+      title: {
+        vi: 'Các Phòng Ban',
+        en: 'Departments'
+      },
+      subtitle: {
+        vi: 'Chuyên môn hóa',
+        en: 'Specialization'
+      },
+      description: {
+        vi: 'Các phòng ban chuyên môn với đội ngũ kỹ sư, chuyên gia hàng đầu',
+        en: 'Specialized departments with leading engineers and experts'
+      },
       primaryButton: {
-        text: 'Khám phá',
+        text: {
+          vi: 'Khám phá',
+          en: 'Explore'
+        },
         link: '#units'
       }
     },
     {
       id: 4,
       image: '/images/banner/04.jpg',
-      title: 'Nghiên cứu & Phát triển',
-      subtitle: 'Đổi mới sáng tạo',
-      description: 'Trung tâm nghiên cứu và phát triển công nghệ tiên tiến',
+      title: {
+        vi: 'Nghiên cứu & Phát triển',
+        en: 'Research & Development'
+      },
+      subtitle: {
+        vi: 'Đổi mới sáng tạo',
+        en: 'Innovation'
+      },
+      description: {
+        vi: 'Trung tâm nghiên cứu và phát triển công nghệ tiên tiến',
+        en: 'Center for advanced technology research and development'
+      },
       primaryButton: {
-        text: 'Dự án R&D',
+        text: {
+          vi: 'Dự án R&D',
+          en: 'R&D Projects'
+        },
         link: '/research'
       }
     }

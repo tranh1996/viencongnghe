@@ -9,23 +9,73 @@
     Footer
 ------------------------*/
 .footer {
-    background-color: var(--themeht-secondary-color);
+    background: linear-gradient(135deg, var(--themeht-secondary-color) 0%, #1a1a2e 100%);
     color: var(--themeht-white-color);
-    padding: 60px 0 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
 }
 
 .footer .widget-title {
     margin-bottom: 30px;
+    position: relative;
+}
+
+.footer .widget-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--themeht-primary-color);
+    border-radius: 2px;
 }
 
 .footer h2 {
     color: var(--themeht-white-color);
     font-size: 24px;
     margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.footer h5 {
+    color: var(--themeht-white-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+
+.footer h6 {
+    color: var(--themeht-primary-color);
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 15px;
+    opacity: 0.8;
 }
 
 .footer-widget {
     margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-widget p {
+    line-height: 1.8;
+    opacity: 0.9;
+    margin-bottom: 20px;
 }
 
 .footer-widget.widget ul {
@@ -38,43 +88,228 @@
 }
 
 .primary-footer {
-    padding: 60px 0;
+    padding: 80px 0 60px;
+    position: relative;
+    z-index: 1;
 }
 
 .secondary-footer {
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 20px 0;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 25px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(10px);
 }
 
 .copyright {
     color: var(--themeht-white-color);
     font-size: 14px;
+    opacity: 0.8;
 }
 
 .copyright a {
     color: var(--themeht-primary-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.footer h5 {
+.copyright a:hover {
     color: var(--themeht-white-color);
-    margin-bottom: 20px;
+    text-decoration: underline;
 }
 
 .footer-menu li {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
 }
 
 .footer-menu li:last-child {
     margin-bottom: 0;
 }
 
+.footer-menu li:hover {
+    transform: translateX(5px);
+}
+
 .footer-menu li a {
+    color: var(--themeht-white-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    opacity: 0.9;
+    position: relative;
+    padding-left: 0;
+}
+
+.footer-menu li a::before {
+    content: '→';
+    position: absolute;
+    left: -15px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: var(--themeht-primary-color);
+}
+
+.footer-menu li a:hover {
+    color: var(--themeht-primary-color);
+    opacity: 1;
+    padding-left: 15px;
+}
+
+.footer-menu li a:hover::before {
+    opacity: 1;
+}
+
+/* Social Icons */
+.social-icons.footer-social {
+    margin-top: 20px;
+}
+
+.social-icons.footer-social ul {
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.social-icons.footer-social li {
+    margin: 0;
+}
+
+.social-icons.footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--themeht-white-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.social-icons.footer-social a:hover {
+    background: var(--themeht-primary-color);
+    color: var(--themeht-white-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-icons.footer-social i {
+    font-size: 16px;
+}
+
+/* Contact Information */
+.media-icon {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.media-icon li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.media-icon li:last-child {
+    margin-bottom: 0;
+}
+
+.media-icon li i {
+    color: var(--themeht-primary-color);
+    font-size: 18px;
+    margin-right: 15px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.media-icon li span {
+    font-weight: 600;
+    color: var(--themeht-white-color);
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.media-icon li p {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.media-icon li a {
     color: var(--themeht-white-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.footer-menu li a:hover {
+.media-icon li a:hover {
     color: var(--themeht-primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .primary-footer {
+        padding: 60px 0 40px;
+    }
+    
+    .footer-widget {
+        margin-bottom: 30px;
+    }
+    
+    .footer h5 {
+        font-size: 16px;
+    }
+    
+    .social-icons.footer-social ul {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .primary-footer {
+        padding: 40px 0 30px;
+    }
+    
+    .secondary-footer {
+        padding: 20px 0;
+        text-align: center;
+    }
+    
+    .footer-menu.list-inline {
+        justify-content: center;
+        margin-top: 15px;
+    }
+    
+    .copyright {
+        margin-bottom: 15px;
+    }
+    
+    .social-icons.footer-social ul {
+        justify-content: center;
+    }
+    
+    .media-icon li {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 575px) {
+    .footer h5 {
+        font-size: 15px;
+    }
+    
+    .footer-widget p {
+        font-size: 14px;
+    }
+    
+    .media-icon li span,
+    .media-icon li p {
+        font-size: 13px;
+    }
 }

@@ -15,60 +15,120 @@ const Home: React.FC = () => {
     {
       id: 1,
       image: '/images/banner/01.jpg',
-      title: 'High Laboratory <span>Quality Service</span>',
-      subtitle: 'Lab Research Excellence',
-      description: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.',
+      title: {
+        vi: 'Dịch vụ chất lượng cao <span>Phòng thí nghiệm</span>',
+        en: 'High Laboratory <span>Quality Service</span>'
+      },
+      subtitle: {
+        vi: 'Chuyên môn nghiên cứu xuất sắc',
+        en: 'Lab Research Excellence'
+      },
+      description: {
+        vi: 'Chào mừng đến với trung tâm phòng thí nghiệm nghiên cứu của chúng tôi, nơi nghiên cứu đột phá gặp gỡ ứng dụng thực tế. Chúng tôi tập hợp chuyên môn đa dạng để giải quyết các vấn đề toàn cầu.',
+        en: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.'
+      },
       primaryButton: {
-        text: 'Explore More',
+        text: {
+          vi: 'Tìm hiểu thêm',
+          en: 'Explore More'
+        },
         link: '/about'
       },
       secondaryButton: {
-        text: 'Contact Us',
+        text: {
+          vi: 'Liên hệ',
+          en: 'Contact Us'
+        },
         link: '/contact'
       }
     },
     {
       id: 2,
       image: '/images/banner/02.jpg',
-      title: 'Reliable & High <span>Quality Service</span>',
-      subtitle: 'Lab Research Excellence',
-      description: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.',
+      title: {
+        vi: 'Dịch vụ đáng tin cậy & <span>Chất lượng cao</span>',
+        en: 'Reliable & High <span>Quality Service</span>'
+      },
+      subtitle: {
+        vi: 'Chuyên môn nghiên cứu xuất sắc',
+        en: 'Lab Research Excellence'
+      },
+      description: {
+        vi: 'Chào mừng đến với trung tâm phòng thí nghiệm nghiên cứu của chúng tôi, nơi nghiên cứu đột phá gặp gỡ ứng dụng thực tế. Chúng tôi tập hợp chuyên môn đa dạng để giải quyết các vấn đề toàn cầu.',
+        en: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.'
+      },
       primaryButton: {
-        text: 'Explore More',
+        text: {
+          vi: 'Tìm hiểu thêm',
+          en: 'Explore More'
+        },
         link: '/about'
       },
       secondaryButton: {
-        text: 'Contact Us',
+        text: {
+          vi: 'Liên hệ',
+          en: 'Contact Us'
+        },
         link: '/contact'
       }
     },
     {
       id: 3,
       image: '/images/banner/03.jpg',
-      title: 'Dịch vụ chất lượng cao',
-      subtitle: 'Chuyên môn & Uy tín',
-      description: 'Cung cấp các dịch vụ kỹ thuật chất lượng cao với đội ngũ chuyên gia giàu kinh nghiệm',
+      title: {
+        vi: 'Dịch vụ chất lượng cao',
+        en: 'High Quality Services'
+      },
+      subtitle: {
+        vi: 'Chuyên môn & Uy tín',
+        en: 'Expertise & Reliability'
+      },
+      description: {
+        vi: 'Cung cấp các dịch vụ kỹ thuật chất lượng cao với đội ngũ chuyên gia giàu kinh nghiệm',
+        en: 'Providing high-quality technical services with experienced expert teams'
+      },
       primaryButton: {
-        text: 'Xem dịch vụ',
+        text: {
+          vi: 'Xem dịch vụ',
+          en: 'View Services'
+        },
         link: '/services'
       },
       secondaryButton: {
-        text: 'Tìm hiểu thêm',
+        text: {
+          vi: 'Tìm hiểu thêm',
+          en: 'Learn More'
+        },
         link: '/about'
       }
     },
     {
       id: 4,
       image: '/images/banner/04.jpg',
-      title: 'Đào tạo & Chuyển giao',
-      subtitle: 'Kiến thức & Kinh nghiệm',
-      description: 'Đào tạo chuyên sâu và chuyển giao công nghệ trong các lĩnh vực chuyên môn',
+      title: {
+        vi: 'Đào tạo & Chuyển giao',
+        en: 'Training & Transfer'
+      },
+      subtitle: {
+        vi: 'Kiến thức & Kinh nghiệm',
+        en: 'Knowledge & Experience'
+      },
+      description: {
+        vi: 'Đào tạo chuyên sâu và chuyển giao công nghệ trong các lĩnh vực chuyên môn',
+        en: 'Intensive training and technology transfer in specialized fields'
+      },
       primaryButton: {
-        text: 'Khóa học',
+        text: {
+          vi: 'Khóa học',
+          en: 'Courses'
+        },
         link: '/services'
       },
       secondaryButton: {
-        text: 'Liên hệ tư vấn',
+        text: {
+          vi: 'Liên hệ tư vấn',
+          en: 'Contact for Consultation'
+        },
         link: '/contact'
       }
     }

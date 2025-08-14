@@ -3,11 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
+import { fetchDepartments, Department } from '../utils/api';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +20,41 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch departments when language changes
+  useEffect(() => {
+    let isMounted = true;
+    const currentController = new AbortController();
+    
+    const loadDepartments = async () => {
+      if (!isMounted) return;
+      
+      setLoading(true);
+      try {
+        const departmentsData = await fetchDepartments(language, currentController.signal);
+        if (isMounted) {
+          setDepartments(departmentsData);
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof Error && error.name === 'AbortError')) {
+          console.error('Failed to load departments:', error);
+          // Fallback to empty array if API fails
+          setDepartments([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadDepartments();
+
+    return () => {
+      isMounted = false;
+      currentController.abort();
+    };
+  }, [language]);
 
   return (
     <header id="site-header" className="header">
@@ -154,15 +192,31 @@ const Header: React.FC = () => {
                       title={t('nav.organization')} 
                       id="organization-dropdown"
                     >
-                      <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.overview')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#admin">{t('nav.organization.admin')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#accounting">{t('nav.organization.accounting')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#testing">{t('nav.organization.testing')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#technology">{t('nav.organization.technology')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#quality">{t('nav.organization.quality')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#mold">{t('nav.organization.mold')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#research">{t('nav.organization.research')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/organization#company">{t('nav.organization.company')}</NavDropdown.Item>
+                      {loading ? (
+                        <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
+                      ) : departments.length > 0 ? (
+                        departments.map((department) => (
+                          <NavDropdown.Item 
+                            key={department.id} 
+                            as={Link} 
+                            to={`/organization#${department.id}`}
+                          >
+                            {department.name}
+                          </NavDropdown.Item>
+                        ))
+                      ) : (
+                        // Fallback to static menu items if API fails
+                        <>
+                          <NavDropdown.Item as={Link} to="/organization#admin">{t('nav.organization.admin')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#accounting">{t('nav.organization.accounting')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#testing">{t('nav.organization.testing')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#technology">{t('nav.organization.technology')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#quality">{t('nav.organization.quality')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#mold">{t('nav.organization.mold')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#research">{t('nav.organization.research')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization#company">{t('nav.organization.company')}</NavDropdown.Item>
+                        </>
+                      )}
                     </NavDropdown>
 
                     <Nav.Link 
