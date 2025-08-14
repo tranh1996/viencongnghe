@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -6,9 +6,43 @@ import BannerSlider from '../components/BannerSlider';
 import SEO from '../components/SEO';
 import OptimizedImage from '../components/OptimizedImage';
 import { getSEOConfig } from '../utils/seo';
+import { fetchLatestNews, News } from '../utils/api';
 
 const Home: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [latestNews, setLatestNews] = useState<News[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const newsData = await fetchLatestNews(language, 3);
+        setLatestNews(newsData);
+      } catch (error) {
+        console.error('Error fetching latest news:', error);
+        // Fallback to empty array if API fails
+        setLatestNews([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, [language]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
 
   // Banner slides for home page
   const bannerSlides = [
@@ -365,66 +399,40 @@ const Home: React.FC = () => {
             </Col>
           </Row>
           <Row>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <OptimizedImage 
-                  src="/images/blog/01.jpg" 
-                  alt="Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn"
-                  context="Tin tức - Hoạt động"
-                  className="card-img-top"
-                />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">27/05/25</h6>
-                  <h3 className="h5 card-title">Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn</h3>
-                  <p className="card-text">
-                    Hoạt động ý nghĩa trong tháng công nhân với nhiều hoạt động thiết thực...
-                  </p>
-                  <Link to="/blog" className="text-theme text-decoration-none">
-                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                  </Link>
+            {loading ? (
+              <Col lg={12} className="text-center py-5">
+                <div className="spinner-border text-theme" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <OptimizedImage 
-                  src="/images/blog/02.jpg" 
-                  alt="Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam"
-                  context="Tin tức - Sự kiện"
-                  className="card-img-top"
-                />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">20/12/24</h6>
-                  <h3 className="h5 card-title">Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam</h3>
-                  <p className="card-text">
-                    Các hoạt động kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam...
-                  </p>
-                  <Link to="/blog" className="text-theme text-decoration-none">
-                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                  </Link>
-                </div>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <OptimizedImage 
-                  src="/images/blog/03.jpg" 
-                  alt="Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022"
-                  context="Tin tức - Triển lãm"
-                  className="card-img-top"
-                />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">21/11/22</h6>
-                  <h3 className="h5 card-title">Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022</h3>
-                  <p className="card-text">
-                    Viện Công nghệ tham gia triển lãm VIMEXPO 2022 với nhiều sản phẩm công nghệ...
-                  </p>
-                  <Link to="/blog" className="text-theme text-decoration-none">
-                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                  </Link>
-                </div>
-              </div>
-            </Col>
+              </Col>
+            ) : latestNews.length === 0 ? (
+              <Col lg={12} className="text-center py-5">
+                <p>{t('home.news.noNews')}</p>
+              </Col>
+            ) : (
+              latestNews.map((news, index) => (
+                <Col lg={4} md={6} className="mb-4" key={news.id}>
+                  <div className="card h-100">
+                                         <OptimizedImage 
+                       src={news.image_url || "/images/blog/01.jpg"} 
+                       alt={news.title}
+                       context="Tin tức - Hoạt động"
+                       className="card-img-top"
+                     />
+                     <div className="card-body">
+                       <h6 className="text-muted mb-2">{formatDate(news.created_at || '')}</h6>
+                       <h3 className="h5 card-title">{news.title}</h3>
+                       <p className="card-text">
+                         {truncateText(news.description || '', 150)}
+                       </p>
+                       <Link to={`/news/${news.slug}`} className="text-theme text-decoration-none">
+                         {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                       </Link>
+                     </div>
+                  </div>
+                </Col>
+              ))
+            )}
           </Row>
         </Container>
       </section>

@@ -36,7 +36,13 @@ const Header: React.FC = () => {
           setDepartments(departmentsData);
         }
       } catch (error) {
-        if (isMounted && !(error instanceof Error && error.name === 'AbortError')) {
+        // Don't log AbortError as it's expected when component unmounts or language changes
+        if (error instanceof Error && error.name === 'AbortError') {
+          // This is expected behavior, no need to log or handle as error
+          return;
+        }
+        
+        if (isMounted) {
           console.error('Failed to load departments:', error);
           // Fallback to empty array if API fails
           setDepartments([]);
@@ -195,26 +201,36 @@ const Header: React.FC = () => {
                       {loading ? (
                         <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
                       ) : departments.length > 0 ? (
-                        departments.map((department) => (
-                          <NavDropdown.Item 
-                            key={department.id} 
-                            as={Link} 
-                            to={`/organization#${department.id}`}
-                          >
-                            {department.name}
+                        <>
+                          {departments.map((department) => (
+                            <NavDropdown.Item 
+                              key={department.id} 
+                              as={Link} 
+                              to={`/organization/${department.id}`}
+                            >
+                              {department.name}
+                            </NavDropdown.Item>
+                          ))}
+                          <NavDropdown.Divider />
+                          <NavDropdown.Item as={Link} to="/organization">
+                            {t('organization.viewAllDepartments')}
                           </NavDropdown.Item>
-                        ))
+                        </>
                       ) : (
                         // Fallback to static menu items if API fails
                         <>
-                          <NavDropdown.Item as={Link} to="/organization#admin">{t('nav.organization.admin')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#accounting">{t('nav.organization.accounting')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#testing">{t('nav.organization.testing')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#technology">{t('nav.organization.technology')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#quality">{t('nav.organization.quality')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#mold">{t('nav.organization.mold')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#research">{t('nav.organization.research')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#company">{t('nav.organization.company')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.admin')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.accounting')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.testing')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.technology')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.quality')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.mold')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.research')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/organization">{t('nav.organization.company')}</NavDropdown.Item>
+                          <NavDropdown.Divider />
+                          <NavDropdown.Item as={Link} to="/organization">
+                            {t('organization.viewAllDepartments')}
+                          </NavDropdown.Item>
                         </>
                       )}
                     </NavDropdown>

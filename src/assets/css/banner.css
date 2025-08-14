@@ -11,8 +11,8 @@
 .banner-slider { 
     background-color: var(--themeht-bg-dark-color); 
     position: relative;
-    height: calc(100vh - 120px);
-    min-height: 500px;
+    height: calc(80vh - 80px);
+    min-height: 400px;
     overflow: hidden;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .banner-content { 
-    padding: 200px 0; 
+    padding: 100px 0; 
     position: relative; 
     z-index: 9; 
 }
@@ -250,7 +250,7 @@
 }
 
 .banner-content { 
-    padding: 200px 0 200px 150px; 
+    padding: 100px 0 200px 150px; 
     position: relative; 
     z-index: 9; 
 }
@@ -261,8 +261,8 @@
 
 .banner-slider h1 { 
     font-weight: 700; 
-    font-size: 100px; 
-    line-height: 110px; 
+    font-size: 70px; 
+    line-height: 80px; 
     color: var(--themeht-primary-color); 
 }
 
@@ -325,14 +325,14 @@
 /* Responsive Banner Adjustments */
 @media (max-width: 1440px) {
     .banner-content { 
-        padding: 150px 0 150px 100px; 
+        padding: 80px 0 80px 100px; 
     }
     .banner-content .banner-text { 
         width: 52%; 
     }
     .banner-slider h1 { 
-        font-size: 70px; 
-        line-height: 80px; 
+        font-size: 55px; 
+        line-height: 65px; 
     }
 }
 
@@ -341,11 +341,11 @@
         width: 60%; 
     }
     .banner-content { 
-        padding: 100px 0 100px 80px; 
+        padding: 60px 0 60px 80px; 
     }
     .banner-slider h1 { 
-        font-size: 50px; 
-        line-height: 60px; 
+        font-size: 40px; 
+        line-height: 50px; 
     }
     .banner-content p { 
         max-width: 100%; 
@@ -354,15 +354,20 @@
 }
 
 @media (max-width: 767px) {
+    .banner-slider {
+        height: calc(80vh - 15px);
+        background-color: var(--themeht-bg-light-color);
+    }
+
     .banner-content { 
-        padding: 80px 30px; 
+        padding: 50px 30px; 
     }
     .banner-content .banner-text { 
         width: 100%; 
     }
     .banner-slider h1 { 
-        font-size: 45px; 
-        line-height: 55px; 
+        font-size: 35px; 
+        line-height: 45px; 
     }
     .banner-slider .slider-img { 
         position: relative; 
@@ -390,11 +395,11 @@
 
 @media (max-width: 576px) {
     .banner-content { 
-        padding: 60px 20px; 
+        padding: 40px 20px; 
     }
     .banner-slider h1 { 
-        font-size: 35px; 
-        line-height: 45px; 
+        font-size: 28px; 
+        line-height: 38px; 
     }
     .banner-content p { 
         max-width: 100%; 

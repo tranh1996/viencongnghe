@@ -13,11 +13,17 @@ import Organization from './pages/Organization';
 import Library from './pages/Research'; // This is now the Library page
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import { validateEnvironment } from './config/environment';
 import './assets/css/labozu.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function App() {
+  // Validate environment variables on app startup
+  React.useEffect(() => {
+    validateEnvironment();
+  }, []);
+
   return (
     <HelmetProvider>
       <LanguageProvider>
@@ -32,6 +38,7 @@ function App() {
                 <Route path="/services" element={<Services />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/organization" element={<Organization />} />
+                <Route path="/organization/:departmentId" element={<Organization />} />
                 <Route path="/library" element={<Library />} />
                 <Route path="/research" element={<Library />} />
                 <Route path="/blog" element={<Blog />} />
