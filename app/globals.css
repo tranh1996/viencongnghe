@@ -1,0 +1,176 @@
+/* ------------------------------------------------
+ Project:   Labozu - Laboratory & Science Research React App
+ Based on:  Labozu HTML5 Template by ThemeHt
+------------------------------------------------ */
+
+/* Import CSS files from src/assets/css */
+@import '../src/assets/css/variables.css';
+@import '../src/assets/css/base.css';
+@import '../src/assets/css/colors.css';
+@import '../src/assets/css/buttons.css';
+@import '../src/assets/css/components.css';
+@import '../src/assets/css/utilities.css';
+@import '../src/assets/css/header.css';
+@import '../src/assets/css/banner.css';
+@import '../src/assets/css/footer.css';
+@import '../src/assets/css/responsive.css';
+@import '../src/assets/css/labozu.css';
+
+/* Import additional CSS files */
+@import '../src/index.css';
+@import '../src/App.css';
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Additional global styles that complement the imported CSS */
+body {
+  color: var(--themeht-text-color);
+  background: var(--themeht-white-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Code element styles */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* App-specific styles */
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Service item styles */
+.service-item {
+  background: var(--themeht-white-color);
+  border: 1px solid var(--themeht-border-light-color);
+  transition: all 0.3s ease;
+}
+
+.service-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* Card styles - ensure they don't conflict with Bootstrap cards */
+.custom-card {
+  border: 1px solid var(--themeht-border-light-color);
+  transition: all 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Contact form styles */
+.contact-form {
+  background: var(--themeht-white-color);
+  border: 1px solid var(--themeht-border-light-color);
+}
+
+.contact-info {
+  background: var(--themeht-white-color);
+  border: 1px solid var(--themeht-border-light-color);
+}
+
+/* Breadcrumb styles */
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item a {
+  color: rgba(255,255,255,0.8);
+}
+
+.breadcrumb-item.active {
+  color: var(--themeht-white-color);
+}
+
+/* Counter styles */
+.counter h3 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+/* Organization card styles */
+.org-unit-card {
+  transition: all 0.3s ease;
+}
+
+.org-unit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.org-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--themeht-primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--themeht-white-color);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}

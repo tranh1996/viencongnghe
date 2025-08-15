@@ -1,23 +1,19 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Badge, Button, Spinner, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Department, fetchDepartmentById, fetchDepartments } from '../utils/api';
 import OptimizedImage from './OptimizedImage';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface DepartmentDetailProps {
-  departmentId: number;
-  onBack: () => void;
-  language: string;
+  departmentId: string;
 }
 
-const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ 
-  departmentId, 
-  onBack, 
-  language 
-}) => {
-  const { t } = useLanguage();
-  const navigate = useNavigate();
+const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => {
+  const { t, language } = useLanguage();
+  const router = useRouter();
   const [department, setDepartment] = useState<Department | null>(null);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +27,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
         setError(null);
         const abortController = new AbortController();
         
-        const departmentData = await fetchDepartmentById(departmentId, language, abortController.signal);
+        const departmentData = await fetchDepartmentById(parseInt(departmentId), language, abortController.signal);
         setDepartment(departmentData);
       } catch (err) {
         if (err instanceof Error && err.name !== 'AbortError') {
@@ -75,7 +71,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
             <Col>
               <Button 
                 variant="outline-light" 
-                onClick={() => navigate('/')}
+                onClick={() => router.push('/')}
                 className="mb-3"
               >
                 <i className="bi bi-arrow-left me-2"></i>
@@ -104,7 +100,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
             <Col>
               <Button 
                 variant="outline-light" 
-                onClick={() => navigate('/')}
+                onClick={() => router.push('/')}
                 className="mb-3"
               >
                 <i className="bi bi-arrow-left me-2"></i>
@@ -112,9 +108,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
               </Button>
               
               <Alert variant="danger">
-                <Alert.Heading>
-                  {t('organization.error')}
-                </Alert.Heading>
+                <Alert.Heading>{t('organization.error')}</Alert.Heading>
                 <p>{error || t('organization.departmentNotFound')}</p>
               </Alert>
             </Col>
@@ -133,7 +127,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
             <Col>
               <Button 
                 variant="outline-light" 
-                onClick={() => navigate('/')}
+                onClick={() => router.push('/')}
                 className="mb-3"
               >
                 <i className="bi bi-arrow-left me-2"></i>
@@ -167,78 +161,67 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
           <Row>
             {/* Left Sidebar - Department Navigation */}
             <Col lg={3} md={4} className="mb-4">
-              <Card className="sticky-top" style={{ top: '2rem', zIndex: 99 }}>
-                <Card.Header className="bg-primary text-white">
-                  <h5 className="mb-0">
-                    <i className="bi bi-building me-2"></i>
-                    {t('organization.departmentList')}
-                  </h5>
-                </Card.Header>
-                <Card.Body className="p-0">
-                  {departmentsLoading ? (
-                    <div className="p-3 text-center">
-                      <Spinner animation="border" size="sm" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </Spinner>
-                      <p className="small text-muted mt-2">{t('organization.loading')}</p>
-                    </div>
-                  ) : departments.length > 0 ? (
-                    <div className="list-group list-group-flush">
-                      {departments.map((dept) => (
-                        <button
-                          key={dept.id}
-                          className={`list-group-item list-group-item-action d-flex align-items-center ${
-                            dept.id === departmentId ? 'active' : ''
-                          }`}
-                          onClick={() => {
-                            if (dept.id !== departmentId) {
-                              navigate(`/organization/${dept.id}`);
-                            }
-                          }}
-                          style={{ 
-                            border: 'none', 
-                            borderBottom: '1px solid #dee2e6',
-                            cursor: dept.id === departmentId ? 'default' : 'pointer',
-                            transition: 'all 0.2s ease'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (dept.id !== departmentId) {
-                              e.currentTarget.style.backgroundColor = '#f8f9fa';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (dept.id !== departmentId) {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }
-                          }}
-                        >
-                          <div className="me-3">
-                            <i className={`bi bi-building ${dept.id === departmentId ? 'text-white' : 'text-primary'}`}></i>
-                          </div>
-                          <div className="flex-grow-1 text-start">
-                            <h6 className="mb-1">{dept.name}</h6>
-                            {dept.code && (
-                              <small className={dept.id === departmentId ? 'text-white-50' : 'text-muted'}>{dept.code}</small>
-                            )}
-                          </div>
-                          {dept.id === departmentId && (
-                            <i className="bi bi-check-circle text-white"></i>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="p-3 text-center">
-                      <i className="bi bi-exclamation-triangle text-warning" style={{ fontSize: '2rem' }}></i>
-                      <p className="small text-muted mt-2">{t('organization.noData')}</p>
-                    </div>
-                  )}
-                </Card.Body>
-              </Card>
+              <div className="department-sidebar">
+                <Card>
+                  <Card.Header>
+                    <h5>
+                      <i className="bi bi-building me-2"></i>
+                      {t('organization.departmentList')}
+                    </h5>
+                  </Card.Header>
+                  <Card.Body>
+                    {departmentsLoading ? (
+                      <div className="loading-state">
+                        <Spinner animation="border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                        <p className="small text-muted mt-2">{t('organization.loading')}</p>
+                      </div>
+                    ) : departments.length > 0 ? (
+                      <div className="list-group list-group-flush">
+                        {departments.map((dept) => (
+                          <button
+                            key={dept.id}
+                            className={`list-group-item list-group-item-action d-flex align-items-center ${
+                              dept.id === parseInt(departmentId) ? 'active' : ''
+                            }`}
+                            onClick={() => {
+                              if (dept.id !== parseInt(departmentId)) {
+                                router.push(`/organization/${dept.id}`);
+                              }
+                            }}
+                            disabled={dept.id === parseInt(departmentId)}
+                          >
+                            <div className="department-icon">
+                              <i className="bi bi-building"></i>
+                            </div>
+                            <div className="department-info">
+                              <h6>{dept.name}</h6>
+                              {dept.code && (
+                                <small>{dept.code}</small>
+                              )}
+                            </div>
+                            <div className="department-status">
+                              {dept.id === parseInt(departmentId) && (
+                                <i className="bi bi-check-circle"></i>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="empty-state">
+                        <i className="bi bi-exclamation-triangle"></i>
+                        <p>{t('organization.noData')}</p>
+                      </div>
+                    )}
+                  </Card.Body>
+                </Card>
+              </div>
             </Col>
 
             {/* Center Content - Department Information */}
-            <Col lg={9} md={8} className="px-3">
+            <Col lg={9} md={8} className="department-main-content">
               {/* Department Introduction */}
               {department.content && (
                 <Card className="mb-4">
@@ -411,7 +394,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({
                 </Button>
                 <Button 
                   variant="outline-primary" 
-                  onClick={onBack}
+                  onClick={() => router.back()}
                 >
                   {t('organization.backToDepartments')}
                 </Button>

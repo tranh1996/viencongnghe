@@ -1,7 +1,13 @@
+'use client';
+
+import type { Metadata } from 'next';
 import React from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
-const Contact: React.FC = () => {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function ContactPage() {
   return (
     <>
       <section className="page-title dark-bg">
@@ -167,6 +173,4 @@ const Contact: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Contact; 
+}

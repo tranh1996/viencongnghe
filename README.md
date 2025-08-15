@@ -1,110 +1,223 @@
-# Viện Công nghệ - Website Chính thức
+# Viện Công nghệ (RITM) - Next.js Website
 
-Website chính thức của Viện Công nghệ (RITM) - Research Institute of Technology for Machinery, được xây dựng bằng React và TypeScript.
+Website chính thức của Viện Công nghệ (RITM) - Research Institute of Technology for Machinery, được xây dựng với Next.js 14 và App Router.
 
-## Giới thiệu
+## 🚀 Tính năng
 
-Viện Công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu.
+- **Next.js 14** với App Router
+- **TypeScript** cho type safety
+- **Bootstrap 5** cho UI components
+- **Server-Side Rendering (SSR)** cho SEO tốt hơn
+- **Image Optimization** với Next.js Image
+- **Internationalization** (Tiếng Việt/English)
+- **Responsive Design**
+- **Google Analytics 4** integration
+- **SEO Optimization**
 
-## Tính năng
+## 🛠️ Công nghệ sử dụng
 
-- **Trang chủ**: Giới thiệu tổng quan về Viện Công nghệ
-- **Về chúng tôi**: Thông tin chi tiết về lịch sử, sứ mệnh và tầm nhìn
-- **Lĩnh vực hoạt động**: Các dịch vụ và chuyên môn của viện
-- **Sản phẩm & Dịch vụ**: Danh mục sản phẩm và dịch vụ cung cấp
-- **Tin tức**: Cập nhật tin tức mới nhất về hoạt động của viện
-- **Thư viện**: Hình ảnh và video hoạt động
-- **Liên hệ**: Thông tin liên hệ và form liên hệ
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Bootstrap 5 + Custom CSS
+- **Icons**: Bootstrap Icons
+- **Analytics**: Google Analytics 4
+- **Package Manager**: npm
+- **Deployment**: Vercel (recommended)
 
-## Công nghệ sử dụng
+## 📦 Cài đặt
 
-- **React 19**: Framework JavaScript cho giao diện người dùng
-- **TypeScript**: Ngôn ngữ lập trình type-safe
-- **Bootstrap 5**: Framework CSS cho responsive design
-- **React Router**: Routing cho ứng dụng React
-- **Bootstrap Icons**: Thư viện icon
+1. **Clone repository**:
+   ```bash
+   git clone <repository-url>
+   cd viencongnghe
+   ```
 
-## Cài đặt và chạy
+2. **Cài đặt dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Yêu cầu hệ thống
+3. **Chạy development server**:
+   ```bash
+   npm run dev
+   ```
 
-- Node.js (phiên bản 16 trở lên)
-- npm hoặc yarn
+4. **Mở trình duyệt**:
+   ```
+   http://localhost:3000
+   ```
 
-### Cài đặt
+## 📦 NPM Commands
 
-1. Clone repository:
 ```bash
-git clone <repository-url>
-cd vien-cong-nghe-react
-```
-
-2. Cài đặt dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Chạy ứng dụng ở môi trường development:
-```bash
-npm start
-```
+# Development server
+npm run dev
 
-Ứng dụng sẽ chạy tại `http://localhost:3000`
-
-### Build cho production
-
-```bash
+# Build for production
 npm run build
+
+# Start production server
+npm start
+
+# Lint code
+npm run lint
+
+# Generate sitemap
+npm run generate-sitemap
 ```
 
-### Chạy build production
+## 🏗️ Cấu trúc dự án
+
+```
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page
+│   ├── about/             # About page
+│   ├── services/          # Services page
+│   ├── products/          # Products page
+│   ├── organization/      # Organization pages
+│   ├── library/           # Library page
+│   ├── blog/              # Blog page
+│   ├── contact/           # Contact page
+│   ├── loading.tsx        # Loading component
+│   ├── error.tsx          # Error component
+│   ├── not-found.tsx      # 404 page
+│   └── globals.css        # Global styles
+├── src/
+│   ├── components/        # React components
+│   ├── pages/             # Page components
+│   ├── contexts/          # React contexts
+│   ├── utils/             # Utility functions
+│   ├── config/            # Configuration files
+│   └── assets/            # Static assets
+├── public/                # Public assets
+└── scripts/               # Build scripts
+```
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+1. **Push code lên GitHub**
+2. **Connect với Vercel**:
+   - Import project từ GitHub
+   - Vercel sẽ tự động detect Next.js
+   - Deploy với cấu hình mặc định
+
+### Manual Deployment
+
+1. **Build project**:
+   ```bash
+   npm run build
+   ```
+
+2. **Start production server**:
+   ```bash
+   npm start
+   ```
+
+## 🔧 Cấu hình
+
+### Environment Variables
+
+Tạo file `.env.local`:
+
+```env
+# Google Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+
+# API Configuration
+NEXT_PUBLIC_API_BASE_URL=https://api.example.com
+
+# SEO Configuration
+NEXT_PUBLIC_SITE_URL=https://viencongnghe.ritm.vn
+```
+
+### SEO Configuration
+
+SEO được cấu hình trong `app/layout.tsx` và từng page với metadata API của Next.js.
+
+## 📱 Responsive Design
+
+Website được thiết kế responsive với Bootstrap 5:
+- **Mobile**: < 768px
+- **Tablet**: 768px - 1024px
+- **Desktop**: > 1024px
+
+## 🌐 Internationalization
+
+Website hỗ trợ 2 ngôn ngữ:
+- **Tiếng Việt** (mặc định)
+- **English**
+
+Language switching được implement với React Context.
+
+## 📊 Analytics
+
+Google Analytics 4 được tích hợp sẵn:
+- Page views tracking
+- Custom events tracking
+- Performance monitoring
+
+## 🔍 SEO Features
+
+- **Meta tags** optimization
+- **Open Graph** tags
+- **Twitter Cards**
+- **Structured data** (JSON-LD)
+- **Sitemap** generation
+- **Robots.txt** configuration
+
+## 🧪 Testing
 
 ```bash
-npm run serve
+# Run tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
 ```
 
-## Cấu trúc thư mục
+## 📝 Scripts
 
-```
-src/
-├── components/          # Các component chung
-│   ├── Header.tsx      # Header component
-│   └── Footer.tsx      # Footer component
-├── pages/              # Các trang của ứng dụng
-│   ├── Home.tsx        # Trang chủ
-│   ├── About.tsx       # Về chúng tôi
-│   ├── Services.tsx    # Lĩnh vực hoạt động
-│   ├── Products.tsx    # Sản phẩm & Dịch vụ
-│   ├── Blog.tsx        # Tin tức
-│   ├── Library.tsx     # Thư viện
-│   └── Contact.tsx     # Liên hệ
-├── assets/             # Tài nguyên tĩnh
-│   └── css/
-│       └── labozu.css  # CSS chính
-└── App.tsx             # Component chính
+```bash
+# Development
+npm run dev          # Start development server
+
+# Production
+npm run build        # Build for production
+npm start           # Start production server
+
+# Linting
+npm run lint        # Run ESLint
+
+# Generate sitemap
+npm run generate-sitemap
 ```
 
-## Thông tin liên hệ
+## 🤝 Contributing
 
-- **Trụ sở chính**: Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội
-- **Cơ sở 2**: Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội
-- **Điện thoại**: +84 243 776 3322
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+**Viện Công nghệ (RITM)**
+- **Website**: https://viencongnghe.ritm.vn
 - **Email**: viencongnghe@ritm.vn
-- **Website**: https://viencongnghe.com/
+- **Phone**: +84 243 776 3322
+- **Address**: Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội
 
-## Lĩnh vực hoạt động
+---
 
-1. **Công nghệ đúc và vật liệu mới**
-2. **Công nghệ xử lý nhiệt**
-3. **Cơ khí chế tạo khuôn mẫu**
-4. **Kiểm định vật liệu**
-5. **Chuyển giao thiết bị/công nghệ**
-6. **Đào tạo, tư vấn công nghệ**
-
-## Giấy phép
-
-Dự án này được phát hành dưới giấy phép MIT.
-
-## Đóng góp
-
-Mọi đóng góp đều được chào đón. Vui lòng tạo issue hoặc pull request để đóng góp vào dự án. 
+**Developed with ❤️ by Viện Công nghệ Team** 

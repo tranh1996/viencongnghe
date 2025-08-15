@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useLanguage } from '../contexts/LanguageContext';
-import BannerSlider from '../components/BannerSlider';
-import SEO from '../components/SEO';
-import OptimizedImage from '../components/OptimizedImage';
-import { getSEOConfig } from '../utils/seo';
-import { fetchLatestNews, News } from '../utils/api';
+'use client';
 
-const Home: React.FC = () => {
+import type { Metadata } from 'next';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useLanguage } from '@/contexts/LanguageContext';
+import BannerSlider from '@/components/BannerSlider';
+import OptimizedImage from '@/components/OptimizedImage';
+import { fetchLatestNews, News } from '@/utils/api';
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function HomePage() {
   const { t, language } = useLanguage();
   const [latestNews, setLatestNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,8 +34,14 @@ const Home: React.FC = () => {
     fetchNews();
   }, [language]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) {
+      return '';
+    }
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return '';
+    }
     return date.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
       year: 'numeric',
       month: '2-digit',
@@ -168,36 +178,8 @@ const Home: React.FC = () => {
     }
   ];
 
-  // Structured data for the home page
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Viện Công nghệ (RITM) - Trang chủ",
-    "description": "Trang chủ của Viện Công nghệ (RITM) - Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam",
-    "url": "https://viencongnghe.com",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Viện Công nghệ (RITM)",
-      "alternateName": "Research Institute of Technology for Machinery",
-      "description": "Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam",
-      "url": "https://viencongnghe.com",
-      "logo": "https://viencongnghe.com/images/logo.svg",
-      "foundingDate": "1970",
-      "areaServed": "Vietnam",
-      "serviceType": [
-        "Công nghệ đúc",
-        "Nhiệt luyện",
-        "Gia công cơ khí",
-        "Kiểm định vật liệu",
-        "Chuyển giao công nghệ"
-      ]
-    }
-  };
-
   return (
     <>
-      <SEO config={getSEOConfig('home')} structuredData={structuredData} />
-      
       {/* Hero Section */}
       <BannerSlider slides={bannerSlides} />
 
@@ -240,7 +222,7 @@ const Home: React.FC = () => {
                   </li>
                 </ul>
                 <div className="mt-4">
-                  <Link to="/about" className="themeht-btn primary-btn">
+                  <Link href="/about" className="themeht-btn primary-btn">
                     {t('home.about.readMore')}
                   </Link>
                 </div>
@@ -273,7 +255,7 @@ const Home: React.FC = () => {
                   {t('home.services.casting')} - Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh. 
                   Mô phỏng thiết kế đúc bằng phần mềm MAGMASoft.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -288,7 +270,7 @@ const Home: React.FC = () => {
                   {t('home.services.heatTreatment')} - Nghiên cứu, dịch vụ nhiệt luyện chân không, nhiệt luyện truyền thống và hóa nhiệt luyện 
                   (thấm C, C-N, N) các loại khuôn và các sản phẩm cơ khí.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -303,7 +285,7 @@ const Home: React.FC = () => {
                   {t('home.services.machining')} - Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại dùng trong các lĩnh vực 
                   rèn, dập, ép và đúc áp lực.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -318,7 +300,7 @@ const Home: React.FC = () => {
                   {t('home.services.testing')} - Thử nghiệm, kiểm định trong lĩnh vực hóa, cơ, không phá huỷ các loại vật liệu, 
                   kết cấu hàn và chi tiết máy.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -333,7 +315,7 @@ const Home: React.FC = () => {
                   {t('home.services.transfer')} - Cung cấp và chuyển giao công nghệ các thiết bị về xử lý nhiệt, Các dây chuyền/ 
                   hệ thống kết cấu cơ khí.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -348,7 +330,7 @@ const Home: React.FC = () => {
                   {t('home.services.training')} - Đào tạo, tư vấn trong lĩnh vực như Công nghệ Đúc; Xử lý nhiệt; Kiểm định vật liệu; 
                   và các lĩnh vực khác.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -413,22 +395,24 @@ const Home: React.FC = () => {
               latestNews.map((news, index) => (
                 <Col lg={4} md={6} className="mb-4" key={news.id}>
                   <div className="card h-100">
-                                         <OptimizedImage 
-                       src={news.image_url || "/images/blog/01.jpg"} 
-                       alt={news.title}
-                       context="Tin tức - Hoạt động"
-                       className="card-img-top"
-                     />
-                     <div className="card-body">
-                       <h6 className="text-muted mb-2">{formatDate(news.created_at || '')}</h6>
-                       <h3 className="h5 card-title">{news.title}</h3>
-                       <p className="card-text">
-                         {truncateText(news.description || '', 150)}
-                       </p>
-                       <Link to={`/news/${news.slug}`} className="text-theme text-decoration-none">
-                         {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                       </Link>
-                     </div>
+                    <OptimizedImage 
+                      src={news.image_url || "/images/blog/01.jpg"} 
+                      alt={news.title}
+                      context="Tin tức - Hoạt động"
+                      className="card-img-top"
+                    />
+                    <div className="card-body">
+                      <h6 className="text-muted mb-2">
+                        {news.created_at ? formatDate(news.created_at) : t('common.recentlyUpdated')}
+                      </h6>
+                      <h3 className="h5 card-title">{news.title}</h3>
+                      <p className="card-text">
+                        {truncateText(news.description || '', 150)}
+                      </p>
+                      <Link href={`/news/${news.slug}`} className="text-theme text-decoration-none">
+                        {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                      </Link>
+                    </div>
                   </div>
                 </Col>
               ))
@@ -446,10 +430,10 @@ const Home: React.FC = () => {
               <p className="mb-4">
                 {t('home.cta.description')}
               </p>
-              <Link to="/contact" className="themeht-btn secondary-btn me-3">
+              <Link href="/contact" className="themeht-btn secondary-btn me-3">
                 {t('home.cta.contactNow')}
               </Link>
-              <Link to="/services" className="themeht-btn primary-btn">
+              <Link href="/services" className="themeht-btn primary-btn">
                 {t('home.cta.viewServices')}
               </Link>
             </Col>
@@ -458,6 +442,4 @@ const Home: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Home; 
+}

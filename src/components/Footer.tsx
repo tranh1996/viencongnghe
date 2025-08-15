@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Container, Row, Col } from 'react-bootstrap';
 
 // Footer Widget Component
@@ -24,19 +26,40 @@ const SocialIcons: React.FC = () => (
   <div className="social-icons footer-social">
     <ul className="list-inline">
       <li>
-        <a href="#" aria-label="Facebook">
+        <button 
+          className="btn btn-link p-0 border-0 bg-transparent"
+          aria-label="Facebook"
+          onClick={() => {
+            // TODO: Add Facebook URL when available
+            console.log('Facebook clicked');
+          }}
+        >
           <i className="bi bi-facebook"></i>
-        </a>
+        </button>
       </li>
       <li>
-        <a href="#" aria-label="YouTube">
+        <button 
+          className="btn btn-link p-0 border-0 bg-transparent"
+          aria-label="YouTube"
+          onClick={() => {
+            // TODO: Add YouTube URL when available
+            console.log('YouTube clicked');
+          }}
+        >
           <i className="bi bi-youtube"></i>
-        </a>
+        </button>
       </li>
       <li>
-        <a href="#" aria-label="LinkedIn">
+        <button 
+          className="btn btn-link p-0 border-0 bg-transparent"
+          aria-label="LinkedIn"
+          onClick={() => {
+            // TODO: Add LinkedIn URL when available
+            console.log('LinkedIn clicked');
+          }}
+        >
           <i className="bi bi-linkedin"></i>
-        </a>
+        </button>
       </li>
     </ul>
   </div>
@@ -86,7 +109,7 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ links }) => (
   <ul className="footer-menu">
     {links.map((link, index) => (
       <li key={index}>
-        <Link to={link.to}>{link.text}</Link>
+        <Link href={link.to}>{link.text}</Link>
       </li>
     ))}
   </ul>
@@ -181,7 +204,7 @@ const Footer: React.FC = () => {
               <ul className="footer-menu list-inline text-md-end">
                 {legalLinks.map((link, index) => (
                   <li key={index}>
-                    <Link to={link.to}>{link.text}</Link>
+                    <Link href={link.to}>{link.text}</Link>
                   </li>
                 ))}
               </ul>

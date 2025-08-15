@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'vi' | 'en';
@@ -39,7 +41,15 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    // Fallback for static generation
+    const fallbackTranslations = viTranslations;
+    return {
+      language: 'vi' as Language,
+      setLanguage: () => {},
+      t: (key: string): string => {
+        return fallbackTranslations[key] || key;
+      },
+    };
   }
   return context;
 };
@@ -103,6 +113,7 @@ const viTranslations: Record<string, string> = {
   'home.news.heading': 'Tin tức mới nhất',
   'home.news.readMore': 'Đọc thêm',
   'home.news.noNews': 'Hiện tại không có tin tức mới.',
+  'common.recentlyUpdated': 'Mới cập nhật',
   'home.cta.title': 'Sẵn sàng hợp tác với chúng tôi?',
   'home.cta.description': 'Liên hệ với đội ngũ chuyên gia của chúng tôi ngay hôm nay để thảo luận về nhu cầu nghiên cứu và khám phá cách chúng tôi có thể giúp bạn đạt được mục tiêu khoa học.',
   'home.cta.contactNow': 'Liên hệ ngay',
@@ -330,6 +341,7 @@ const enTranslations: Record<string, string> = {
   'home.news.heading': 'Latest News',
   'home.news.readMore': 'Read More',
   'home.news.noNews': 'No news available at the moment.',
+  'common.recentlyUpdated': 'Recently Updated',
   'home.cta.title': 'Ready to Collaborate with Us?',
   'home.cta.description': 'Contact our team of experts today to discuss your research needs and discover how we can help you achieve your scientific goals.',
   'home.cta.contactNow': 'Contact Now',

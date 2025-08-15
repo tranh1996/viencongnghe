@@ -1,15 +1,22 @@
+'use client';
+
+import type { Metadata } from 'next';
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Badge, Spinner, Alert } from 'react-bootstrap';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useLanguage } from '../contexts/LanguageContext';
-import BannerSlider from '../components/BannerSlider';
-import { fetchDepartments, Department } from '../utils/api';
-import DepartmentDetail from '../components/DepartmentDetail';
+import { useParams, useRouter } from 'next/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
+import BannerSlider from '@/components/BannerSlider';
+import { fetchDepartments, Department } from '@/utils/api';
+import DepartmentDetail from '@/components/DepartmentDetail';
 
-const Organization: React.FC = () => {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function OrganizationPage() {
   const { t, language } = useLanguage();
-  const { departmentId } = useParams<{ departmentId?: string }>();
-  const navigate = useNavigate();
+  const params = useParams<{ departmentId?: string }>();
+  const departmentId = params?.departmentId;
+  const router = useRouter();
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -80,20 +87,18 @@ const Organization: React.FC = () => {
   }, [departmentId]);
 
   const handleDepartmentClick = (department: Department) => {
-    navigate(`/organization/${department.id}`);
+    router.push(`/organization/${department.id}`);
   };
 
   const handleBackToList = () => {
-    navigate('/organization');
+    router.push('/organization');
   };
 
   // If a department is selected, show its detail view
   if (selectedDepartmentId) {
     return (
       <DepartmentDetail 
-        departmentId={selectedDepartmentId} 
-        onBack={handleBackToList}
-        language={language}
+        departmentId={selectedDepartmentId.toString()} 
       />
     );
   }
@@ -183,9 +188,9 @@ const Organization: React.FC = () => {
                       {/* Contact Information Preview */}
                       {(department.contact_email || department.contact_phone || department.contact_address) && (
                         <div className="contact-preview">
-                                                     <h6 className="text-theme mb-2">
-                             {t('organization.contactInfo')}
-                           </h6>
+                          <h6 className="text-theme mb-2">
+                            {t('organization.contactInfo')}
+                          </h6>
                           <div className="small text-muted">
                             {department.contact_email && (
                               <div className="mb-1">
@@ -211,10 +216,10 @@ const Organization: React.FC = () => {
 
                       {/* View Details Button */}
                       <div className="text-center mt-3">
-                                                 <Badge bg="primary" className="px-3 py-2">
-                           {t('organization.viewDetails')}
-                           <i className="bi bi-arrow-right ms-2"></i>
-                         </Badge>
+                        <Badge bg="primary" className="px-3 py-2">
+                          {t('organization.viewDetails')}
+                          <i className="bi bi-arrow-right ms-2"></i>
+                        </Badge>
                       </div>
                     </Card.Body>
                   </Card>
@@ -264,6 +269,4 @@ const Organization: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Organization;
+}

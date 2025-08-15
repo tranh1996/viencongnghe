@@ -74,10 +74,11 @@ export interface ApiResponse<T> {
 }
 
 export interface NewsApiResponse {
-  success: boolean;
-  status: number;
-  message: string;
-  data: News[];
+  highlights: News[];
+  total: number;
+  page: number;
+  pageSize: number;
+  latestNews: News[];
 }
 
 const API_BASE_URL = api.baseUrl;
@@ -163,12 +164,7 @@ export const fetchLatestNews = async (language: string, limit: number = 10, sign
     }
 
     const data: NewsApiResponse = await response.json();
-    
-    if (data.success) {
-      return data.data;
-    } else {
-      throw new Error(data.message || 'Failed to fetch latest news');
-    }
+    return data.highlights || [];
   } catch (error) {
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {
@@ -195,12 +191,7 @@ export const fetchHighlightNews = async (language: string, signal?: AbortSignal)
     }
 
     const data: NewsApiResponse = await response.json();
-    
-    if (data.success) {
-      return data.data;
-    } else {
-      throw new Error(data.message || 'Failed to fetch highlight news');
-    }
+    return data.highlights || [];
   } catch (error) {
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {

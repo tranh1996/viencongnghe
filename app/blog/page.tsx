@@ -1,9 +1,15 @@
+'use client';
+
+import type { Metadata } from 'next';
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
-import { useLanguage } from '../contexts/LanguageContext';
-import { fetchLatestNews, fetchHighlightNews, News } from '../utils/api';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { fetchLatestNews, fetchHighlightNews, News } from '@/utils/api';
 
-const Blog: React.FC = () => {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function BlogPage() {
   const { language, t } = useLanguage();
   const [latestNews, setLatestNews] = useState<News[]>([]);
   const [highlightNews, setHighlightNews] = useState<News[]>([]);
@@ -34,8 +40,14 @@ const Blog: React.FC = () => {
     fetchNews();
   }, [language]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) {
+      return '';
+    }
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return '';
+    }
     return date.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
       year: 'numeric',
       month: '2-digit',
@@ -165,19 +177,19 @@ const Blog: React.FC = () => {
             <Row className="mb-5">
               <Col lg={8} className="mb-4">
                 <div className="card">
-                                       <img 
-                       src={highlightNews[0]?.image_url || "/images/blog/01.jpg"} 
-                       className="card-img-top" 
-                       alt={highlightNews[0]?.title || "Tin tức nổi bật"} 
-                     />
-                     <div className="card-body">
-                       <h6 className="text-muted mb-2">
-                         {highlightNews[0]?.created_at ? formatDate(highlightNews[0].created_at) : ''}
-                       </h6>
-                       <h3 className="card-title">{highlightNews[0]?.title}</h3>
-                       <p className="card-text">
-                         {highlightNews[0]?.description ? truncateText(highlightNews[0].description, 200) : ''}
-                       </p>
+                  <img 
+                    src={highlightNews[0]?.image_url || "/images/blog/01.jpg"} 
+                    className="card-img-top" 
+                    alt={highlightNews[0]?.title || "Tin tức nổi bật"} 
+                  />
+                  <div className="card-body">
+                    <h6 className="text-muted mb-2">
+                      {highlightNews[0]?.created_at ? formatDate(highlightNews[0].created_at) : t('common.recentlyUpdated')}
+                    </h6>
+                    <h3 className="card-title">{highlightNews[0]?.title}</h3>
+                    <p className="card-text">
+                      {highlightNews[0]?.description ? truncateText(highlightNews[0].description, 200) : ''}
+                    </p>
                     <a href={`/news/${highlightNews[0]?.slug}`} className="text-theme text-decoration-none">
                       {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
                     </a>
@@ -185,21 +197,21 @@ const Blog: React.FC = () => {
                 </div>
               </Col>
               <Col lg={4} className="mb-4">
-                                 {highlightNews[1] && (
-                   <div className="card">
-                     <img 
-                       src={highlightNews[1]?.image_url || "/images/blog/02.jpg"} 
-                       className="card-img-top" 
-                       alt={highlightNews[1]?.title || "Tin tức"} 
-                     />
-                     <div className="card-body">
-                       <h6 className="text-muted mb-2">
-                         {highlightNews[1]?.created_at ? formatDate(highlightNews[1].created_at) : ''}
-                       </h6>
-                       <h5 className="card-title">{highlightNews[1]?.title}</h5>
-                       <p className="card-text">
-                         {highlightNews[1]?.description ? truncateText(highlightNews[1].description, 150) : ''}
-                       </p>
+                {highlightNews[1] && (
+                  <div className="card">
+                    <img 
+                      src={highlightNews[1]?.image_url || "/images/blog/02.jpg"} 
+                      className="card-img-top" 
+                      alt={highlightNews[1]?.title || "Tin tức"} 
+                    />
+                    <div className="card-body">
+                      <h6 className="text-muted mb-2">
+                        {highlightNews[1]?.created_at ? formatDate(highlightNews[1].created_at) : t('common.recentlyUpdated')}
+                      </h6>
+                      <h5 className="card-title">{highlightNews[1]?.title}</h5>
+                      <p className="card-text">
+                        {highlightNews[1]?.description ? truncateText(highlightNews[1].description, 150) : ''}
+                      </p>
                       <a href={`/news/${highlightNews[1]?.slug}`} className="text-theme text-decoration-none">
                         {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
                       </a>
@@ -218,25 +230,25 @@ const Blog: React.FC = () => {
                   <h5 className="mb-0">{t('blog.categories.activities')}</h5>
                 </div>
                 <div className="card-body">
-                                     {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin hoạt động')).length > 0 ? (
-                     <ul className="list-unstyled">
-                       {latestNews
-                         .filter(news => news.categories.some(cat => cat.name === 'Tin hoạt động'))
-                         .slice(0, 3)
-                         .map((news) => (
-                           <li key={news.id} className="mb-3">
-                             <a href={`/news/${news.slug}`} className="text-decoration-none">
-                               <h6>{news.title}</h6>
-                               <small className="text-muted">
-                                 {news.created_at ? formatDate(news.created_at) : ''}
-                               </small>
-                             </a>
-                           </li>
-                         ))}
-                     </ul>
-                   ) : (
-                     <p className="text-muted">{t('organization.noDataMessage')}</p>
-                   )}
+                  {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length > 0 ? (
+                    <ul className="list-unstyled">
+                      {latestNews
+                        .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
+                        .slice(0, 3)
+                        .map((news) => (
+                          <li key={news.id} className="mb-3">
+                            <a href={`/news/${news.slug}`} className="text-decoration-none">
+                              <h6>{news.title}</h6>
+                              <small className="text-muted">
+                                {formatDate(news.created_at)}
+                              </small>
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted">{t('organization.noDataMessage')}</p>
+                  )}
                 </div>
               </div>
             </Col>
@@ -247,25 +259,25 @@ const Blog: React.FC = () => {
                   <h5 className="mb-0">{t('blog.categories.science')}</h5>
                 </div>
                 <div className="card-body">
-                                     {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin khoa học công nghệ')).length > 0 ? (
-                     <ul className="list-unstyled">
-                       {latestNews
-                         .filter(news => news.categories.some(cat => cat.name === 'Tin khoa học công nghệ'))
-                         .slice(0, 3)
-                         .map((news) => (
-                           <li key={news.id} className="mb-3">
-                             <a href={`/news/${news.slug}`} className="text-decoration-none">
-                               <h6>{news.title}</h6>
-                               <small className="text-muted">
-                                 {news.created_at ? formatDate(news.created_at) : ''}
-                               </small>
-                             </a>
-                           </li>
-                         ))}
-                     </ul>
-                   ) : (
-                     <p className="text-muted">{t('organization.noDataMessage')}</p>
-                   )}
+                  {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length > 0 ? (
+                    <ul className="list-unstyled">
+                      {latestNews
+                        .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
+                        .slice(0, 3)
+                        .map((news) => (
+                          <li key={news.id} className="mb-3">
+                            <a href={`/news/${news.slug}`} className="text-decoration-none">
+                              <h6>{news.title}</h6>
+                              <small className="text-muted">
+                                {formatDate(news.created_at)}
+                              </small>
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted">{t('organization.noDataMessage')}</p>
+                  )}
                 </div>
               </div>
             </Col>
@@ -276,25 +288,25 @@ const Blog: React.FC = () => {
                   <h5 className="mb-0">{t('blog.categories.training')}</h5>
                 </div>
                 <div className="card-body">
-                                     {latestNews.filter(news => news.categories.some(cat => cat.name === 'Hoạt động đào tạo')).length > 0 ? (
-                     <ul className="list-unstyled">
-                       {latestNews
-                         .filter(news => news.categories.some(cat => cat.name === 'Hoạt động đào tạo'))
-                         .slice(0, 3)
-                         .map((news) => (
-                           <li key={news.id} className="mb-3">
-                             <a href={`/news/${news.slug}`} className="text-decoration-none">
-                               <h6>{news.title}</h6>
-                               <small className="text-muted">
-                                 {news.created_at ? formatDate(news.created_at) : ''}
-                               </small>
-                             </a>
-                           </li>
-                         ))}
-                     </ul>
-                   ) : (
-                     <p className="text-muted">{t('organization.noDataMessage')}</p>
-                   )}
+                  {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length > 0 ? (
+                    <ul className="list-unstyled">
+                      {latestNews
+                        .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
+                        .slice(0, 3)
+                        .map((news) => (
+                          <li key={news.id} className="mb-3">
+                            <a href={`/news/${news.slug}`} className="text-decoration-none">
+                              <h6>{news.title}</h6>
+                              <small className="text-muted">
+                                {formatDate(news.created_at)}
+                              </small>
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted">{t('organization.noDataMessage')}</p>
+                  )}
                 </div>
               </div>
             </Col>
@@ -308,31 +320,31 @@ const Blog: React.FC = () => {
               </Col>
             </Row>
             <Row>
-                             {latestNews
-                 .filter(news => news.categories.some(cat => cat.name === 'Bài viết chuyên môn'))
-                 .slice(0, 3)
-                 .map((news) => (
-                   <Col key={news.id} lg={4} md={6} className="mb-4">
-                     <div className="card h-100">
-                       <img 
-                         src={news.image_url || "/images/blog/03.jpg"} 
-                         className="card-img-top" 
-                         alt={news.title} 
-                       />
-                       <div className="card-body">
-                         <h5 className="card-title">{news.title}</h5>
-                         <p className="card-text">
-                           {news.description ? truncateText(news.description, 120) : ''}
-                         </p>
-                         <a href={`/news/${news.slug}`} className="text-theme text-decoration-none">
-                           {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                         </a>
-                       </div>
-                     </div>
-                   </Col>
-                 ))}
-             </Row>
-             {latestNews.filter(news => news.categories.some(cat => cat.name === 'Bài viết chuyên môn')).length === 0 && (
+              {latestNews
+                .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
+                .slice(0, 3)
+                .map((news) => (
+                  <Col key={news.id} lg={4} md={6} className="mb-4">
+                    <div className="card h-100">
+                      <img 
+                        src={news.image_url || "/images/blog/03.jpg"} 
+                        className="card-img-top" 
+                        alt={news.title} 
+                      />
+                      <div className="card-body">
+                        <h5 className="card-title">{news.title}</h5>
+                        <p className="card-text">
+                          {news.description ? truncateText(news.description, 120) : ''}
+                        </p>
+                        <a href={`/news/${news.slug}`} className="text-theme text-decoration-none">
+                          {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </Col>
+                ))}
+            </Row>
+            {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length === 0 && (
               <Row>
                 <Col>
                   <p className="text-center text-muted">{t('organization.noDataMessage')}</p>
@@ -344,6 +356,4 @@ const Blog: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Blog; 
+}

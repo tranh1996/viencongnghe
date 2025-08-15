@@ -1,35 +1,16 @@
+'use client';
+
+import type { Metadata } from 'next';
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import SEO from '../components/SEO';
-import OptimizedImage from '../components/OptimizedImage';
-import { getSEOConfig } from '../utils/seo';
+import OptimizedImage from '@/components/OptimizedImage';
 
-const About: React.FC = () => {
-  // Structured data for the about page
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Giới thiệu - Viện Công nghệ (RITM)",
-    "description": "Tìm hiểu về lịch sử 50+ năm phát triển của Viện Công nghệ (RITM), sứ mệnh nghiên cứu và phát triển công nghệ cơ khí",
-    "url": "https://viencongnghe.com/about",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Viện Công nghệ (RITM)",
-      "alternateName": "Research Institute of Technology for Machinery",
-      "description": "Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam với hơn 50 năm kinh nghiệm",
-      "url": "https://viencongnghe.com",
-      "logo": "https://viencongnghe.com/images/logo.svg",
-      "foundingDate": "1970",
-      "areaServed": "Vietnam",
-      "mission": "Nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt",
-      "vision": "Trở thành viện nghiên cứu hàng đầu trong lĩnh vực cơ khí và luyện kim, được công nhận về sự xuất sắc, đổi mới và cam kết thúc đẩy sự phát triển của khoa học công nghệ"
-    }
-  };
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
+export default function AboutPage() {
   return (
     <>
-      <SEO config={getSEOConfig('about')} structuredData={structuredData} />
-      
       {/* Page Title */}
       <section className="page-title dark-bg">
         <Container>
@@ -230,6 +211,4 @@ const About: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default About; 
+}
