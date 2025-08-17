@@ -164,6 +164,7 @@ export const fetchLatestNews = async (language: string, limit: number = 10, sign
     }
 
     const data: NewsApiResponse = await response.json();
+    console.log('API response for latest news:', data);
     return data.highlights || [];
   } catch (error) {
     // Don't log AbortError as it's expected when requests are cancelled
@@ -191,6 +192,7 @@ export const fetchHighlightNews = async (language: string, signal?: AbortSignal)
     }
 
     const data: NewsApiResponse = await response.json();
+    console.log('API response for highlight news:', data);
     return data.highlights || [];
   } catch (error) {
     // Don't log AbortError as it's expected when requests are cancelled

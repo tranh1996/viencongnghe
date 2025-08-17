@@ -16,9 +16,6 @@
 @import '../src/assets/css/responsive.css';
 @import '../src/assets/css/labozu.css';
 
-/* Import additional CSS files */
-@import '../src/index.css';
-@import '../src/App.css';
 
 /* Global styles */
 * {
@@ -40,6 +37,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 a {
   color: inherit;

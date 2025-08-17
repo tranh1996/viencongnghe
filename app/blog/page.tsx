@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { fetchLatestNews, fetchHighlightNews, News } from '@/utils/api';
+import OptimizedImage from '@/components/OptimizedImage';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -177,10 +178,13 @@ export default function BlogPage() {
             <Row className="mb-5">
               <Col lg={8} className="mb-4">
                 <div className="card">
-                  <img 
+                  <OptimizedImage 
                     src={highlightNews[0]?.image_url || "/images/blog/01.jpg"} 
                     className="card-img-top" 
-                    alt={highlightNews[0]?.title || "Tin tức nổi bật"} 
+                    alt={highlightNews[0]?.title || "Tin tức nổi bật"}
+                    width={800}
+                    height={400}
+                    context="blog-featured"
                   />
                   <div className="card-body">
                     <h6 className="text-muted mb-2">

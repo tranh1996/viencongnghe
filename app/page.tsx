@@ -199,7 +199,7 @@ export default function HomePage() {
             <Col lg={6}>
               <div className="ps-lg-5">
                 <h6 className="text-theme mb-3">{t('home.about.title')}</h6>
-                <h1 className="mb-4">{t('home.about.heading')}</h1>
+                <h2 className="mb-4">{t('home.about.heading')}</h2>
                 <p className="mb-4">
                   {t('home.about.description')}
                 </p>

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'admin-viencn.anf-technology.com', 'viencongnghe.com'],
     unoptimized: true,
   },
   trailingSlash: false,

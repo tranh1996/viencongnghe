@@ -139,7 +139,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
                   <i className="bi bi-building" style={{ fontSize: '3rem' }}></i>
                 </div>
                 <div>
-                  <h1 className="mb-2">{department.name}</h1>
+                  <h2 className="mb-2 department-title">{department.name}</h2>
                   {department.code && (
                     <Badge bg="light" text="dark" className="mb-2">
                       {department.code}
@@ -285,8 +285,8 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
                 </Card>
               )}
 
-              {/* Contact Information Section - Moved Below */}
-              <Card className="mb-4">
+              {/* Contact Information Section */}
+              <Card className="mb-5" style={{ position: 'relative', zIndex: 2 }}>
                 <Card.Body>
                   <h4 className="mb-3">
                     {t('organization.contactInformation')}
@@ -374,7 +374,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
       </section>
 
       {/* Additional Information */}
-      <section className="light-bg py-5">
+      <section className="light-bg py-5" style={{ marginTop: '2rem', marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
         <Container>
           <Row className="text-center">
             <Col lg={8} className="mx-auto">
