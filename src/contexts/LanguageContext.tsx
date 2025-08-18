@@ -59,6 +59,7 @@ const viTranslations: Record<string, string> = {
   // Header
   'nav.home': 'Trang chủ',
   'nav.about': 'Về chúng tôi',
+  'nav.about.general': 'Giới thiệu chung',
   'nav.organization': 'Cơ cấu tổ chức',
   'nav.products': 'Sản phẩm',
   'nav.news': 'Tin tức',
@@ -142,6 +143,7 @@ const viTranslations: Record<string, string> = {
   'about.resources.facilities': 'Cơ sở vật chất',
   'about.resources.experts': 'Đội ngũ chuyên gia',
   'about.resources.technology': 'Công nghệ tiên tiến',
+  'about.organization.title': 'Ban lãnh đạo',
 
   // Vision & Mission page
   'visionMission.pageTitle': 'Tầm nhìn & Sứ mệnh',
@@ -159,6 +161,10 @@ const viTranslations: Record<string, string> = {
   'visionMission.vision.contentNotAvailable': 'Nội dung tầm nhìn chưa có sẵn.',
   'visionMission.mission.contentNotAvailable': 'Nội dung sứ mệnh chưa có sẵn.',
   'visionMission.values.contentNotAvailable': 'Nội dung giá trị cốt lõi chưa có sẵn.',
+  'visionMission.summary.title': 'Tầm nhìn và Sứ mệnh',
+  'visionMission.summary.description': 'Viện Công nghệ cam kết thực hiện tầm nhìn trở thành một tổ chức nghiên cứu hàng đầu trong lĩnh vực công nghệ, đóng góp tích cực vào sự phát triển bền vững của đất nước. Chúng tôi nỗ lực không ngừng để thực hiện sứ mệnh nghiên cứu, phát triển và chuyển giao công nghệ tiên tiến.',
+  'visionMission.summary.aboutButton': 'Về chúng tôi',
+  'visionMission.summary.historyButton': 'Lịch sử phát triển',
 
   // History page
   'history.pageTitle': 'Lịch sử hình thành & phát triển',
@@ -315,6 +321,7 @@ const enTranslations: Record<string, string> = {
   // Header
   'nav.home': 'Home',
   'nav.about': 'About Us',
+  'nav.about.general': 'General Introduction',
   'nav.organization': 'Organization',
   'nav.products': 'Products',
   'nav.news': 'News',
@@ -398,6 +405,7 @@ const enTranslations: Record<string, string> = {
   'about.resources.facilities': 'Facilities',
   'about.resources.experts': 'Expert Team',
   'about.resources.technology': 'Advanced Technology',
+  'about.organization.title': 'Leadership',
 
   // Vision & Mission page
   'visionMission.pageTitle': 'Vision & Mission',
@@ -415,6 +423,10 @@ const enTranslations: Record<string, string> = {
   'visionMission.vision.contentNotAvailable': 'Vision content not available.',
   'visionMission.mission.contentNotAvailable': 'Mission content not available.',
   'visionMission.values.contentNotAvailable': 'Core values content not available.',
+  'visionMission.summary.title': 'Vision and Mission',
+  'visionMission.summary.description': 'The Technology Institute is committed to realizing its vision of becoming a leading research organization in the field of technology, actively contributing to the sustainable development of the country. We strive continuously to fulfill our mission of researching, developing and transferring advanced technologies.',
+  'visionMission.summary.aboutButton': 'About Us',
+  'visionMission.summary.historyButton': 'Development History',
 
   // History page
   'history.pageTitle': 'History of Formation & Development',
