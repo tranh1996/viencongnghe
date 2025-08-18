@@ -1,14 +1,66 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useLanguage } from '../contexts/LanguageContext';
-import BannerSlider from '../components/BannerSlider';
-import SEO from '../components/SEO';
-import OptimizedImage from '../components/OptimizedImage';
-import { getSEOConfig } from '../utils/seo';
+'use client';
 
-const Home: React.FC = () => {
-  const { t } = useLanguage();
+import type { Metadata } from 'next';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useLanguage } from '@/contexts/LanguageContext';
+import BannerSlider from '@/components/BannerSlider';
+import OptimizedImage from '@/components/OptimizedImage';
+import { fetchLatestNews, News, fetchAboutOverview, AboutOverview } from '@/utils/api';
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function HomePage() {
+  const { t, language } = useLanguage();
+  const [latestNews, setLatestNews] = useState<News[]>([]);
+  const [aboutOverview, setAboutOverview] = useState<AboutOverview | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [aboutLoading, setAboutLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [newsData, aboutData] = await Promise.all([
+          fetchLatestNews(language, 3),
+          fetchAboutOverview(language)
+        ]);
+        setLatestNews(newsData);
+        setAboutOverview(aboutData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Fallback to empty array if API fails
+        setLatestNews([]);
+        setAboutOverview(null);
+      } finally {
+        setLoading(false);
+        setAboutLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [language]);
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) {
+      return '';
+    }
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return '';
+    }
+    return date.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
 
   // Banner slides for home page
   const bannerSlides = [
@@ -134,36 +186,8 @@ const Home: React.FC = () => {
     }
   ];
 
-  // Structured data for the home page
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Viện Công nghệ (RITM) - Trang chủ",
-    "description": "Trang chủ của Viện Công nghệ (RITM) - Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam",
-    "url": "https://viencongnghe.com",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Viện Công nghệ (RITM)",
-      "alternateName": "Research Institute of Technology for Machinery",
-      "description": "Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam",
-      "url": "https://viencongnghe.com",
-      "logo": "https://viencongnghe.com/images/logo.svg",
-      "foundingDate": "1970",
-      "areaServed": "Vietnam",
-      "serviceType": [
-        "Công nghệ đúc",
-        "Nhiệt luyện",
-        "Gia công cơ khí",
-        "Kiểm định vật liệu",
-        "Chuyển giao công nghệ"
-      ]
-    }
-  };
-
   return (
     <>
-      <SEO config={getSEOConfig('home')} structuredData={structuredData} />
-      
       {/* Hero Section */}
       <BannerSlider slides={bannerSlides} />
 
@@ -172,41 +196,116 @@ const Home: React.FC = () => {
         <Container>
           <Row className="align-items-center">
             <Col lg={6} className="mb-4 mb-lg-0">
-              <OptimizedImage 
-                src="/images/about/01.jpg" 
-                alt="Viện Công nghệ RITM - Nghiên cứu và phát triển"
-                context="Trang chủ - Giới thiệu"
-                className="about-img-shape"
-                style={{ backgroundImage: 'url(/images/about/01.jpg)' }}
-              />
+              {aboutLoading ? (
+                <div className="about-img-shape" style={{ 
+                  height: '400px', 
+                  background: '#f8f9fa',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <div className="spinner-border text-theme" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : aboutOverview && aboutOverview.images.length > 0 ? (
+                <div className="about-img-shape position-relative">
+                  <div id="aboutImageCarousel" className="carousel slide" data-bs-ride="carousel">
+                    <div className="carousel-inner">
+                      {aboutOverview.images.map((image, index) => (
+                        <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                          <OptimizedImage 
+                            src={image} 
+                            alt={`${aboutOverview.title} - Image ${index + 1}`}
+                            context="Trang chủ - Giới thiệu"
+                            className="w-100 h-100"
+                            style={{ 
+                              objectFit: 'cover',
+                              height: '400px',
+                              width: '100%'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {aboutOverview.images.length > 1 && (
+                      <>
+                        <button className="carousel-control-prev" type="button" data-bs-target="#aboutImageCarousel" data-bs-slide="prev">
+                          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button" data-bs-target="#aboutImageCarousel" data-bs-slide="next">
+                          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Next</span>
+                        </button>
+                        <div className="carousel-indicators">
+                          {aboutOverview.images.map((_, index) => (
+                            <button 
+                              key={index}
+                              type="button" 
+                              data-bs-target="#aboutImageCarousel" 
+                              data-bs-slide-to={index} 
+                              className={index === 0 ? 'active' : ''}
+                              aria-current={index === 0 ? 'true' : 'false'}
+                              aria-label={`Slide ${index + 1}`}
+                            ></button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <OptimizedImage 
+                  src="/images/about/01.jpg" 
+                  alt="Viện Công nghệ RITM - Nghiên cứu và phát triển"
+                  context="Trang chủ - Giới thiệu"
+                  className="about-img-shape"
+                  style={{ backgroundImage: 'url(/images/about/01.jpg)' }}
+                />
+              )}
             </Col>
             <Col lg={6}>
               <div className="ps-lg-5">
                 <h6 className="text-theme mb-3">{t('home.about.title')}</h6>
-                <h1 className="mb-4">{t('home.about.heading')}</h1>
+                <h2 className="mb-4">
+                  {aboutOverview?.title || t('home.about.heading')}
+                </h2>
                 <p className="mb-4">
-                  {t('home.about.description')}
+                  {aboutOverview?.description || t('home.about.description')}
                 </p>
-                <ul className="list-icon style-1">
-                  <li>
-                    <i className="bi bi-check-circle-fill"></i>
-                    <span>{t('home.services.casting')}</span>
-                  </li>
-                  <li>
-                    <i className="bi bi-check-circle-fill"></i>
-                    <span>{t('home.services.heatTreatment')}</span>
-                  </li>
-                  <li>
-                    <i className="bi bi-check-circle-fill"></i>
-                    <span>{t('home.services.machining')}</span>
-                  </li>
-                  <li>
-                    <i className="bi bi-check-circle-fill"></i>
-                    <span>{t('home.services.testing')}</span>
-                  </li>
-                </ul>
+                
+                {/* Video Section - Only show if videos are available */}
+                {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
+                  <div className="mt-4">
+                    <h6 className="text-theme mb-3">{t('home.about.videos')}</h6>
+                    <h4 className="mb-4">{t('home.about.watchOurStory')}</h4>
+                    <Row>
+                      {aboutOverview.videos.map((video, index) => (
+                        <Col lg={12} className="mb-3" key={index}>
+                          <div className="video-container position-relative">
+                            <div className="ratio ratio-16x9">
+                              <iframe
+                                src={video.url}
+                                title={video.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded"
+                              ></iframe>
+                            </div>
+                            <div className="video-title mt-3">
+                              <h6 className="text-center">{video.title}</h6>
+                            </div>
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+                  </div>
+                )}
+                
                 <div className="mt-4">
-                  <Link to="/about" className="themeht-btn primary-btn">
+                  <Link href="/about" className="themeht-btn primary-btn">
                     {t('home.about.readMore')}
                   </Link>
                 </div>
@@ -239,7 +338,7 @@ const Home: React.FC = () => {
                   {t('home.services.casting')} - Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh. 
                   Mô phỏng thiết kế đúc bằng phần mềm MAGMASoft.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -254,7 +353,7 @@ const Home: React.FC = () => {
                   {t('home.services.heatTreatment')} - Nghiên cứu, dịch vụ nhiệt luyện chân không, nhiệt luyện truyền thống và hóa nhiệt luyện 
                   (thấm C, C-N, N) các loại khuôn và các sản phẩm cơ khí.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -269,7 +368,7 @@ const Home: React.FC = () => {
                   {t('home.services.machining')} - Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại dùng trong các lĩnh vực 
                   rèn, dập, ép và đúc áp lực.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -284,7 +383,7 @@ const Home: React.FC = () => {
                   {t('home.services.testing')} - Thử nghiệm, kiểm định trong lĩnh vực hóa, cơ, không phá huỷ các loại vật liệu, 
                   kết cấu hàn và chi tiết máy.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -299,7 +398,7 @@ const Home: React.FC = () => {
                   {t('home.services.transfer')} - Cung cấp và chuyển giao công nghệ các thiết bị về xử lý nhiệt, Các dây chuyền/ 
                   hệ thống kết cấu cơ khí.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -314,7 +413,7 @@ const Home: React.FC = () => {
                   {t('home.services.training')} - Đào tạo, tư vấn trong lĩnh vực như Công nghệ Đúc; Xử lý nhiệt; Kiểm định vật liệu; 
                   và các lĩnh vực khác.
                 </p>
-                <Link to="/services" className="text-theme text-decoration-none">
+                <Link href="/services" className="text-theme text-decoration-none">
                   {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
                 </Link>
               </div>
@@ -365,66 +464,42 @@ const Home: React.FC = () => {
             </Col>
           </Row>
           <Row>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <OptimizedImage 
-                  src="/images/blog/01.jpg" 
-                  alt="Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn"
-                  context="Tin tức - Hoạt động"
-                  className="card-img-top"
-                />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">27/05/25</h6>
-                  <h3 className="h5 card-title">Tháng công nhân – Lan tỏa yêu thương, chia sẻ khó khăn</h3>
-                  <p className="card-text">
-                    Hoạt động ý nghĩa trong tháng công nhân với nhiều hoạt động thiết thực...
-                  </p>
-                  <Link to="/blog" className="text-theme text-decoration-none">
-                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                  </Link>
+            {loading ? (
+              <Col lg={12} className="text-center py-5">
+                <div className="spinner-border text-theme" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <OptimizedImage 
-                  src="/images/blog/02.jpg" 
-                  alt="Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam"
-                  context="Tin tức - Sự kiện"
-                  className="card-img-top"
-                />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">20/12/24</h6>
-                  <h3 className="h5 card-title">Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam</h3>
-                  <p className="card-text">
-                    Các hoạt động kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam...
-                  </p>
-                  <Link to="/blog" className="text-theme text-decoration-none">
-                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                  </Link>
-                </div>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <OptimizedImage 
-                  src="/images/blog/03.jpg" 
-                  alt="Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022"
-                  context="Tin tức - Triển lãm"
-                  className="card-img-top"
-                />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">21/11/22</h6>
-                  <h3 className="h5 card-title">Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022</h3>
-                  <p className="card-text">
-                    Viện Công nghệ tham gia triển lãm VIMEXPO 2022 với nhiều sản phẩm công nghệ...
-                  </p>
-                  <Link to="/blog" className="text-theme text-decoration-none">
-                    {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                  </Link>
-                </div>
-              </div>
-            </Col>
+              </Col>
+            ) : latestNews.length === 0 ? (
+              <Col lg={12} className="text-center py-5">
+                <p>{t('home.news.noNews')}</p>
+              </Col>
+            ) : (
+              latestNews.map((news, index) => (
+                <Col lg={4} md={6} className="mb-4" key={news.id}>
+                  <div className="card h-100">
+                    <OptimizedImage 
+                      src={news.image_url || "/images/blog/01.jpg"} 
+                      alt={news.title}
+                      context="Tin tức - Hoạt động"
+                      className="card-img-top"
+                    />
+                    <div className="card-body">
+                      <h6 className="text-muted mb-2">
+                        {news.created_at ? formatDate(news.created_at) : t('common.recentlyUpdated')}
+                      </h6>
+                      <h3 className="h5 card-title">{news.title}</h3>
+                      <p className="card-text">
+                        {truncateText(news.description || '', 150)}
+                      </p>
+                      <Link href={`/news/${news.slug}`} className="text-theme text-decoration-none">
+                        {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                      </Link>
+                    </div>
+                  </div>
+                </Col>
+              ))
+            )}
           </Row>
         </Container>
       </section>
@@ -434,14 +509,14 @@ const Home: React.FC = () => {
         <Container>
           <Row className="text-center">
             <Col lg={8} className="mx-auto">
-              <h2 className="mb-4">{t('home.cta.title')}</h2>
+              <h2 className="mb-4 text-white">{t('home.cta.title')}</h2>
               <p className="mb-4">
                 {t('home.cta.description')}
               </p>
-              <Link to="/contact" className="themeht-btn secondary-btn me-3">
+              <Link href="/contact" className="themeht-btn secondary-btn me-3">
                 {t('home.cta.contactNow')}
               </Link>
-              <Link to="/services" className="themeht-btn primary-btn">
+              <Link href="/services" className="themeht-btn primary-btn">
                 {t('home.cta.viewServices')}
               </Link>
             </Col>
@@ -450,6 +525,4 @@ const Home: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Home; 
+}

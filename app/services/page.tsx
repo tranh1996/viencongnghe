@@ -1,7 +1,13 @@
+'use client';
+
+import type { Metadata } from 'next';
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services: React.FC = () => {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function ServicesPage() {
   return (
     <>
       {/* Page Title */}
@@ -195,6 +201,4 @@ const Services: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Services; 
+}

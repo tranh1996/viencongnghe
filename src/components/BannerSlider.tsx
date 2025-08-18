@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface BannerSlide {
@@ -106,12 +108,12 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
                 )}
                 <div className="btn-box mt-5">
                   {slide.primaryButton && (
-                    <Link to={slide.primaryButton.link} className="themeht-btn primary-btn">
+                    <Link href={slide.primaryButton.link} className="themeht-btn primary-btn">
                       {slide.primaryButton.text[language]}
                     </Link>
                   )}
                   {slide.secondaryButton && (
-                    <Link to={slide.secondaryButton.link} className="themeht-btn dark-btn">
+                    <Link href={slide.secondaryButton.link} className="themeht-btn dark-btn">
                       {slide.secondaryButton.text[language]}
                     </Link>
                   )}

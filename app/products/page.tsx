@@ -1,7 +1,13 @@
+'use client';
+
+import type { Metadata } from 'next';
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Products: React.FC = () => {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default function ProductsPage() {
   return (
     <>
       <section className="page-title dark-bg">
@@ -223,6 +229,4 @@ const Products: React.FC = () => {
       </section>
     </>
   );
-};
-
-export default Products;
+}

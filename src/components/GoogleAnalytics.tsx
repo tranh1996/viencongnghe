@@ -1,10 +1,13 @@
+'use client';
+
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname, useSearchParams } from 'next/navigation';
 import ReactGA from 'react-ga4';
 import { GA_CONFIG } from '../utils/seo';
 
 const GoogleAnalytics: React.FC = () => {
-  const location = useLocation();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     // Initialize Google Analytics
@@ -21,12 +24,13 @@ const GoogleAnalytics: React.FC = () => {
   useEffect(() => {
     // Track page views
     if (GA_CONFIG.measurementId && GA_CONFIG.measurementId !== 'G-XXXXXXXXXX') {
+      const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
       ReactGA.send({
         hitType: 'pageview',
-        page: location.pathname + location.search
+        page: url
       });
     }
-  }, [location]);
+  }, [pathname, searchParams]);
 
   // Custom event tracking function
   const trackEvent = (category: string, action: string, label?: string, value?: number) => {

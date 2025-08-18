@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'vi' | 'en';
@@ -39,7 +41,15 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    // Fallback for static generation
+    const fallbackTranslations = viTranslations;
+    return {
+      language: 'vi' as Language,
+      setLanguage: () => {},
+      t: (key: string): string => {
+        return fallbackTranslations[key] || key;
+      },
+    };
   }
   return context;
 };
@@ -54,8 +64,8 @@ const viTranslations: Record<string, string> = {
   'nav.news': 'Tin tức',
   'nav.library': 'Thư viện',
   'nav.contact': 'Liên hệ',
-  'nav.about.overview': 'Tổng quan',
-  'nav.about.resources': 'Nguồn lực',
+  'nav.about.visionMission': 'Tầm nhìn sứ mệnh',
+  'nav.about.history': 'Lịch sử hình thành & phát triển',
   'nav.organization.units': 'Đơn vị đoàn thể',
   'nav.organization.admin': 'Phòng Tổ chức – Hành chính',
   'nav.organization.accounting': 'Phòng Kế toán – Tài chính',
@@ -85,6 +95,8 @@ const viTranslations: Record<string, string> = {
   'home.about.heading': 'Hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim',
   'home.about.description': 'Trong suốt hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim, Viện Công nghệ không ngừng đầu tư và phát triển các lĩnh vực thế mạnh của Viện nhằm đáp ứng được những yêu cầu khắt khe nhất của khách hàng trong nước và quốc tế.',
   'home.about.readMore': 'Xem thêm',
+  'home.about.videos': 'Video giới thiệu',
+  'home.about.watchOurStory': 'Xem câu chuyện của chúng tôi',
   'home.services.title': 'Lĩnh vực hoạt động',
   'home.services.heading': 'Chuyên môn và dịch vụ của chúng tôi',
   'home.services.description': 'Viện cũng triển khai nhiều nghiên cứu về lĩnh vực vật liệu mới, nhiệt luyện, cơ khí chế tạo khuôn mẫu với mục tiêu ứng dụng vào thực tế.',
@@ -102,6 +114,8 @@ const viTranslations: Record<string, string> = {
   'home.news.title': 'Tin tức',
   'home.news.heading': 'Tin tức mới nhất',
   'home.news.readMore': 'Đọc thêm',
+  'home.news.noNews': 'Hiện tại không có tin tức mới.',
+  'common.recentlyUpdated': 'Mới cập nhật',
   'home.cta.title': 'Sẵn sàng hợp tác với chúng tôi?',
   'home.cta.description': 'Liên hệ với đội ngũ chuyên gia của chúng tôi ngay hôm nay để thảo luận về nhu cầu nghiên cứu và khám phá cách chúng tôi có thể giúp bạn đạt được mục tiêu khoa học.',
   'home.cta.contactNow': 'Liên hệ ngay',
@@ -128,6 +142,32 @@ const viTranslations: Record<string, string> = {
   'about.resources.facilities': 'Cơ sở vật chất',
   'about.resources.experts': 'Đội ngũ chuyên gia',
   'about.resources.technology': 'Công nghệ tiên tiến',
+
+  // Vision & Mission page
+  'visionMission.pageTitle': 'Tầm nhìn & Sứ mệnh',
+  'visionMission.breadcrumb.home': 'Trang chủ',
+  'visionMission.breadcrumb.about': 'Về chúng tôi',
+  'visionMission.breadcrumb.visionMission': 'Tầm nhìn & Sứ mệnh',
+  'visionMission.title': 'Tầm nhìn & Sứ mệnh',
+  'visionMission.mainTitle': 'VIỆN CÔNG NGHỆ - GIÁTRỊ TRONG TỪNG HÀNH ĐỘNG',
+  'visionMission.overview.title': 'Tổng quan',
+  'visionMission.organization.title': 'Ban lãnh đạo',
+  'visionMission.organization.members': 'Thành viên ban lãnh đạo',
+  'visionMission.vision.title': 'Tầm nhìn',
+  'visionMission.mission.title': 'Sứ mệnh',
+  'visionMission.values.title': 'Giá trị cốt lõi',
+  'visionMission.vision.contentNotAvailable': 'Nội dung tầm nhìn chưa có sẵn.',
+  'visionMission.mission.contentNotAvailable': 'Nội dung sứ mệnh chưa có sẵn.',
+  'visionMission.values.contentNotAvailable': 'Nội dung giá trị cốt lõi chưa có sẵn.',
+
+  // History page
+  'history.pageTitle': 'Lịch sử hình thành & phát triển',
+  'history.breadcrumb.home': 'Trang chủ',
+  'history.breadcrumb.about': 'Về chúng tôi',
+  'history.breadcrumb.history': 'Lịch sử hình thành & phát triển',
+  'history.title': 'Lịch sử hình thành & phát triển',
+  'history.subtitle': 'Hành trình hơn 50 năm phát triển',
+  'history.milestones.title': 'Các mốc lịch sử quan trọng',
 
   // Services page
   'services.pageTitle': 'Lĩnh vực hoạt động',
@@ -238,6 +278,33 @@ const viTranslations: Record<string, string> = {
   'footer.terms': 'Điều khoản sử dụng',
   'footer.sitemap': 'Sơ đồ trang',
 
+  // Organization page
+  'organization.title': 'Danh sách các phòng ban',
+  'organization.description': 'Khám phá cơ cấu tổ chức của Viện Công nghệ với các phòng ban chuyên môn, đảm bảo hiệu quả hoạt động và phát triển bền vững.',
+  'organization.loading': 'Đang tải dữ liệu...',
+  'organization.error': 'Lỗi tải dữ liệu',
+  'organization.noData': 'Không có dữ liệu',
+  'organization.noDataMessage': 'Hiện tại không có thông tin về các phòng ban.',
+  'organization.viewDetails': 'Xem chi tiết',
+  'organization.contactInfo': 'Thông tin liên hệ:',
+  'organization.backToList': 'Quay lại danh sách',
+  'organization.backToDepartments': 'Xem phòng ban khác',
+  'organization.departmentIntro': 'Giới thiệu phòng ban',
+  'organization.imagesVideos': 'Hình ảnh & Video',
+  'organization.image': 'Hình ảnh',
+  'organization.video': 'Video',
+  'organization.contactInformation': 'Thông tin liên hệ',
+  'organization.email': 'Email',
+  'organization.phone': 'Điện thoại',
+  'organization.address': 'Địa chỉ',
+  'organization.contactNotAvailable': 'Thông tin liên hệ chưa có sẵn.',
+  'organization.generalContact': 'Liên hệ chung',
+  'organization.generalContactDesc': 'Để biết thêm thông tin, vui lòng liên hệ:',
+  'organization.haveQuestions': 'Bạn có câu hỏi?',
+  'organization.haveQuestionsDesc': 'Nếu bạn cần thêm thông tin về phòng ban này hoặc muốn hợp tác, vui lòng liên hệ với chúng tôi.',
+  'organization.viewAllDepartments': 'Xem tất cả phòng ban',
+  'organization.departmentList': 'Danh sách phòng ban',
+
   // Language switcher
   'language.vi': 'Tiếng Việt',
   'language.en': 'English',
@@ -253,8 +320,8 @@ const enTranslations: Record<string, string> = {
   'nav.news': 'News',
   'nav.library': 'Library',
   'nav.contact': 'Contact',
-  'nav.about.overview': 'Overview',
-  'nav.about.resources': 'Resources',
+  'nav.about.visionMission': 'Vision & Mission',
+  'nav.about.history': 'History of Formation & Development',
   'nav.organization.units': 'Units',
   'nav.organization.admin': 'Administration Department',
   'nav.organization.accounting': 'Accounting & Finance Department',
@@ -284,6 +351,8 @@ const enTranslations: Record<string, string> = {
   'home.about.heading': 'Over 50 years of experience in mechanical engineering and metallurgy',
   'home.about.description': 'Throughout more than 50 years of operation in the field of mechanical engineering and metallurgy, the Technology Institute has continuously invested and developed the Institute\'s strengths to meet the most stringent requirements of domestic and international customers.',
   'home.about.readMore': 'Read More',
+  'home.about.videos': 'Introduction Videos',
+  'home.about.watchOurStory': 'Watch Our Story',
   'home.services.title': 'Areas of Operation',
   'home.services.heading': 'Our Expertise and Services',
   'home.services.description': 'The Institute also implements many research projects in the field of new materials, heat treatment, mechanical engineering for mold making with the goal of practical application.',
@@ -301,6 +370,8 @@ const enTranslations: Record<string, string> = {
   'home.news.title': 'News',
   'home.news.heading': 'Latest News',
   'home.news.readMore': 'Read More',
+  'home.news.noNews': 'No news available at the moment.',
+  'common.recentlyUpdated': 'Recently Updated',
   'home.cta.title': 'Ready to Collaborate with Us?',
   'home.cta.description': 'Contact our team of experts today to discuss your research needs and discover how we can help you achieve your scientific goals.',
   'home.cta.contactNow': 'Contact Now',
@@ -327,6 +398,32 @@ const enTranslations: Record<string, string> = {
   'about.resources.facilities': 'Facilities',
   'about.resources.experts': 'Expert Team',
   'about.resources.technology': 'Advanced Technology',
+
+  // Vision & Mission page
+  'visionMission.pageTitle': 'Vision & Mission',
+  'visionMission.breadcrumb.home': 'Home',
+  'visionMission.breadcrumb.about': 'About Us',
+  'visionMission.breadcrumb.visionMission': 'Vision & Mission',
+  'visionMission.title': 'Vision & Mission',
+  'visionMission.mainTitle': 'TECHNOLOGY INSTITUTE - VALUE IN EVERY ACTION',
+  'visionMission.overview.title': 'Overview',
+  'visionMission.organization.title': 'Leadership',
+  'visionMission.organization.members': 'Leadership Members',
+  'visionMission.vision.title': 'Vision',
+  'visionMission.mission.title': 'Mission',
+  'visionMission.values.title': 'Core Values',
+  'visionMission.vision.contentNotAvailable': 'Vision content not available.',
+  'visionMission.mission.contentNotAvailable': 'Mission content not available.',
+  'visionMission.values.contentNotAvailable': 'Core values content not available.',
+
+  // History page
+  'history.pageTitle': 'History of Formation & Development',
+  'history.breadcrumb.home': 'Home',
+  'history.breadcrumb.about': 'About Us',
+  'history.breadcrumb.history': 'History of Formation & Development',
+  'history.title': 'History of Formation & Development',
+  'history.subtitle': 'Over 50 years of development journey',
+  'history.milestones.title': 'Key Historical Milestones',
 
   // Services page
   'services.pageTitle': 'Areas of Operation',
@@ -436,6 +533,33 @@ const enTranslations: Record<string, string> = {
   'footer.privacy': 'Privacy Policy',
   'footer.terms': 'Terms of Use',
   'footer.sitemap': 'Sitemap',
+
+  // Organization page
+  'organization.title': 'List of Departments',
+  'organization.description': 'Explore the organizational structure of the Technology Institute with specialized departments, ensuring operational efficiency and sustainable development.',
+  'organization.loading': 'Loading data...',
+  'organization.error': 'Error Loading Data',
+  'organization.noData': 'No Data Available',
+  'organization.noDataMessage': 'Currently no department information is available.',
+  'organization.viewDetails': 'View Details',
+  'organization.contactInfo': 'Contact Information:',
+  'organization.backToList': 'Back to List',
+  'organization.backToDepartments': 'View Other Departments',
+  'organization.departmentIntro': 'Department Introduction',
+  'organization.imagesVideos': 'Images & Videos',
+  'organization.image': 'Image',
+  'organization.video': 'Video',
+  'organization.contactInformation': 'Contact Information',
+  'organization.email': 'Email',
+  'organization.phone': 'Phone',
+  'organization.address': 'Address',
+  'organization.contactNotAvailable': 'Contact information not available.',
+  'organization.generalContact': 'General Contact',
+  'organization.generalContactDesc': 'For more information, please contact:',
+  'organization.haveQuestions': 'Have Questions?',
+  'organization.haveQuestionsDesc': 'If you need more information about this department or want to collaborate, please contact us.',
+  'organization.viewAllDepartments': 'View All Departments',
+  'organization.departmentList': 'Department List',
 
   // Language switcher
   'language.vi': 'Tiếng Việt',

@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -9,7 +12,7 @@ const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
   const { t, language } = useLanguage();
 
   useEffect(() => {
@@ -36,7 +39,13 @@ const Header: React.FC = () => {
           setDepartments(departmentsData);
         }
       } catch (error) {
-        if (isMounted && !(error instanceof Error && error.name === 'AbortError')) {
+        // Don't log AbortError as it's expected when component unmounts or language changes
+        if (error instanceof Error && error.name === 'AbortError') {
+          // This is expected behavior, no need to log or handle as error
+          return;
+        }
+        
+        if (isMounted) {
           console.error('Failed to load departments:', error);
           // Fallback to empty array if API fails
           setDepartments([]);
@@ -98,7 +107,7 @@ const Header: React.FC = () => {
           {/* Logo and Header Elements Row */}
           <div className="row align-items-center">
             <div className="col-lg-3 col-md-6">
-              <Navbar.Brand as={Link} to="/" className="logo">
+              <Navbar.Brand as={Link} href="/" className="logo">
                 <img 
                   className="img-fluid" 
                   src="/images/logo.svg" 
@@ -114,26 +123,51 @@ const Header: React.FC = () => {
               <div className="header-right d-flex align-items-center justify-content-end">
                 {/* Desktop Search Icon */}
                 <div className="search-icon d-none d-lg-block">
-                  <a id="search" href="javascript:void(0)">
+                  <button 
+                    id="search" 
+                    className="btn btn-link p-0 border-0 bg-transparent"
+                    onClick={() => {
+                      // TODO: Implement search functionality
+                      console.log('Search clicked');
+                    }}
+                  >
                     <i className="bi bi-search"></i>
-                  </a>
+                  </button>
                 </div>
                 <div className="social-icons mx-4 d-none d-lg-flex">
                   <ul className="list-inline">
                     <li>
-                      <a href="#">
+                      <button 
+                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
+                        onClick={() => {
+                          // TODO: Add Facebook URL when available
+                          console.log('Facebook clicked');
+                        }}
+                      >
                         <i className="bi bi-facebook"></i>
-                      </a>
+                      </button>
                     </li>
                     <li>
-                      <a href="#">
+                      <button 
+                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
+                        onClick={() => {
+                          // TODO: Add YouTube URL when available
+                          console.log('YouTube clicked');
+                        }}
+                      >
                         <i className="bi bi-youtube"></i>
-                      </a>
+                      </button>
                     </li>
                     <li>
-                      <a href="#">
+                      <button 
+                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
+                        onClick={() => {
+                          // TODO: Add LinkedIn URL when available
+                          console.log('LinkedIn clicked');
+                        }}
+                      >
                         <i className="bi bi-linkedin"></i>
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </div>
@@ -173,8 +207,8 @@ const Header: React.FC = () => {
                   <Nav className="navbar-nav">
                     <Nav.Link
                         as={Link}
-                      to="/"
-                      className={location.pathname === '/' ? 'active' : ''}
+                      href="/"
+                      className={pathname === '/' ? 'active' : ''}
                     >
                       {t('nav.home')}
                     </Nav.Link>
@@ -182,10 +216,10 @@ const Header: React.FC = () => {
                     <NavDropdown 
                       title={t('nav.about')} 
                       id="about-dropdown"
-                      className={location.pathname === '/about' ? 'active' : ''}
+                      className={pathname === '/about' ? 'active' : ''}
                     >
-                      <NavDropdown.Item as={Link} to="/about">{t('nav.about.overview')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/about#resources">{t('nav.about.resources')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about/vision-mission">{t('nav.about.visionMission')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about/history">{t('nav.about.history')}</NavDropdown.Item>
                     </NavDropdown>
 
                     <NavDropdown 
@@ -195,34 +229,44 @@ const Header: React.FC = () => {
                       {loading ? (
                         <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
                       ) : departments.length > 0 ? (
-                        departments.map((department) => (
-                          <NavDropdown.Item 
-                            key={department.id} 
-                            as={Link} 
-                            to={`/organization#${department.id}`}
-                          >
-                            {department.name}
+                        <>
+                          {departments.map((department) => (
+                            <NavDropdown.Item 
+                              key={department.id} 
+                              as={Link} 
+                              href={`/organization/${department.id}`}
+                            >
+                              {department.name}
+                            </NavDropdown.Item>
+                          ))}
+                          <NavDropdown.Divider />
+                          <NavDropdown.Item as={Link} href="/organization">
+                            {t('organization.viewAllDepartments')}
                           </NavDropdown.Item>
-                        ))
+                        </>
                       ) : (
                         // Fallback to static menu items if API fails
                         <>
-                          <NavDropdown.Item as={Link} to="/organization#admin">{t('nav.organization.admin')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#accounting">{t('nav.organization.accounting')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#testing">{t('nav.organization.testing')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#technology">{t('nav.organization.technology')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#quality">{t('nav.organization.quality')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#mold">{t('nav.organization.mold')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#research">{t('nav.organization.research')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} to="/organization#company">{t('nav.organization.company')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.admin')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.accounting')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.testing')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.technology')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.quality')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.mold')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.research')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.company')}</NavDropdown.Item>
+                          <NavDropdown.Divider />
+                          <NavDropdown.Item as={Link} href="/organization">
+                            {t('organization.viewAllDepartments')}
+                          </NavDropdown.Item>
                         </>
                       )}
                     </NavDropdown>
 
                     <Nav.Link 
                       as={Link} 
-                      to="/products"
-                      className={location.pathname === '/products' ? 'active' : ''}
+                      href="/products"
+                      className={pathname === '/products' ? 'active' : ''}
                     >
                       {t('nav.products')}
                     </Nav.Link>
@@ -230,26 +274,26 @@ const Header: React.FC = () => {
                     <NavDropdown 
                       title={t('nav.news')} 
                       id="news-dropdown"
-                      className={location.pathname === '/blog' ? 'active' : ''}
+                      className={pathname === '/blog' ? 'active' : ''}
                     >
-                      <NavDropdown.Item as={Link} to="/blog">{t('nav.news.activities')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/blog#science">{t('nav.news.science')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/blog#professional">{t('nav.news.professional')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/blog#training">{t('nav.news.training')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/blog">{t('nav.news.activities')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/blog#science">{t('nav.news.science')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/blog#professional">{t('nav.news.professional')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/blog#training">{t('nav.news.training')}</NavDropdown.Item>
                     </NavDropdown>
 
                     <Nav.Link 
                       as={Link} 
-                      to="/library"
-                      className={location.pathname === '/library' ? 'active' : ''}
+                      href="/library"
+                      className={pathname === '/library' ? 'active' : ''}
                     >
                       {t('nav.library')}
                     </Nav.Link>
 
                     <Nav.Link 
                       as={Link} 
-                      to="/contact"
-                      className={location.pathname === '/contact' ? 'active' : ''}
+                      href="/contact"
+                      className={pathname === '/contact' ? 'active' : ''}
                     >
                       {t('nav.contact')}
                     </Nav.Link>
@@ -260,19 +304,37 @@ const Header: React.FC = () => {
                     <div className="social-icons">
                       <ul className="list-inline">
                         <li>
-                          <a href="#">
+                          <button 
+                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
+                            onClick={() => {
+                              // TODO: Add Facebook URL when available
+                              console.log('Facebook clicked');
+                            }}
+                          >
                             <i className="bi bi-facebook"></i>
-                          </a>
+                          </button>
                         </li>
                         <li>
-                          <a href="#">
+                          <button 
+                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
+                            onClick={() => {
+                              // TODO: Add YouTube URL when available
+                              console.log('YouTube clicked');
+                            }}
+                          >
                             <i className="bi bi-youtube"></i>
-                          </a>
+                          </button>
                         </li>
                         <li>
-                          <a href="#">
+                          <button 
+                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
+                            onClick={() => {
+                              // TODO: Add LinkedIn URL when available
+                              console.log('LinkedIn clicked');
+                            }}
+                          >
                             <i className="bi bi-linkedin"></i>
-                          </a>
+                          </button>
                         </li>
                       </ul>
                     </div>
