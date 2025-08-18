@@ -81,6 +81,74 @@ export interface NewsApiResponse {
   latestNews: News[];
 }
 
+export interface AboutVideo {
+  type: string;
+  url: string;
+  title: string;
+}
+
+export interface AboutOverview {
+  title: string;
+  description: string;
+  images: string[];
+  videos: AboutVideo[];
+}
+
+export interface AboutOverviewResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: AboutOverview;
+}
+
+export interface AboutVision {
+  content: string;
+  image: string | null;
+}
+
+export interface AboutVisionResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: {
+    content: string;
+    image: string | null;
+  };
+}
+
+export interface OrganizationMember {
+  name: string;
+  position: string;
+  department: string;
+  description: string;
+  avatar: string | null;
+}
+
+export interface OrganizationResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: {
+    members: OrganizationMember[];
+  };
+}
+
+export interface HistoryMilestone {
+  title: string;
+  year: string;
+  description: string;
+  image: string | null;
+}
+
+export interface AboutHistoryResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: {
+    milestones: HistoryMilestone[];
+  };
+}
+
 const API_BASE_URL = api.baseUrl;
 
 export const fetchDepartments = async (language: string, signal?: AbortSignal): Promise<Department[]> => {
@@ -198,6 +266,138 @@ export const fetchHighlightNews = async (language: string, signal?: AbortSignal)
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {
       console.error('Error fetching highlight news:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchAboutOverview = async (language: string, signal?: AbortSignal): Promise<AboutOverview> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/about/overview`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: AboutOverviewResponse = await response.json();
+    
+    if (data.success) {
+      return data.data;
+    } else {
+      throw new Error(data.message || 'Failed to fetch about overview');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching about overview:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchAboutVision = async (language: string, signal?: AbortSignal): Promise<AboutVision> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/about/vision`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: AboutVisionResponse = await response.json();
+    
+    if (data.success) {
+      // Return the data in the expected format
+      return {
+        content: data.data.content,
+        image: data.data.image
+      };
+    } else {
+      throw new Error(data.message || 'Failed to fetch vision and mission');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching vision and mission:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchOrganization = async (language: string, signal?: AbortSignal): Promise<OrganizationMember[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/about/organization`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: OrganizationResponse = await response.json();
+    
+    if (data.success) {
+      return data.data.members;
+    } else {
+      throw new Error(data.message || 'Failed to fetch organization');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching organization:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchAboutHistory = async (language: string, signal?: AbortSignal): Promise<HistoryMilestone[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/about/history`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: AboutHistoryResponse = await response.json();
+    
+    if (data.success) {
+      return data.data.milestones;
+    } else {
+      throw new Error(data.message || 'Failed to fetch history');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching history:', error);
     }
     throw error;
   }

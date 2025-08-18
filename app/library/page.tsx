@@ -1,13 +1,15 @@
 'use client';
 
-import type { Metadata } from 'next';
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 export default function LibraryPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <section className="page-title dark-bg">
@@ -122,7 +124,7 @@ export default function LibraryPage() {
           <section className="mt-5">
             <Row className="text-center mb-4">
               <Col>
-                <h3>Video hoạt động</h3>
+                <h3>{t('library.video.title')}</h3>
               </Col>
             </Row>
             <Row>
@@ -132,12 +134,12 @@ export default function LibraryPage() {
                     <div className="mb-3">
                       <i className="bi bi-play-circle text-theme" style={{ fontSize: '4rem' }}></i>
                     </div>
-                    <h5 className="card-title">Giới thiệu Viện Công nghệ</h5>
+                    <h5 className="card-title">{t('library.video.introduction')}</h5>
                     <p className="card-text">
-                      Video giới thiệu tổng quan về Viện Công nghệ và các hoạt động chính.
+                      {t('library.video.introduction')} - {t('library.description')}
                     </p>
                     <a href="#" className="themeht-btn primary-btn">
-                      Xem video
+                      {t('library.video.watch')}
                     </a>
                   </div>
                 </div>
@@ -149,12 +151,12 @@ export default function LibraryPage() {
                     <div className="mb-3">
                       <i className="bi bi-play-circle text-theme" style={{ fontSize: '4rem' }}></i>
                     </div>
-                    <h5 className="card-title">Quy trình sản xuất</h5>
+                    <h5 className="card-title">{t('library.video.production')}</h5>
                     <p className="card-text">
-                      Video về quy trình sản xuất và chế tạo các sản phẩm cơ khí.
+                      {t('library.video.production')} - {t('library.description')}
                     </p>
                     <a href="#" className="themeht-btn primary-btn">
-                      Xem video
+                      {t('library.video.watch')}
                     </a>
                   </div>
                 </div>
@@ -166,7 +168,7 @@ export default function LibraryPage() {
           <section className="light-bg mt-5">
             <Row className="text-center mb-4">
               <Col>
-                <h3>Thư viện ảnh</h3>
+                <h3>{t('library.gallery.title')}</h3>
               </Col>
             </Row>
             <Row>

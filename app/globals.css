@@ -119,9 +119,50 @@ code {
   border: 1px solid var(--themeht-border-light-color);
 }
 
-.contact-info {
-  background: var(--themeht-white-color);
-  border: 1px solid var(--themeht-border-light-color);
+/* ContactInfo Styles */
+.media-icon {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.media-icon li {
+  display: block;
+  margin-bottom: 20px;
+  color: #ccc;
+  position: relative;
+  padding-left: 35px;
+}
+
+.media-icon li i {
+  color: var(--theme-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 16px;
+}
+
+.media-icon li span {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.media-icon li p {
+  margin: 0;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+.media-icon li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.media-icon li a:hover {
+  color: var(--theme-color);
 }
 
 /* Breadcrumb styles */
@@ -170,5 +211,217 @@ code {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+/* Vision & Mission Section Styles */
+.vision-column,
+.mission-column,
+.values-column {
+  height: 100%;
+}
+
+.vision-card,
+.mission-card,
+.values-card {
+  background: var(--themeht-white-color);
+  border: 1px solid var(--themeht-border-light-color);
+  border-radius: 12px;
+  padding: 2rem;
+  height: 100%;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.vision-card:hover,
+.mission-card:hover,
+.values-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border-color: var(--themeht-primary-color);
+}
+
+.vision-icon,
+.mission-icon,
+.values-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--themeht-primary-color) 0%, var(--themeht-secondary-color) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: var(--themeht-white-color);
+  font-size: 1.5rem;
+}
+
+.vision-title,
+.mission-title,
+.values-title {
+  color: var(--themeht-primary-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.vision-content,
+.mission-content,
+.values-content {
+  text-align: center;
+}
+
+.vision-content p,
+.mission-content p,
+.values-content p {
+  color: var(--themeht-text-color);
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .vision-card,
+  .mission-card,
+  .values-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .vision-icon,
+  .mission-icon,
+  .values-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .vision-title,
+  .mission-title,
+  .values-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .vision-card,
+  .mission-card,
+  .values-card {
+    padding: 1.25rem;
+  }
+  
+  .vision-content p,
+  .mission-content p,
+  .values-content p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+}
+
+/* Overview Image Slider Styles */
+.overview-image-slider {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.overview-image-slider .carousel {
+  border-radius: 12px;
+}
+
+.overview-image-slider .carousel-inner {
+  border-radius: 12px;
+}
+
+.overview-image-slider .carousel-item {
+  border-radius: 12px;
+}
+
+.overview-image-slider .about-img-shape {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.overview-image-slider .carousel-indicators {
+  bottom: 20px;
+}
+
+.overview-image-slider .carousel-indicators button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.5);
+  border: 2px solid rgba(255,255,255,0.8);
+  margin: 0 4px;
+}
+
+.overview-image-slider .carousel-indicators button.active {
+  background-color: var(--themeht-primary-color);
+  border-color: var(--themeht-primary-color);
+}
+
+.overview-image-slider .carousel-control-prev,
+.overview-image-slider .carousel-control-next {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 20px;
+}
+
+.overview-image-slider .carousel-control-prev {
+  left: 10px;
+}
+
+.overview-image-slider .carousel-control-next {
+  right: 10px;
+}
+
+.overview-image-slider .carousel-control-prev-icon,
+.overview-image-slider .carousel-control-next-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Responsive adjustments for slider */
+@media (max-width: 991px) {
+  .overview-image-slider .about-img-shape {
+    height: 350px;
+  }
+  
+  .overview-image-slider .carousel-control-prev,
+  .overview-image-slider .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .overview-image-slider .about-img-shape {
+    height: 300px;
+  }
+  
+  .overview-image-slider .carousel-control-prev,
+  .overview-image-slider .carousel-control-next {
+    width: 35px;
+    height: 35px;
+    margin: 0 5px;
+  }
+  
+  .overview-image-slider .carousel-control-prev-icon,
+  .overview-image-slider .carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
   }
 }

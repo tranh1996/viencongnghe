@@ -138,7 +138,7 @@ const Header: React.FC = () => {
                   <ul className="list-inline">
                     <li>
                       <button 
-                        className="btn btn-link p-0 border-0 bg-transparent"
+                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
                         onClick={() => {
                           // TODO: Add Facebook URL when available
                           console.log('Facebook clicked');
@@ -149,7 +149,7 @@ const Header: React.FC = () => {
                     </li>
                     <li>
                       <button 
-                        className="btn btn-link p-0 border-0 bg-transparent"
+                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
                         onClick={() => {
                           // TODO: Add YouTube URL when available
                           console.log('YouTube clicked');
@@ -160,7 +160,7 @@ const Header: React.FC = () => {
                     </li>
                     <li>
                       <button 
-                        className="btn btn-link p-0 border-0 bg-transparent"
+                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
                         onClick={() => {
                           // TODO: Add LinkedIn URL when available
                           console.log('LinkedIn clicked');
@@ -218,8 +218,8 @@ const Header: React.FC = () => {
                       id="about-dropdown"
                       className={pathname === '/about' ? 'active' : ''}
                     >
-                      <NavDropdown.Item as={Link} href="/about">{t('nav.about.overview')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} href="/about#resources">{t('nav.about.resources')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about/vision-mission">{t('nav.about.visionMission')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about/history">{t('nav.about.history')}</NavDropdown.Item>
                     </NavDropdown>
 
                     <NavDropdown 
@@ -305,7 +305,7 @@ const Header: React.FC = () => {
                       <ul className="list-inline">
                         <li>
                           <button 
-                            className="btn btn-link p-0 border-0 bg-transparent"
+                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
                             onClick={() => {
                               // TODO: Add Facebook URL when available
                               console.log('Facebook clicked');
@@ -316,7 +316,7 @@ const Header: React.FC = () => {
                         </li>
                         <li>
                           <button 
-                            className="btn btn-link p-0 border-0 bg-transparent"
+                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
                             onClick={() => {
                               // TODO: Add YouTube URL when available
                               console.log('YouTube clicked');
@@ -327,7 +327,7 @@ const Header: React.FC = () => {
                         </li>
                         <li>
                           <button 
-                            className="btn btn-link p-0 border-0 bg-transparent"
+                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
                             onClick={() => {
                               // TODO: Add LinkedIn URL when available
                               console.log('LinkedIn clicked');

@@ -167,14 +167,14 @@ const Footer: React.FC = () => {
             </Col>
 
             {/* News Links */}
-            <Col lg={3} md={6}>
+            <Col lg={2} md={6}>
               <FooterWidget title="TIN TỨC">
                 <FooterLinks links={newsLinks} />
               </FooterWidget>
             </Col>
 
             {/* Contact Information */}
-            <Col lg={3} md={6}>
+            <Col lg={4} md={6}>
               <FooterWidget title="THÔNG TIN CÔNG TY">
                 <ContactInfo />
               </FooterWidget>

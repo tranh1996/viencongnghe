@@ -11,7 +11,7 @@
 .banner-slider { 
     background-color: var(--themeht-bg-dark-color); 
     position: relative;
-    height: calc(80vh - 80px);
+    height: calc(100vh - 15px);
     min-height: 400px;
     overflow: hidden;
 }
@@ -473,6 +473,19 @@
         white-space: nowrap;
         min-width: 0;
         flex: 1;
+    }
+}
+
+/* Max-height media queries for banner-slider */
+@media (max-height: 900px) {
+    .banner-slider {
+        height: calc(100vh - 15px);
+    }
+}
+
+@media (max-height: 700px) {
+    .banner-slider {
+        height: calc(120vh - 15px);
     }
 }
 
