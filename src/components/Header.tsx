@@ -218,6 +218,7 @@ const Header: React.FC = () => {
                       id="about-dropdown"
                       className={pathname === '/about' ? 'active' : ''}
                     >
+                      <NavDropdown.Item as={Link} href="/about">{t('nav.about.general')}</NavDropdown.Item>
                       <NavDropdown.Item as={Link} href="/about/vision-mission">{t('nav.about.visionMission')}</NavDropdown.Item>
                       <NavDropdown.Item as={Link} href="/about/history">{t('nav.about.history')}</NavDropdown.Item>
                     </NavDropdown>
