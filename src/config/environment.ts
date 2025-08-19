@@ -9,14 +9,14 @@
 export const config = {
   // API Configuration
   api: {
-    baseUrl: process.env.REACT_APP_API_BASE_URL || 'https://admin-viencn.anf-technology.com/api/v1',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://admin-viencn.anf-technology.com/api/v1',
   },
   
   // Application Configuration
   app: {
-    name: process.env.REACT_APP_NAME || 'Viện Công Nghệ',
-    version: process.env.REACT_APP_VERSION || '1.0.0',
-    debug: process.env.REACT_APP_DEBUG === 'true',
+    name: process.env.NEXT_PUBLIC_APP_NAME || 'Viện Công Nghệ',
+    version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+    debug: process.env.NEXT_PUBLIC_DEBUG === 'true',
   },
   
   // Environment
@@ -32,7 +32,7 @@ export type Config = typeof config;
 // Validate required environment variables
 export const validateEnvironment = (): void => {
   const requiredVars = [
-    'REACT_APP_API_BASE_URL',
+    'NEXT_PUBLIC_API_BASE_URL',
   ];
   
   const missingVars = requiredVars.filter(varName => !process.env[varName]);

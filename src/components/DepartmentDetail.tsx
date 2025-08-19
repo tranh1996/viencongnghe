@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Badge, Button, Spinner, Alert } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import { Department, fetchDepartmentById, fetchDepartments } from '../utils/api';
+import { Department, fetchDepartmentBySlug, fetchDepartments } from '../utils/api';
 import OptimizedImage from './OptimizedImage';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface DepartmentDetailProps {
-  departmentId: string;
+  departmentSlug: string;
 }
 
-const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => {
+const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) => {
   const { t, language } = useLanguage();
   const router = useRouter();
   const [department, setDepartment] = useState<Department | null>(null);
@@ -27,7 +27,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
         setError(null);
         const abortController = new AbortController();
         
-        const departmentData = await fetchDepartmentById(parseInt(departmentId), language, abortController.signal);
+        const departmentData = await fetchDepartmentBySlug(departmentSlug, language, abortController.signal);
         setDepartment(departmentData);
       } catch (err) {
         if (err instanceof Error && err.name !== 'AbortError') {
@@ -39,7 +39,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
     };
 
     fetchDepartment();
-  }, [departmentId, language]);
+  }, [departmentSlug, language]);
 
   // Fetch all departments for sidebar
   useEffect(() => {
@@ -183,14 +183,14 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
                           <button
                             key={dept.id}
                             className={`list-group-item list-group-item-action d-flex align-items-center ${
-                              dept.id === parseInt(departmentId) ? 'active' : ''
+                              dept.slug === departmentSlug ? 'active' : ''
                             }`}
                             onClick={() => {
-                              if (dept.id !== parseInt(departmentId)) {
-                                router.push(`/organization/${dept.id}`);
+                              if (dept.slug !== departmentSlug) {
+                                router.push(`/organization/${dept.slug}`);
                               }
                             }}
-                            disabled={dept.id === parseInt(departmentId)}
+                            disabled={dept.slug === departmentSlug}
                           >
                             <div className="department-icon">
                               <i className="bi bi-building"></i>
@@ -202,7 +202,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentId }) => 
                               )}
                             </div>
                             <div className="department-status">
-                              {dept.id === parseInt(departmentId) && (
+                              {dept.slug === departmentSlug && (
                                 <i className="bi bi-check-circle"></i>
                               )}
                             </div>
