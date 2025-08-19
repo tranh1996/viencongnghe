@@ -42,6 +42,46 @@
 }
 
 /* ------------------------
+    Theme Buttons
+------------------------*/
+.btn-theme {
+    background-color: var(--themeht-primary-color);
+    color: var(--themeht-white-color);
+    border: 2px solid var(--themeht-primary-color);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-theme:hover {
+    background-color: var(--themeht-secondary-color);
+    border-color: var(--themeht-secondary-color);
+    color: var(--themeht-white-color);
+}
+
+.btn-outline-theme {
+    background-color: transparent;
+    color: var(--themeht-primary-color);
+    border: 2px solid var(--themeht-primary-color);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-outline-theme:hover {
+    background-color: var(--themeht-primary-color);
+    color: var(--themeht-white-color);
+}
+
+/* ------------------------
     Button Box
 ------------------------*/
 .btn-box {
@@ -71,6 +111,12 @@
     .btn-box .themeht-btn {
         margin-right: 0;
     }
+    
+    .btn-theme,
+    .btn-outline-theme {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
 }
 
 /* Ensure buttons are accessible on mobile */
@@ -83,5 +129,11 @@
     .themeht-btn:focus {
         outline: 2px solid var(--themeht-primary-color);
         outline-offset: 2px;
+    }
+    
+    .btn-theme,
+    .btn-outline-theme {
+        min-height: 44px;
+        min-width: 44px;
     }
 }

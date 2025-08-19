@@ -2,44 +2,73 @@
 
 import type { Metadata } from 'next';
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert, Pagination, Form } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { fetchLatestNews, fetchHighlightNews, News } from '@/utils/api';
+import { fetchPosts, fetchBlogCategories, News, NewsCategory } from '@/utils/api';
 import OptimizedImage from '@/components/OptimizedImage';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 export default function BlogPage() {
   const { language, t } = useLanguage();
-  const [latestNews, setLatestNews] = useState<News[]>([]);
-  const [highlightNews, setHighlightNews] = useState<News[]>([]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const [posts, setPosts] = useState<News[]>([]);
+  const [categories, setCategories] = useState<NewsCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<any>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  const currentCategory = searchParams.get('category') || '';
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchData = async () => {
       setLoading(true);
       setError(null);
       
       try {
-        const [latestData, highlightData] = await Promise.all([
-          fetchLatestNews(language, 10),
-          fetchHighlightNews(language)
+        const [postsData, categoriesData] = await Promise.all([
+          fetchPosts(language, currentPage, 10, currentCategory || undefined),
+          fetchBlogCategories(language)
         ]);
         
-        setLatestNews(latestData);
-        setHighlightNews(highlightData);
+        setPosts(postsData.posts);
+        setPagination(postsData.pagination);
+        setCategories(categoriesData);
+        setSelectedCategory(currentCategory);
       } catch (err) {
-        console.error('Error fetching news:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch news');
+        console.error('Error fetching data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchNews();
-  }, [language]);
+    fetchData();
+  }, [language, currentPage, currentCategory]);
+
+  const handleCategoryChange = (category: string) => {
+    const params = new URLSearchParams();
+    if (category) {
+      params.set('category', category);
+    }
+    params.set('page', '1');
+    router.push(`/blog?${params.toString()}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams();
+    if (currentCategory) {
+      params.set('category', currentCategory);
+    }
+    params.set('page', page.toString());
+    router.push(`/blog?${params.toString()}`);
+  };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) {
@@ -57,8 +86,51 @@ export default function BlogPage() {
   };
 
   const truncateText = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
+    if (!text || text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
+  };
+
+  const renderPagination = () => {
+    if (!pagination || pagination.last_page <= 1) return null;
+
+    const items = [];
+    const startPage = Math.max(1, pagination.current_page - 2);
+    const endPage = Math.min(pagination.last_page, pagination.current_page + 2);
+
+    // Previous button
+    if (pagination.current_page > 1) {
+      items.push(
+        <Pagination.Prev 
+          key="prev" 
+          onClick={() => handlePageChange(pagination.current_page - 1)}
+        />
+      );
+    }
+
+    // Page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <Pagination.Item
+          key={i}
+          active={i === pagination.current_page}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </Pagination.Item>
+      );
+    }
+
+    // Next button
+    if (pagination.current_page < pagination.last_page) {
+      items.push(
+        <Pagination.Next 
+          key="next" 
+          onClick={() => handlePageChange(pagination.current_page + 1)}
+        />
+      );
+    }
+
+    return <Pagination className="justify-content-center mt-4">{items}</Pagination>;
   };
 
   if (loading) {
@@ -173,189 +245,82 @@ export default function BlogPage() {
             </Col>
           </Row>
 
-          {/* Featured News */}
-          {highlightNews.length > 0 && (
-            <Row className="mb-5">
-              <Col lg={8} className="mb-4">
-                <div className="card">
-                  <OptimizedImage 
-                    src={highlightNews[0]?.image_url || "/images/blog/01.jpg"} 
-                    className="card-img-top" 
-                    alt={highlightNews[0]?.title || "Tin tức nổi bật"}
-                    width={800}
-                    height={400}
-                    context="blog-featured"
-                  />
-                  <div className="card-body">
-                    <h6 className="text-muted mb-2">
-                      {highlightNews[0]?.created_at ? formatDate(highlightNews[0].created_at) : t('common.recentlyUpdated')}
-                    </h6>
-                    <h3 className="card-title">{highlightNews[0]?.title}</h3>
-                    <p className="card-text">
-                      {highlightNews[0]?.description ? truncateText(highlightNews[0].description, 200) : ''}
-                    </p>
-                    <a href={`/news/${highlightNews[0]?.slug}`} className="text-theme text-decoration-none">
-                      {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                    </a>
-                  </div>
-                </div>
-              </Col>
-              <Col lg={4} className="mb-4">
-                {highlightNews[1] && (
-                  <div className="card">
-                    <img 
-                      src={highlightNews[1]?.image_url || "/images/blog/02.jpg"} 
-                      className="card-img-top" 
-                      alt={highlightNews[1]?.title || "Tin tức"} 
-                    />
-                    <div className="card-body">
-                      <h6 className="text-muted mb-2">
-                        {highlightNews[1]?.created_at ? formatDate(highlightNews[1].created_at) : t('common.recentlyUpdated')}
-                      </h6>
-                      <h5 className="card-title">{highlightNews[1]?.title}</h5>
-                      <p className="card-text">
-                        {highlightNews[1]?.description ? truncateText(highlightNews[1].description, 150) : ''}
-                      </p>
-                      <a href={`/news/${highlightNews[1]?.slug}`} className="text-theme text-decoration-none">
-                        {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </Col>
-            </Row>
-          )}
-
-          {/* News Categories */}
-          <Row>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <div className="card-header bg-theme text-white">
-                  <h5 className="mb-0">{t('blog.categories.activities')}</h5>
-                </div>
-                <div className="card-body">
-                  {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length > 0 ? (
-                    <ul className="list-unstyled">
-                      {latestNews
-                        .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
-                        .slice(0, 3)
-                        .map((news) => (
-                          <li key={news.id} className="mb-3">
-                            <a href={`/news/${news.slug}`} className="text-decoration-none">
-                              <h6>{news.title}</h6>
-                              <small className="text-muted">
-                                {formatDate(news.created_at)}
-                              </small>
-                            </a>
-                          </li>
-                        ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted">{t('organization.noDataMessage')}</p>
-                  )}
-                </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <div className="card-header bg-theme text-white">
-                  <h5 className="mb-0">{t('blog.categories.science')}</h5>
-                </div>
-                <div className="card-body">
-                  {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length > 0 ? (
-                    <ul className="list-unstyled">
-                      {latestNews
-                        .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
-                        .slice(0, 3)
-                        .map((news) => (
-                          <li key={news.id} className="mb-3">
-                            <a href={`/news/${news.slug}`} className="text-decoration-none">
-                              <h6>{news.title}</h6>
-                              <small className="text-muted">
-                                {formatDate(news.created_at)}
-                              </small>
-                            </a>
-                          </li>
-                        ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted">{t('organization.noDataMessage')}</p>
-                  )}
-                </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <div className="card-header bg-theme text-white">
-                  <h5 className="mb-0">{t('blog.categories.training')}</h5>
-                </div>
-                <div className="card-body">
-                  {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length > 0 ? (
-                    <ul className="list-unstyled">
-                      {latestNews
-                        .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
-                        .slice(0, 3)
-                        .map((news) => (
-                          <li key={news.id} className="mb-3">
-                            <a href={`/news/${news.slug}`} className="text-decoration-none">
-                              <h6>{news.title}</h6>
-                              <small className="text-muted">
-                                {formatDate(news.created_at)}
-                              </small>
-                            </a>
-                          </li>
-                        ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted">{t('organization.noDataMessage')}</p>
-                  )}
-                </div>
-              </div>
+          {/* Category Filter */}
+          <Row className="mb-4">
+            <Col lg={6} md={8} className="mx-auto">
+              <Form.Select 
+                value={selectedCategory} 
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className="form-select-lg"
+              >
+                <option value="">{t('blog.allCategories')}</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.slug}>
+                    {language === 'vi' ? category.name : (category.name_en || category.name)}
+                  </option>
+                ))}
+              </Form.Select>
             </Col>
           </Row>
 
-          {/* Professional Articles */}
-          <section id="professional" className="mt-5">
-            <Row className="text-center mb-4">
-              <Col>
-                <h3>{t('blog.professional.title')}</h3>
-              </Col>
-            </Row>
-            <Row>
-              {latestNews
-                .filter(news => news.categories.some(cat => cat.name === 'Tin tức'))
-                .slice(0, 3)
-                .map((news) => (
-                  <Col key={news.id} lg={4} md={6} className="mb-4">
+          {/* Posts Grid */}
+          {posts.length > 0 ? (
+            <>
+              <Row>
+                {posts.map((post) => (
+                  <Col key={post.id} lg={4} md={6} className="mb-4">
                     <div className="card h-100">
-                      <img 
-                        src={news.image_url || "/images/blog/03.jpg"} 
+                      <OptimizedImage 
+                        src={post.image_url || "/images/blog/01.jpg"} 
                         className="card-img-top" 
-                        alt={news.title} 
+                        alt={post.title}
+                        width={400}
+                        height={250}
+                        context="blog-list"
                       />
-                      <div className="card-body">
-                        <h5 className="card-title">{news.title}</h5>
-                        <p className="card-text">
-                          {news.description ? truncateText(news.description, 120) : ''}
+                      <div className="card-body d-flex flex-column">
+                        <div className="mb-2">
+                          {post.categories && post.categories.length > 0 ? (
+                            post.categories.map((category) => (
+                              <span key={category.id} className="badge bg-theme me-1">
+                                {language === 'vi' ? category.name : (category.name_en || category.name)}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="badge bg-secondary me-1">
+                              {t('blog.noCategory')}
+                            </span>
+                          )}
+                        </div>
+                        <h6 className="text-muted mb-2">
+                          {formatDate(post.created_at)}
+                        </h6>
+                        <h5 className="card-title">{post.title}</h5>
+                        <p className="card-text flex-grow-1">
+                          {post.description ? truncateText(post.description, 120) : ''}
                         </p>
-                        <a href={`/news/${news.slug}`} className="text-theme text-decoration-none">
+                        <a href={`/blog/${post.slug}`} className="text-theme text-decoration-none mt-auto">
                           {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
                         </a>
                       </div>
                     </div>
                   </Col>
                 ))}
-            </Row>
-            {latestNews.filter(news => news.categories.some(cat => cat.name === 'Tin tức')).length === 0 && (
-              <Row>
-                <Col>
-                  <p className="text-center text-muted">{t('organization.noDataMessage')}</p>
-                </Col>
               </Row>
-            )}
-          </section>
+
+              {/* Pagination */}
+              {renderPagination()}
+            </>
+          ) : (
+            <Row>
+              <Col>
+                <div className="text-center py-5">
+                  <h4 className="text-muted">{t('blog.noPosts')}</h4>
+                  <p className="text-muted">{t('blog.noPostsDescription')}</p>
+                </div>
+              </Col>
+            </Row>
+          )}
         </Container>
       </section>
     </>

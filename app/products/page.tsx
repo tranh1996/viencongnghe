@@ -1,13 +1,70 @@
 'use client';
 
 import type { Metadata } from 'next';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { fetchProducts, fetchProductCategories, Product, ProductCategory } from '../../src/utils/api';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [productsData, categoriesData] = await Promise.all([
+          fetchProducts('vi', 1, 20),
+          fetchProductCategories('vi')
+        ]);
+        
+        setProducts(productsData);
+        setCategories(categoriesData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const filteredProducts = selectedCategory 
+    ? products.filter(product => product.product_category.slug === selectedCategory)
+    : products;
+
+  const featuredProducts = products.filter(product => product.is_featured);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+        <div className="spinner-border text-theme" role="status">
+          <span className="visually-hidden">Đang tải...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+        <div className="text-center">
+          <i className="bi bi-exclamation-triangle text-warning" style={{ fontSize: '3rem' }}></i>
+          <p className="mt-3">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <section className="page-title dark-bg">
@@ -43,144 +100,91 @@ export default function ProductsPage() {
             </Col>
           </Row>
 
+          {/* Category Filter */}
+          {categories.length > 0 && (
+            <Row className="mb-4">
+              <Col>
+                <div className="d-flex flex-wrap gap-2 justify-content-center">
+                  <button
+                    className={`btn ${!selectedCategory ? 'btn-theme' : 'btn-outline-theme'}`}
+                    onClick={() => setSelectedCategory(null)}
+                  >
+                    Tất cả
+                  </button>
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      className={`btn ${selectedCategory === category.slug ? 'btn-theme' : 'btn-outline-theme'}`}
+                      onClick={() => setSelectedCategory(category.slug)}
+                    >
+                      {category.name}
+                    </button>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+          )}
+
+          {/* Products Grid */}
           <Row>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <img src="/images/product/01.jpg" className="card-img-top" alt="Bộ dưỡng kiểm trục" />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">Khoa học công nghệ</h6>
-                  <h5 className="card-title">Bộ dưỡng kiểm trục và kiểm lỗ</h5>
-                  <p className="card-text">
-                    + dưỡng Ø162-No Go dung sai (-0,02) – (-0,025) mm + dưỡng Ø162-Go: dung...
-                  </p>
-                  <a href="#" className="text-theme text-decoration-none">
-                    Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                  </a>
+            {filteredProducts.map((product) => (
+              <Col lg={4} md={6} className="mb-4" key={product.id}>
+                <div className="card h-100">
+                                     <img 
+                     src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'} 
+                     className="card-img-top" 
+                     alt={product.name}
+                     style={{ height: '200px', objectFit: 'cover' }}
+                   />
+                  <div className="card-body">
+                    <h6 className="text-muted mb-2">{product.product_category.name}</h6>
+                    <h5 className="card-title">{product.name}</h5>
+                    <p className="card-text">
+                      {product.description || product.content?.substring(0, 100) + '...' || 'Không có mô tả'}
+                    </p>
+                    <a href={`/products/${product.slug}`} className="text-theme text-decoration-none">
+                      Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <img src="/images/product/02.jpg" className="card-img-top" alt="Lò Ram" />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">Khoa học công nghệ</h6>
-                  <h5 className="card-title">Lò Ram</h5>
-                  <p className="card-text">
-                    – Công suất 65kW; Điều khiển PID; Nhiệt độ làm việc tối đa 650oC;...
-                  </p>
-                  <a href="#" className="text-theme text-decoration-none">
-                    Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                  </a>
-                </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <img src="/images/product/03.jpg" className="card-img-top" alt="Thiết bị gia công lạnh" />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">Khoa học công nghệ</h6>
-                  <h5 className="card-title">Thiết bị gia công lạnh</h5>
-                  <p className="card-text">
-                    – Kích thước không gian làm việc: 400 x 400 x 600 (mm) –...
-                  </p>
-                  <a href="#" className="text-theme text-decoration-none">
-                    Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                  </a>
-                </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <img src="/images/product/04.jpg" className="card-img-top" alt="Lò gas" />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">Khoa học công nghệ</h6>
-                  <h5 className="card-title">Lò gas</h5>
-                  <p className="card-text">
-                    – Điều khiển tự động, kỹ thuật số – Nhiệt độ tối đa 1.300...
-                  </p>
-                  <a href="#" className="text-theme text-decoration-none">
-                    Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                  </a>
-                </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <img src="/images/product/05.jpg" className="card-img-top" alt="Lò sấy tầng sôi" />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">Khoa học công nghệ</h6>
-                  <h5 className="card-title">Lò sấy tầng sôi</h5>
-                  <p className="card-text">
-                    – Công suất 8-15 tấn/h – Dùng trong khai thác các loại khoáng sản...
-                  </p>
-                  <a href="#" className="text-theme text-decoration-none">
-                    Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                  </a>
-                </div>
-              </div>
-            </Col>
-
-            <Col lg={4} md={6} className="mb-4">
-              <div className="card h-100">
-                <img src="/images/product/06.jpg" className="card-img-top" alt="Cần máy 235" />
-                <div className="card-body">
-                  <h6 className="text-muted mb-2">Đúc</h6>
-                  <h5 className="card-title">Cần máy 235 – Cụm lắp máy cưa Pilouse</h5>
-                  <p className="card-text">
-                    – Vật liệu: Gang xám FC200. – Khách hàng: Pilouse- Tiệp.
-                  </p>
-                  <a href="#" className="text-theme text-decoration-none">
-                    Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                  </a>
-                </div>
-              </div>
-            </Col>
+              </Col>
+            ))}
           </Row>
 
-          {/* Special Products */}
-          <section className="mt-5">
-            <Row className="text-center mb-4">
-              <Col>
-                <h3>Sản phẩm đặc biệt</h3>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={6} className="mb-4">
-                <div className="card">
-                  <img src="/images/product/01.jpg" className="card-img-top" alt="Hợp kim Titan" />
-                  <div className="card-body">
-                    <h6 className="text-muted mb-2">Khoa học công nghệ</h6>
-                    <h4 className="card-title">Hợp kim Titan ứng dụng trong lĩnh vực y tế (Ti-6Al-7Nb và Ti-5Al-2.5Fe)</h4>
-                    <p className="card-text">
-                      Vật liệu do Viện Công nghệ chế tạo và hợp tác với Đại học...
-                    </p>
-                    <a href="#" className="text-theme text-decoration-none">
-                      Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                    </a>
-                  </div>
-                </div>
-              </Col>
-              <Col lg={6} className="mb-4">
-                <div className="card">
-                  <img src="/images/product/02.jpg" className="card-img-top" alt="Khuôn rèn kìm" />
-                  <div className="card-body">
-                    <h6 className="text-muted mb-2">Gia công cơ khí</h6>
-                    <h4 className="card-title">Khuôn rèn kìm</h4>
-                    <p className="card-text">
-                      Gia công theo đơn đặt hàng
-                    </p>
-                    <a href="#" className="text-theme text-decoration-none">
-                      Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                    </a>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </section>
+          {/* Featured Products */}
+          {featuredProducts.length > 0 && (
+            <section className="mt-5">
+              <Row className="text-center mb-4">
+                <Col>
+                  <h3>Sản phẩm đặc biệt</h3>
+                </Col>
+              </Row>
+              <Row>
+                {featuredProducts.slice(0, 2).map((product) => (
+                  <Col lg={6} className="mb-4" key={product.id}>
+                    <div className="card">
+                                             <img 
+                         src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'} 
+                         className="card-img-top" 
+                         alt={product.name}
+                         style={{ height: '250px', objectFit: 'cover' }}
+                       />
+                      <div className="card-body">
+                        <h6 className="text-muted mb-2">{product.product_category.name}</h6>
+                        <h4 className="card-title">{product.name}</h4>
+                        <p className="card-text">
+                          {product.description || product.content?.substring(0, 150) + '...' || 'Không có mô tả'}
+                        </p>
+                        <a href={`/products/${product.slug}`} className="text-theme text-decoration-none">
+                          Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            </section>
+          )}
 
           {/* Services Section */}
           <section className="light-bg mt-5">

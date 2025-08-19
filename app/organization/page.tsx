@@ -14,13 +14,13 @@ export const dynamic = 'force-dynamic';
 
 export default function OrganizationPage() {
   const { t, language } = useLanguage();
-  const params = useParams<{ departmentId?: string }>();
-  const departmentId = params?.departmentId;
+  const params = useParams<{ departmentSlug?: string }>();
+  const departmentSlug = params?.departmentSlug;
   const router = useRouter();
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | null>(null);
+  const [selectedDepartmentSlug, setSelectedDepartmentSlug] = useState<string | null>(null);
 
   // Banner slides for organizational structure
   const bannerSlides = [
@@ -74,20 +74,17 @@ export default function OrganizationPage() {
     loadDepartments();
   }, [language]);
 
-  // Handle department ID from URL
+  // Handle department slug from URL
   useEffect(() => {
-    if (departmentId) {
-      const id = parseInt(departmentId, 10);
-      if (!isNaN(id)) {
-        setSelectedDepartmentId(id);
-      }
+    if (departmentSlug) {
+      setSelectedDepartmentSlug(departmentSlug);
     } else {
-      setSelectedDepartmentId(null);
+      setSelectedDepartmentSlug(null);
     }
-  }, [departmentId]);
+  }, [departmentSlug]);
 
   const handleDepartmentClick = (department: Department) => {
-    router.push(`/organization/${department.id}`);
+    router.push(`/organization/${department.slug}`);
   };
 
   const handleBackToList = () => {
@@ -95,10 +92,10 @@ export default function OrganizationPage() {
   };
 
   // If a department is selected, show its detail view
-  if (selectedDepartmentId) {
+  if (selectedDepartmentSlug) {
     return (
       <DepartmentDetail 
-        departmentId={selectedDepartmentId.toString()} 
+        departmentSlug={selectedDepartmentSlug} 
       />
     );
   }

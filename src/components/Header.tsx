@@ -6,12 +6,14 @@ import { usePathname } from 'next/navigation';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import { fetchDepartments, Department } from '../utils/api';
+import { fetchDepartments, fetchBlogCategories, Department, NewsCategory } from '../utils/api';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [blogCategories, setBlogCategories] = useState<NewsCategory[]>([]);
   const [loading, setLoading] = useState(false);
+  const [blogCategoriesLoading, setBlogCategoriesLoading] = useState(false);
   const pathname = usePathname();
   const { t, language } = useLanguage();
 
@@ -58,6 +60,47 @@ const Header: React.FC = () => {
     };
 
     loadDepartments();
+
+    return () => {
+      isMounted = false;
+      currentController.abort();
+    };
+  }, [language]);
+
+  // Fetch blog categories when language changes
+  useEffect(() => {
+    let isMounted = true;
+    const currentController = new AbortController();
+    
+    const loadBlogCategories = async () => {
+      if (!isMounted) return;
+      
+      setBlogCategoriesLoading(true);
+      try {
+        const categoriesData = await fetchBlogCategories(language, currentController.signal);
+        if (isMounted) {
+          setBlogCategories(categoriesData);
+        }
+      } catch (error) {
+        // Don't log AbortError as it's expected when component unmounts or language changes
+        if (error instanceof Error && error.name === 'AbortError') {
+          // This is expected behavior, no need to log or handle as error
+          return;
+        }
+        
+        if (isMounted) {
+          console.error('Failed to load blog categories:', error);
+          // Fallback to empty array if API fails
+          setBlogCategories([]);
+        }
+      } finally {
+        if (isMounted) {
+          setBlogCategoriesLoading(false);
+        }
+      }
+    };
+
+    loadBlogCategories();
 
     return () => {
       isMounted = false;
@@ -235,7 +278,7 @@ const Header: React.FC = () => {
                             <NavDropdown.Item 
                               key={department.id} 
                               as={Link} 
-                              href={`/organization/${department.id}`}
+                              href={`/organization/${department.slug}`}
                             >
                               {department.name}
                             </NavDropdown.Item>
@@ -277,10 +320,36 @@ const Header: React.FC = () => {
                       id="news-dropdown"
                       className={pathname === '/blog' ? 'active' : ''}
                     >
-                      <NavDropdown.Item as={Link} href="/blog">{t('nav.news.activities')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} href="/blog#science">{t('nav.news.science')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} href="/blog#professional">{t('nav.news.professional')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} href="/blog#training">{t('nav.news.training')}</NavDropdown.Item>
+                      {blogCategoriesLoading ? (
+                        <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
+                      ) : blogCategories.length > 0 ? (
+                        <>
+                          {blogCategories
+                            .filter(category => category.is_active)
+                            .sort((a, b) => a.display_menu_priority - b.display_menu_priority)
+                            .map((category) => (
+                              <NavDropdown.Item 
+                                key={category.id} 
+                                as={Link} 
+                                href={`/blog?category=${category.slug}`}
+                              >
+                                {category.name}
+                              </NavDropdown.Item>
+                            ))}
+                          <NavDropdown.Divider />
+                          <NavDropdown.Item as={Link} href="/blog">
+                            {t('nav.news.viewAll')}
+                          </NavDropdown.Item>
+                        </>
+                      ) : (
+                        // Fallback to static menu items if API fails
+                        <>
+                          <NavDropdown.Item as={Link} href="/blog">{t('nav.news.activities')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog#science">{t('nav.news.science')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog#professional">{t('nav.news.professional')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog#training">{t('nav.news.training')}</NavDropdown.Item>
+                        </>
+                      )}
                     </NavDropdown>
 
                     <Nav.Link 
