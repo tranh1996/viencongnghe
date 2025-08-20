@@ -153,7 +153,7 @@ const Header: React.FC = () => {
               <Navbar.Brand as={Link} href="/" className="logo">
                 <img 
                   className="img-fluid" 
-                  src="/images/logo.svg" 
+                  src="/images/logo.png"
                   alt="Viện Công nghệ" 
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;

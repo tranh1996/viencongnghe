@@ -541,7 +541,7 @@ export const fetchProducts = async (
   page: number = 1, 
   limit: number = 20, 
   signal?: AbortSignal
-): Promise<Product[]> => {
+): Promise<{ products: Product[]; pagination: any }> => {
   try {
     const response = await fetch(`${API_BASE_URL}/products?page=${page}&limit=${limit}`, {
       method: 'GET',
@@ -560,7 +560,17 @@ export const fetchProducts = async (
     const data: ProductApiResponse = await response.json();
     
     if (data.success) {
-      return data.data.items.data || data.data.items || [];
+      return {
+        products: data.data.items.data || data.data.items || [],
+        pagination: data.data.pagination || {
+          current_page: page,
+          last_page: 1,
+          per_page: limit,
+          total: 0,
+          from: 1,
+          to: limit
+        }
+      };
     } else {
       throw new Error(data.message || 'Failed to fetch products');
     }

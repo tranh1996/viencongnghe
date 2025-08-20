@@ -3,29 +3,62 @@
 import type { Metadata } from 'next';
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { fetchProducts, fetchProductCategories, Product, ProductCategory } from '../../src/utils/api';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<string>('default');
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 20
+  });
 
   useEffect(() => {
+    // Get URL parameters
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const category = searchParams.get('category') || null;
+    const sort = searchParams.get('sort') || 'default';
+
+    setSelectedCategory(category);
+    setSortOrder(sort);
+    setPagination(prev => ({ ...prev, currentPage: page, itemsPerPage: limit }));
+
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [productsData, categoriesData] = await Promise.all([
-          fetchProducts('vi', 1, 20),
+        const [productsResponse, categoriesData] = await Promise.all([
+          fetchProducts('vi', page, limit),
           fetchProductCategories('vi')
         ]);
         
-        setProducts(productsData);
+        setProducts(productsResponse.products);
         setCategories(categoriesData);
+        
+        // Update pagination info from API response
+        if (productsResponse.pagination) {
+          setPagination({
+            currentPage: productsResponse.pagination.current_page,
+            totalPages: productsResponse.pagination.last_page,
+            totalItems: productsResponse.pagination.total,
+            itemsPerPage: productsResponse.pagination.per_page
+          });
+        }
+        
         setError(null);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -36,13 +69,58 @@ export default function ProductsPage() {
     };
 
     fetchData();
-  }, []);
+  }, [searchParams]);
+
+  // Function to update URL parameters
+  const updateURL = (params: { page?: number; category?: string | null; sort?: string }) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    if (params.page !== undefined) {
+      newSearchParams.set('page', params.page.toString());
+    }
+    if (params.category !== undefined) {
+      if (params.category) {
+        newSearchParams.set('category', params.category);
+      } else {
+        newSearchParams.delete('category');
+      }
+    }
+    if (params.sort !== undefined) {
+      newSearchParams.set('sort', params.sort);
+    }
+    
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
+
+  // Handle category selection
+  const handleCategorySelect = (categorySlug: string | null) => {
+    updateURL({ category: categorySlug, page: 1 }); // Reset to page 1 when changing category
+  };
+
+  // Handle sorting
+  const handleSortChange = (sort: string) => {
+    updateURL({ sort, page: 1 }); // Reset to page 1 when changing sort
+  };
 
   const filteredProducts = selectedCategory 
     ? products.filter(product => product.product_category.slug === selectedCategory)
     : products;
 
-  const featuredProducts = products.filter(product => product.is_featured);
+  // Apply sorting
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortOrder) {
+      case 'name-asc':
+        return a.name.localeCompare(b.name);
+      case 'name-desc':
+        return b.name.localeCompare(a.name);
+      case 'newest':
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      case 'oldest':
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      default:
+        return 0;
+    }
+  });
 
   if (loading) {
     return (
@@ -87,63 +165,101 @@ export default function ProductsPage() {
         </Container>
       </section>
 
-      <section>
+      <section className="py-5">
         <Container>
-          <Row className="text-center mb-5">
-            <Col lg={8} className="mx-auto">
-              <h6 className="text-theme mb-3">SẢN PHẨM & DỊCH VỤ</h6>
-              <h2 className="mb-4">Các sản phẩm và dịch vụ của chúng tôi</h2>
-              <p>
-                Viện Công nghệ cung cấp đa dạng các sản phẩm và dịch vụ trong lĩnh vực 
-                cơ khí, luyện kim và công nghệ vật liệu.
-              </p>
-            </Col>
-          </Row>
-
-          {/* Category Filter */}
+          {/* Category Filter Cards */}
           {categories.length > 0 && (
-            <Row className="mb-4">
+            <Row className="mb-5">
               <Col>
-                <div className="d-flex flex-wrap gap-2 justify-content-center">
-                  <button
-                    className={`btn ${!selectedCategory ? 'btn-theme' : 'btn-outline-theme'}`}
-                    onClick={() => setSelectedCategory(null)}
-                  >
-                    Tất cả
-                  </button>
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      className={`btn ${selectedCategory === category.slug ? 'btn-theme' : 'btn-outline-theme'}`}
-                      onClick={() => setSelectedCategory(category.slug)}
-                    >
-                      {category.name}
-                    </button>
+                <h2 className="text-center mb-4">Danh mục sản phẩm</h2>
+                <Row>
+                  {/* Category Cards */}
+                  {categories.slice(0, 4).map((category) => (
+                    <Col lg={3} md={6} className="mb-4" key={category.id}>
+                      <div 
+                        className={`card category-card h-100 ${selectedCategory === category.slug ? 'active' : ''}`}
+                        onClick={() => handleCategorySelect(category.slug === selectedCategory ? null : category.slug)}
+                        style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                      >
+                        <div className="card-img-top position-relative" style={{ height: '200px', overflow: 'hidden' }}>
+                          <img 
+                            src={category.image_url || '/images/product/01.jpg'} 
+                            className="w-100 h-100" 
+                            alt={category.name}
+                            style={{ objectFit: 'cover' }}
+                          />
+                          <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark" style={{ opacity: 0.7 }}></div>
+                        </div>
+                        <div className="card-body text-center">
+                          <h5 className="card-title position-relative" style={{ zIndex: 2, color: '#fff', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                            {category.name}
+                          </h5>
+                        </div>
+                      </div>
+                    </Col>
                   ))}
-                </div>
+                </Row>
               </Col>
             </Row>
           )}
 
+          {/* Results Counter and Sorting */}
+          <Row className="mb-4 align-items-center">
+            <Col md={6}>
+              <div className="d-flex align-items-center gap-3">
+                <p className="mb-0">
+                  Hiển thị {pagination.currentPage === 1 ? 1 : ((pagination.currentPage - 1) * pagination.itemsPerPage) + 1}-{Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)} của {pagination.totalItems} kết quả
+                </p>
+                {selectedCategory && (
+                  <button 
+                    className="btn btn-outline-theme btn-sm"
+                    onClick={() => handleCategorySelect(null)}
+                  >
+                    Hiển thị tất cả
+                  </button>
+                )}
+              </div>
+            </Col>
+            <Col md={6} className="text-md-end">
+              <select 
+                className="form-select d-inline-block w-auto"
+                value={sortOrder}
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
+                <option value="default">Thứ tự mặc định</option>
+                <option value="name-asc">Tên A-Z</option>
+                <option value="name-desc">Tên Z-A</option>
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+              </select>
+            </Col>
+          </Row>
+
           {/* Products Grid */}
           <Row>
-            {filteredProducts.map((product) => (
-              <Col lg={4} md={6} className="mb-4" key={product.id}>
-                <div className="card h-100">
-                                     <img 
-                     src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'} 
-                     className="card-img-top" 
-                     alt={product.name}
-                     style={{ height: '200px', objectFit: 'cover' }}
-                   />
-                  <div className="card-body">
-                    <h6 className="text-muted mb-2">{product.product_category.name}</h6>
-                    <h5 className="card-title">{product.name}</h5>
-                    <p className="card-text">
-                      {product.description || product.content?.substring(0, 100) + '...' || 'Không có mô tả'}
+            {sortedProducts.map((product) => (
+              <Col lg={3} md={6} className="mb-4" key={product.id}>
+                <div className="card product-card h-100">
+                  <div className="position-relative">
+                    <img 
+                      src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'} 
+                      className="card-img-top" 
+                      alt={product.name}
+                      style={{ height: '200px', objectFit: 'cover' }}
+                    />
+                    <div className="position-absolute top-0 start-0 m-2">
+                      <span className="badge" style={{ backgroundColor: 'var(--themeht-primary-color)', color: 'white', fontWeight: 'bold' }}>
+                        {product.product_category.name}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="card-body d-flex flex-column">
+                    <h6 className="card-title">{product.name}</h6>
+                    <p className="card-text flex-grow-1">
+                      {product.description || product.content?.substring(0, 100) + '...' || 'Sản phẩm của Viện Công Nghệ'}
                     </p>
-                    <a href={`/products/${product.slug}`} className="text-theme text-decoration-none">
-                      Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
+                    <a href={`/products/${product.slug}`} className="btn btn-outline-theme btn-sm">
+                      Xem chi tiết
                     </a>
                   </div>
                 </div>
@@ -151,86 +267,111 @@ export default function ProductsPage() {
             ))}
           </Row>
 
-          {/* Featured Products */}
-          {featuredProducts.length > 0 && (
-            <section className="mt-5">
-              <Row className="text-center mb-4">
-                <Col>
-                  <h3>Sản phẩm đặc biệt</h3>
-                </Col>
-              </Row>
-              <Row>
-                {featuredProducts.slice(0, 2).map((product) => (
-                  <Col lg={6} className="mb-4" key={product.id}>
-                    <div className="card">
-                                             <img 
-                         src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'} 
-                         className="card-img-top" 
-                         alt={product.name}
-                         style={{ height: '250px', objectFit: 'cover' }}
-                       />
-                      <div className="card-body">
-                        <h6 className="text-muted mb-2">{product.product_category.name}</h6>
-                        <h4 className="card-title">{product.name}</h4>
-                        <p className="card-text">
-                          {product.description || product.content?.substring(0, 150) + '...' || 'Không có mô tả'}
-                        </p>
-                        <a href={`/products/${product.slug}`} className="text-theme text-decoration-none">
-                          Xem chi tiết <i className="bi bi-arrow-right ms-1"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            </section>
+          {/* No Products Message */}
+          {sortedProducts.length === 0 && (
+            <Row>
+              <Col className="text-center py-5">
+                <i className="bi bi-box text-muted" style={{ fontSize: '4rem' }}></i>
+                <h4 className="mt-3">Không có sản phẩm nào</h4>
+                <p className="text-muted">Không tìm thấy sản phẩm nào trong danh mục này.</p>
+              </Col>
+            </Row>
           )}
 
-          {/* Services Section */}
-          <section className="light-bg mt-5">
-            <Row className="text-center mb-4">
-              <Col>
-                <h3>Dịch vụ của chúng tôi</h3>
+          {/* Pagination Controls */}
+          {pagination.totalPages > 1 && (
+            <Row className="mt-5">
+              <Col className="text-center">
+                <nav aria-label="Product pagination">
+                  <ul className="pagination justify-content-center">
+                    {/* Previous Page */}
+                    <li className={`page-item ${pagination.currentPage === 1 ? 'disabled' : ''}`}>
+                      <button 
+                        className="page-link" 
+                        onClick={() => updateURL({ page: pagination.currentPage - 1 })}
+                        disabled={pagination.currentPage === 1}
+                      >
+                        <i className="bi bi-chevron-left"></i>
+                      </button>
+                    </li>
+                    
+                    {/* Page Numbers */}
+                    {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                      let pageNum: number;
+                      if (pagination.totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (pagination.currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (pagination.currentPage >= pagination.totalPages - 2) {
+                        pageNum = pagination.totalPages - 4 + i;
+                      } else {
+                        pageNum = pagination.currentPage - 2 + i;
+                      }
+                      
+                      return (
+                        <li key={pageNum} className={`page-item ${pagination.currentPage === pageNum ? 'active' : ''}`}>
+                          <button 
+                            className="page-link"
+                            onClick={() => updateURL({ page: pageNum })}
+                          >
+                            {pageNum}
+                          </button>
+                        </li>
+                      );
+                    })}
+                    
+                    {/* Next Page */}
+                    <li className={`page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}`}>
+                      <button 
+                        className="page-link" 
+                        onClick={() => updateURL({ page: pagination.currentPage + 1 })}
+                        disabled={pagination.currentPage === pagination.totalPages}
+                      >
+                        <i className="bi bi-chevron-right"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
               </Col>
             </Row>
-            <Row>
-              <Col lg={4} md={6} className="mb-4">
-                <div className="text-center p-4">
-                  <div className="mb-3">
-                    <i className="bi bi-gear text-theme" style={{ fontSize: '3rem' }}></i>
-                  </div>
-                  <h5>Công nghệ đúc và vật liệu mới</h5>
-                  <p>
-                    Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh.
-                  </p>
-                </div>
-              </Col>
-              <Col lg={4} md={6} className="mb-4">
-                <div className="text-center p-4">
-                  <div className="mb-3">
-                    <i className="bi bi-thermometer-half text-theme" style={{ fontSize: '3rem' }}></i>
-                  </div>
-                  <h5>Công nghệ xử lý nhiệt</h5>
-                  <p>
-                    Nghiên cứu, dịch vụ nhiệt luyện chân không, nhiệt luyện truyền thống.
-                  </p>
-                </div>
-              </Col>
-              <Col lg={4} md={6} className="mb-4">
-                <div className="text-center p-4">
-                  <div className="mb-3">
-                    <i className="bi bi-tools text-theme" style={{ fontSize: '3rem' }}></i>
-                  </div>
-                  <h5>Cơ khí chế tạo khuôn mẫu</h5>
-                  <p>
-                    Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại.
-                  </p>
-                </div>
-              </Col>
-            </Row>
-          </section>
+          )}
         </Container>
       </section>
+
+                   <style jsx>{`
+        .category-card {
+          border: 2px solid transparent;
+          transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .category-card.active {
+          border-color: var(--themeht-primary-color);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-card {
+          transition: all 0.3s ease;
+          border: 1px solid #e9ecef;
+        }
+        
+        .product-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card-img-top {
+          transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover .card-img-top {
+          transform: scale(1.05);
+        }
+      `}</style>
     </>
   );
 }
