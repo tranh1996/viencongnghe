@@ -1,41 +1,55 @@
 'use client';
 
-import React from 'react';
-import { Dropdown } from 'react-bootstrap';
-import { useLanguage } from '../contexts/LanguageContext';
+import React, { useState, useEffect } from 'react';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { supportedLanguages, getCurrentLanguage, setLanguage } from '../config/languages';
 
-const LanguageSwitcher: React.FC = () => {
-  const { language, setLanguage, t } = useLanguage();
+interface LanguageSwitcherProps {
+  onLanguageChange?: (languageCode: string) => void;
+}
 
-  const handleLanguageChange = (newLanguage: 'vi' | 'en') => {
-    setLanguage(newLanguage);
+export default function LanguageSwitcher({ onLanguageChange }: LanguageSwitcherProps) {
+  const [currentLang, setCurrentLang] = useState<string>('vi');
+
+  useEffect(() => {
+    const lang = getCurrentLanguage();
+    setCurrentLang(lang);
+  }, []);
+
+  const handleLanguageChange = (languageCode: string) => {
+    setCurrentLang(languageCode);
+    setLanguage(languageCode);
+    if (onLanguageChange) {
+      onLanguageChange(languageCode);
+    }
+    // Reload the page to apply language changes
+    window.location.reload();
   };
 
+  const currentLanguage = supportedLanguages.find(lang => lang.code === currentLang);
+
   return (
-    <Dropdown className="language-switcher">
-      <Dropdown.Toggle variant="outline-light" size="sm">
-        <i className="bi bi-globe me-1"></i>
-        {language === 'vi' ? 'VI' : 'EN'}
-      </Dropdown.Toggle>
-
-      <Dropdown.Menu>
-        <Dropdown.Item 
-          onClick={() => handleLanguageChange('vi')}
-          active={language === 'vi'}
+    <DropdownButton
+      id="language-switcher"
+      title={
+        <span>
+          {currentLanguage?.flag} {currentLanguage?.name}
+        </span>
+      }
+      variant="outline-light"
+      size="sm"
+      className="language-switcher"
+    >
+      {supportedLanguages.map((language) => (
+        <Dropdown.Item
+          key={language.code}
+          onClick={() => handleLanguageChange(language.code)}
+          active={language.code === currentLang}
         >
-          <i className="bi bi-flag me-2"></i>
-          {t('language.vi')}
+          <span className="me-2">{language.flag}</span>
+          {language.name}
         </Dropdown.Item>
-        <Dropdown.Item 
-          onClick={() => handleLanguageChange('en')}
-          active={language === 'en'}
-        >
-          <i className="bi bi-flag me-2"></i>
-          {t('language.en')}
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+      ))}
+    </DropdownButton>
   );
-};
-
-export default LanguageSwitcher;
+}

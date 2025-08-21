@@ -7,7 +7,7 @@ type Language = 'vi' | 'en';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -19,10 +19,19 @@ interface LanguageProviderProps {
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('vi');
 
-  // Translation function
-  const t = (key: string): string => {
+  // Translation function with parameter interpolation
+  const t = (key: string, params?: Record<string, string | number>): string => {
     const translations = language === 'vi' ? viTranslations : enTranslations;
-    return translations[key] || key;
+    let translation = translations[key] || key;
+    
+    // Replace placeholders with parameters
+    if (params) {
+      Object.entries(params).forEach(([paramKey, value]) => {
+        translation = translation.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), String(value));
+      });
+    }
+    
+    return translation;
   };
 
   const value = {
@@ -46,8 +55,17 @@ export const useLanguage = (): LanguageContextType => {
     return {
       language: 'vi' as Language,
       setLanguage: () => {},
-      t: (key: string): string => {
-        return fallbackTranslations[key] || key;
+      t: (key: string, params?: Record<string, string | number>): string => {
+        let translation = fallbackTranslations[key] || key;
+        
+        // Replace placeholders with parameters
+        if (params) {
+          Object.entries(params).forEach(([paramKey, value]) => {
+            translation = translation.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), String(value));
+          });
+        }
+        
+        return translation;
       },
     };
   }
@@ -203,6 +221,47 @@ const viTranslations: Record<string, string> = {
   'products.viewDetails': 'Xem chi tiết',
   'products.special.title': 'Sản phẩm đặc biệt',
   'products.services.title': 'Dịch vụ của chúng tôi',
+  
+  // Product search and filters
+  'products.search.placeholder': 'Tìm kiếm sản phẩm...',
+  'products.search.searching': 'Đang tìm kiếm...',
+  'products.search.popular.title': 'Từ khóa phổ biến',
+  'products.search.results.found': 'Tìm thấy {count} kết quả cho "{query}"',
+  'products.search.results.notFound': 'Không tìm thấy sản phẩm nào phù hợp với "{query}"',
+  'products.search.results.notFoundMessage': 'Không tìm thấy sản phẩm nào phù hợp với "{query}". Vui lòng thử từ khóa khác.',
+  'products.search.clear': 'Xóa tìm kiếm',
+  'products.search.backToAll': 'Quay lại tất cả sản phẩm',
+  'products.search.viewMore': 'Xem thêm',
+  'products.search.enterToSearch': 'Nhấn Enter để tìm kiếm tất cả kết quả cho "{query}"',
+  'products.search.noSuggestions': 'Nhập từ khóa để tìm kiếm sản phẩm',
+  'products.search.viewMoreInCategory': 'Xem thêm {count} sản phẩm khác trong {category}',
+  
+  // Product categories
+  'products.categories.title': 'Danh mục sản phẩm',
+  'products.categories.all': 'Tất cả',
+  'products.categories.showAll': 'Hiển thị tất cả',
+  
+  // Product sorting and filtering
+  'products.sort.default': 'Thứ tự mặc định',
+  'products.sort.nameAsc': 'Tên A-Z',
+  'products.sort.nameDesc': 'Tên Z-A',
+  'products.sort.newest': 'Mới nhất',
+  'products.sort.oldest': 'Cũ nhất',
+  
+  // Product results
+  'products.results.showing': 'Hiển thị {from}-{to} của {total} kết quả',
+  'products.results.noProducts': 'Không có sản phẩm nào',
+  'products.results.noProductsMessage': 'Không tìm thấy sản phẩm nào trong danh mục này.',
+  'products.results.loading': 'Đang tải...',
+  'products.results.error': 'Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.',
+  
+  // Popular search terms
+  'products.popular.juicer': 'Máy ép trái cây',
+  'products.popular.tea': 'Trà',
+  'products.popular.household': 'Đồ gia dụng',
+  'products.popular.medical': 'Thiết bị y tế',
+  'products.popular.technology': 'Công nghệ',
+  'products.popular.research': 'Nghiên cứu',
 
   // Blog page
   'blog.pageTitle': 'Tin tức',
@@ -477,6 +536,47 @@ const enTranslations: Record<string, string> = {
   'products.viewDetails': 'View Details',
   'products.special.title': 'Special Products',
   'products.services.title': 'Our Services',
+  
+  // Product search and filters
+  'products.search.placeholder': 'Search products...',
+  'products.search.searching': 'Searching...',
+  'products.search.popular.title': 'Popular Keywords',
+  'products.search.results.found': 'Found {count} results for "{query}"',
+  'products.search.results.notFound': 'No products found matching "{query}"',
+  'products.search.results.notFoundMessage': 'No products found matching "{query}". Please try different keywords.',
+  'products.search.clear': 'Clear Search',
+  'products.search.backToAll': 'Back to All Products',
+  'products.search.viewMore': 'View More',
+  'products.search.enterToSearch': 'Press Enter to search all results for "{query}"',
+  'products.search.noSuggestions': 'Enter keywords to search products',
+  'products.search.viewMoreInCategory': 'View {count} more products in {category}',
+  
+  // Product categories
+  'products.categories.title': 'Product Categories',
+  'products.categories.all': 'All',
+  'products.categories.showAll': 'Show All',
+  
+  // Product sorting and filtering
+  'products.sort.default': 'Default Order',
+  'products.sort.nameAsc': 'Name A-Z',
+  'products.sort.nameDesc': 'Name Z-A',
+  'products.sort.newest': 'Newest',
+  'products.sort.oldest': 'Oldest',
+  
+  // Product results
+  'products.results.showing': 'Showing {from}-{to} of {total} results',
+  'products.results.noProducts': 'No Products',
+  'products.results.noProductsMessage': 'No products found in this category.',
+  'products.results.loading': 'Loading...',
+  'products.results.error': 'Unable to load product data. Please try again later.',
+  
+  // Popular search terms
+  'products.popular.juicer': 'Juicer',
+  'products.popular.tea': 'Tea',
+  'products.popular.household': 'Household Items',
+  'products.popular.medical': 'Medical Equipment',
+  'products.popular.technology': 'Technology',
+  'products.popular.research': 'Research',
 
   // Blog page
   'blog.pageTitle': 'News',
