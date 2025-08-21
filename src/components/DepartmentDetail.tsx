@@ -219,11 +219,11 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                 <ul className="list-unstyled">
                   <li className="mb-2">
                     <i className="bi bi-check-circle text-success me-2"></i>
-                    Danh hiệu "Tập thể lao động tiên tiến" các năm 2016, 2017, 2019.
+                    Danh hiệu &ldquo;Tập thể lao động tiên tiến&rdquo; các năm 2016, 2017, 2019.
                   </li>
                   <li className="mb-2">
                     <i className="bi bi-check-circle text-success me-2"></i>
-                    Bằng khen của TGĐ Tổng Công ty VEAM: "Đơn vị hoàn thành xuất sắc nhiệm vụ" năm 2018.
+                    Bằng khen của TGĐ Tổng Công ty VEAM: &ldquo;Đơn vị hoàn thành xuất sắc nhiệm vụ&rdquo; năm 2018.
                   </li>
                 </ul>
               </div>
