@@ -56,14 +56,14 @@ export default function ProductsPage() {
   const flattenedSuggestions = searchSuggestions;
   
   // Popular search terms
-  const popularSearchTerms = [
+  const popularSearchTerms = React.useMemo(() => [
     t('products.popular.juicer'),
     t('products.popular.tea'),
     t('products.popular.household'),
     t('products.popular.medical'),
     t('products.popular.technology'),
     t('products.popular.research')
-  ];
+  ], [t]);
 
   useEffect(() => {
     // Get URL parameters
