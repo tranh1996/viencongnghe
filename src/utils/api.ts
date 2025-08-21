@@ -803,3 +803,45 @@ export const fetchRelatedPosts = async (
     throw error;
   }
 };
+
+export const searchProducts = async (
+  query: string,
+  language: string,
+  limit?: number,
+  signal?: AbortSignal
+): Promise<Product[]> => {
+  try {
+    let url = `${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`;
+    if (limit !== undefined) {
+      url += `&limit=${limit}`;
+    }
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: { success: boolean; status: number; message: string; data: Product[] } = await response.json();
+    
+    if (data.success) {
+      return data.data || [];
+    } else {
+      throw new Error(data.message || 'Failed to search products');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error searching products:', error);
+    }
+    throw error;
+  }
+};

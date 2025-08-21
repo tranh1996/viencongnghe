@@ -65,91 +65,47 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
   // Loading state
   if (loading) {
     return (
-      <section className="primary-bg text-white py-5">
-        <Container>
-          <Row>
-            <Col>
-              <Button 
-                variant="outline-light" 
-                onClick={() => router.push('/')}
-                className="mb-3"
-              >
-                <i className="bi bi-arrow-left me-2"></i>
-                Quay lại Trang chủ
-              </Button>
-              
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status" className="mb-3">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-                <p>{t('organization.loading')}</p>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <div className="text-center py-5">
+        <Spinner animation="border" role="status" className="mb-3">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <p>{t('organization.loading')}</p>
+      </div>
     );
   }
 
   // Error state
   if (error || !department) {
     return (
-      <section className="primary-bg text-white py-5">
-        <Container>
-          <Row>
-            <Col>
-              <Button 
-                variant="outline-light" 
-                onClick={() => router.push('/')}
-                className="mb-3"
-              >
-                <i className="bi bi-arrow-left me-2"></i>
-                Quay lại Trang chủ
-              </Button>
-              
-              <Alert variant="danger">
-                <Alert.Heading>{t('organization.error')}</Alert.Heading>
-                <p>{error || t('organization.departmentNotFound')}</p>
-              </Alert>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Container className="py-5">
+        <Alert variant="danger">
+          <Alert.Heading>{t('organization.error')}</Alert.Heading>
+          <p>{error || t('organization.departmentNotFound')}</p>
+        </Alert>
+      </Container>
     );
   }
 
   return (
     <>
-      {/* Header Section */}
-      <section className="primary-bg text-white py-5">
+            {/* Dark Banner Section */}
+      <section className="page-title dark-bg">
         <Container>
           <Row>
             <Col>
-              <Button 
-                variant="outline-light" 
-                onClick={() => router.push('/')}
-                className="mb-3"
-              >
-                <i className="bi bi-arrow-left me-2"></i>
-                Quay lại Trang chủ
-              </Button>
-              
-              <div className="d-flex align-items-center">
-                <div className="me-4">
-                  <i className="bi bi-building" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <div>
-                  <h2 className="mb-2 department-title">{department.name}</h2>
-                  {department.code && (
-                    <Badge bg="light" text="dark" className="mb-2">
-                      {department.code}
-                    </Badge>
-                  )}
-                  {department.description && (
-                    <p className="mb-0 opacity-75">{department.description}</p>
-                  )}
-                </div>
+              <div className="text-center">
+                <h1 className="mb-0 fw-bold text-white">{department.name}</h1>
               </div>
+              <nav aria-label="breadcrumb" className="mt-4">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <a href="/" className="text-decoration-none">Trang chủ</a>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    {department.name}
+                  </li>
+                </ol>
+              </nav>
             </Col>
           </Row>
         </Container>
@@ -159,245 +115,200 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
       <section className="py-5">
         <Container>
           <Row>
-            {/* Left Sidebar - Department Navigation */}
+            {/* Left Sidebar - Organizational Structure */}
             <Col lg={3} md={4} className="mb-4">
-              <div className="department-sidebar">
-                <Card>
-                  <Card.Header>
-                    <h5>
-                      <i className="bi bi-building me-2"></i>
-                      {t('organization.departmentList')}
-                    </h5>
-                  </Card.Header>
-                  <Card.Body>
-                    {departmentsLoading ? (
-                      <div className="loading-state">
-                        <Spinner animation="border" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </Spinner>
-                        <p className="small text-muted mt-2">{t('organization.loading')}</p>
-                      </div>
-                    ) : departments.length > 0 ? (
-                      <div className="list-group list-group-flush">
-                        {departments.map((dept) => (
-                          <button
-                            key={dept.id}
-                            className={`list-group-item list-group-item-action d-flex align-items-center ${
-                              dept.slug === departmentSlug ? 'active' : ''
-                            }`}
-                            onClick={() => {
-                              if (dept.slug !== departmentSlug) {
-                                router.push(`/organization/${dept.slug}`);
-                              }
-                            }}
-                            disabled={dept.slug === departmentSlug}
-                          >
-                            <div className="department-icon">
-                              <i className="bi bi-building"></i>
-                            </div>
-                            <div className="department-info">
-                              <h6>{dept.name}</h6>
-                              {dept.code && (
-                                <small>{dept.code}</small>
-                              )}
-                            </div>
-                            <div className="department-status">
-                              {dept.slug === departmentSlug && (
-                                <i className="bi bi-check-circle"></i>
-                              )}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="empty-state">
-                        <i className="bi bi-exclamation-triangle"></i>
-                        <p>{t('organization.noData')}</p>
-                      </div>
-                    )}
-                  </Card.Body>
-                </Card>
+              <div className="page-title dark-bg text-white p-3 mb-4">
+                <h5 className="mb-0 text-white">CƠ CẤU TỔ CHỨC</h5>
+              </div>
+              
+              {departmentsLoading ? (
+                <div className="text-center py-3">
+                  <Spinner animation="border" size="sm" />
+                </div>
+              ) : (
+                <div className="list-group">
+                  {departments.map((dept) => (
+                    <a
+                      key={dept.id}
+                      href={`/organization/${dept.slug}`}
+                      className={`list-group-item list-group-item-action d-flex align-items-center ${
+                        dept.slug === departmentSlug ? 'active' : ''
+                      }`}
+                    >
+                      <span className="me-2">&gt;</span>
+                      <span className={dept.slug === departmentSlug ? 'fw-bold' : ''}>
+                        {dept.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* Library Sections */}
+              <div className="mt-4">
+                <a href="/library" className="text-decoration-none">
+                  <div className="page-title dark-bg text-white p-3 mb-3">
+                    <h6 className="mb-0 text-white">Thư viện</h6>
+                  </div>
+                </a>
+                
+                <div className="row g-2">
+                  <div className="col-6">
+                    <div className="text-center">
+                      <img 
+                        src="/images/product/01.jpg" 
+                        alt="Hình ảnh hoạt động"
+                        className="img-fluid rounded mb-2"
+                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                      />
+                      <div className="small">Hình ảnh hoạt động</div>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="text-center">
+                      <img 
+                        src="/images/product/02.jpg" 
+                        alt="Sản phẩm & Dịch vụ"
+                        className="img-fluid rounded mb-2"
+                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                      />
+                      <div className="small">Sản phẩm & Dịch vụ</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Col>
 
-            {/* Center Content - Department Information */}
-            <Col lg={9} md={8} className="department-main-content">
-              {/* Department Introduction */}
+            {/* Right Main Content */}
+            <Col lg={9} md={8}>
+              {/* Department Header with Contact Button */}
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h2 className="mb-0">{department.name}</h2>
+                <Button variant="primary" href="/contact" className="px-4 py-2" style={{ minWidth: '120px' }}>
+                  Liên hệ
+                </Button>
+              </div>
+
+              {/* Department Image */}
+              {department.image && (
+                <div className="mb-4">
+                  <OptimizedImage
+                    src={department.image}
+                    alt={department.name}
+                    className="img-fluid rounded"
+                    style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
+                  />
+                </div>
+              )}
+
+              {/* Department Content */}
               {department.content && (
-                <Card className="mb-4">
-                  <Card.Body>
-                    <h3 className="mb-3">
-                      {t('organization.departmentIntro')}
-                    </h3>
-                    <div 
-                      dangerouslySetInnerHTML={{ __html: department.content }}
-                      className="department-content"
-                      style={{ 
-                        maxWidth: '100%', 
-                        overflowWrap: 'break-word',
-                        wordWrap: 'break-word'
-                      }}
+                <div className="mb-4">
+                  <div 
+                    dangerouslySetInnerHTML={{ __html: department.content }}
+                    className="department-content"
+                  />
+                </div>
+              )}
+
+              {/* Achievements Section */}
+              <div className="mb-4">
+                <h5 className="mb-3">
+                  Ghi nhận những nỗ lực và cố gắng đó, trong những năm gần đây, Phòng đã được tặng các danh hiệu thi đua khen thưởng
+                </h5>
+                <ul className="list-unstyled">
+                  <li className="mb-2">
+                    <i className="bi bi-check-circle text-success me-2"></i>
+                    Danh hiệu "Tập thể lao động tiên tiến" các năm 2016, 2017, 2019.
+                  </li>
+                  <li className="mb-2">
+                    <i className="bi bi-check-circle text-success me-2"></i>
+                    Bằng khen của TGĐ Tổng Công ty VEAM: "Đơn vị hoàn thành xuất sắc nhiệm vụ" năm 2018.
+                  </li>
+                </ul>
+              </div>
+
+              {/* Activity Images Section */}
+              <div className="mb-4">
+                <h5 className="mb-3">Một số hình ảnh hoạt động của chúng tôi</h5>
+                <Row className="g-3">
+                  <Col md={4}>
+                    <img 
+                      src="/images/service/01.jpg" 
+                      alt="Hoạt động 1"
+                      className="img-fluid rounded"
+                      style={{ width: '100%', height: '150px', objectFit: 'cover' }}
                     />
-                  </Card.Body>
-                </Card>
-              )}
-
-              {/* Media Section */}
-              {(department.image || department.video_url) && (
-                <Card className="mb-4">
-                  <Card.Body>
-                    <h3 className="mb-3">
-                      {t('organization.imagesVideos')}
-                    </h3>
-                    
-                    {/* Image */}
-                    {department.image && (
-                      <div className="mb-4">
-                        <h5 className="mb-3">
-                          {t('organization.image')}
-                        </h5>
-                        <OptimizedImage
-                          src={department.image}
-                          alt={department.name}
-                          className="img-fluid rounded"
-                          style={{ maxHeight: '400px', objectFit: 'cover' }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Video */}
-                    {department.video_url && (
-                      <div>
-                        <h5 className="mb-3">
-                          {t('organization.video')}
-                        </h5>
-                        <div className="ratio ratio-16x9">
-                          <iframe
-                            src={department.video_url}
-                            title={department.name}
-                            allowFullScreen
-                            className="rounded"
-                          ></iframe>
-                        </div>
-                      </div>
-                    )}
-                  </Card.Body>
-                </Card>
-              )}
-
-              {/* Contact Information Section */}
-              <Card className="mb-5" style={{ position: 'relative', zIndex: 2 }}>
-                <Card.Body>
-                  <h4 className="mb-3">
-                    {t('organization.contactInformation')}
-                  </h4>
-                  
-                  <Row>
-                    <Col md={6}>
-                      {(department.contact_email || department.contact_phone || department.contact_address) ? (
-                        <div>
-                          {department.contact_email && (
-                            <div className="mb-3">
-                              <h6 className="text-theme mb-2">
-                                <i className="bi bi-envelope me-2"></i>
-                                {t('organization.email')}
-                              </h6>
-                              <a 
-                                href={`mailto:${department.contact_email}`}
-                                className="text-decoration-none"
-                              >
-                                {department.contact_email}
-                              </a>
-                            </div>
-                          )}
-
-                          {department.contact_phone && (
-                            <div className="mb-3">
-                              <h6 className="text-theme mb-2">
-                                <i className="bi bi-telephone me-2"></i>
-                                {t('organization.phone')}
-                              </h6>
-                              <a 
-                                href={`tel:${department.contact_phone}`}
-                                className="text-decoration-none"
-                              >
-                                {department.contact_phone}
-                              </a>
-                            </div>
-                          )}
-
-                          {department.contact_address && (
-                            <div className="mb-3">
-                              <h6 className="text-theme mb-2">
-                                <i className="bi bi-geo-alt me-2"></i>
-                                {t('organization.address')}
-                              </h6>
-                              <p className="mb-0">{department.contact_address}</p>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <p className="text-muted">
-                          {t('organization.contactNotAvailable')}
-                        </p>
-                      )}
-                    </Col>
-                    
-                    <Col md={6}>
-                      {/* General Contact */}
-                      <div>
-                        <h6 className="text-theme mb-2">
-                          {t('organization.generalContact')}
-                        </h6>
-                        <p className="small text-muted mb-2">
-                          {t('organization.generalContactDesc')}
-                        </p>
-                        <div className="small">
-                          <div className="mb-1">
-                            <strong>Email:</strong> viencongnghe@ritm.vn
-                          </div>
-                          <div className="mb-1">
-                            <strong>Phone:</strong> +84 243 776 3322
-                          </div>
-                          <div>
-                            <strong>Address:</strong> Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
+                  </Col>
+                  <Col md={4}>
+                    <img 
+                      src="/images/service/02.jpg" 
+                      alt="Hoạt động 2"
+                      className="img-fluid rounded"
+                      style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                    />
+                  </Col>
+                  <Col md={4}>
+                    <img 
+                      src="/images/service/03.jpg" 
+                      alt="Hoạt động 3"
+                      className="img-fluid rounded"
+                      style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                    />
+                  </Col>
+                </Row>
+              </div>
             </Col>
           </Row>
         </Container>
       </section>
 
-      {/* Additional Information */}
-      <section className="light-bg py-5" style={{ marginTop: '2rem', marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
+            {/* Footer Contact Information */}
+      <section className="py-4">
         <Container>
-          <Row className="text-center">
-            <Col lg={8} className="mx-auto">
-              <h3 className="mb-4">
-                {t('organization.haveQuestions')}
-              </h3>
-              <p className="mb-4">
-                {t('organization.haveQuestionsDesc')}
-              </p>
-              <div>
-                <Button 
-                  variant="primary" 
-                  href="/contact" 
-                  className="me-3"
-                >
-                  {t('contact.form.sendMessage')}
-                </Button>
-                <Button 
-                  variant="outline-primary" 
-                  onClick={() => router.back()}
-                >
-                  {t('organization.backToDepartments')}
-                </Button>
+          <Row>
+            <Col lg={3} md={4}></Col>
+            <Col lg={9} md={8}>
+              <div className="bg-white border rounded p-4 shadow-sm">
+                <h5 className="mb-3 fw-bold">Thông tin liên hệ</h5>
+                <Row>
+                  <Col md={6} lg={3}>
+                    <div className="d-flex align-items-start mb-3">
+                      <i className="bi bi-geo-alt text-primary me-3 mt-1"></i>
+                      <div>
+                        <strong>Địa chỉ:</strong><br />
+                        <span className="text-muted">Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội</span>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={6} lg={3}>
+                    <div className="d-flex align-items-start mb-3">
+                      <i className="bi bi-envelope text-primary me-3 mt-1"></i>
+                      <div>
+                        <strong>Email:</strong><br />
+                        <span className="text-muted">viencongnghe@ritm.vn</span>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={6} lg={3}>
+                    <div className="d-flex align-items-start mb-3">
+                      <i className="bi bi-telephone text-primary me-3 mt-1"></i>
+                      <div>
+                        <strong>Điện thoại:</strong><br />
+                        <span className="text-muted">+84 243 776 3322</span>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={6} lg={3}>
+                    <div className="d-flex align-items-start mb-3">
+                      <i className="bi bi-printer text-primary me-3 mt-1"></i>
+                      <div>
+                        <strong>Fax:</strong><br />
+                        <span className="text-muted">+84 243 835 9235</span>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Col>
           </Row>
