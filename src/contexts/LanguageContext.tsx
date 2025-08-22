@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'vi' | 'en';
 
@@ -18,6 +18,22 @@ interface LanguageProviderProps {
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('vi');
+
+  // Initialize language from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('preferred-language') as Language;
+      if (savedLang && (savedLang === 'vi' || savedLang === 'en')) {
+        setLanguage(savedLang);
+      } else {
+        // Detect browser language
+        const browserLang = navigator.language.split('-')[0] as Language;
+        if (browserLang === 'vi' || browserLang === 'en') {
+          setLanguage(browserLang);
+        }
+      }
+    }
+  }, []);
 
   // Translation function with parameter interpolation
   const t = (key: string, params?: Record<string, string | number>): string => {
@@ -221,8 +237,11 @@ const viTranslations: Record<string, string> = {
   'products.viewDetails': 'Xem chi tiết',
   'products.special.title': 'Sản phẩm đặc biệt',
   'products.services.title': 'Dịch vụ của chúng tôi',
+  'products.brand': 'Thương hiệu',
+  'products.noDescription': 'Chưa có mô tả',
   
   // Product search and filters
+  'products.search.title': 'Tìm kiếm sản phẩm',
   'products.search.placeholder': 'Tìm kiếm sản phẩm...',
   'products.search.searching': 'Đang tìm kiếm...',
   'products.search.popular.title': 'Từ khóa phổ biến',
@@ -242,16 +261,23 @@ const viTranslations: Record<string, string> = {
   'products.categories.showAll': 'Hiển thị tất cả',
   
   // Product sorting and filtering
+  'products.sort.sortBy': 'Sắp xếp theo',
   'products.sort.default': 'Thứ tự mặc định',
   'products.sort.nameAsc': 'Tên A-Z',
   'products.sort.nameDesc': 'Tên Z-A',
   'products.sort.newest': 'Mới nhất',
   'products.sort.oldest': 'Cũ nhất',
+  'products.sort.popular': 'Phổ biến',
+  'products.sort.name': 'Theo tên',
   
   // Product results
-  'products.results.showing': 'Hiển thị {from}-{to} của {total} kết quả',
+  'products.results.showing': 'Hiển thị',
+  'products.results.to': '-',
+  'products.results.of': 'của',
+  'products.results.total': 'kết quả',
   'products.results.noProducts': 'Không có sản phẩm nào',
   'products.results.noProductsMessage': 'Không tìm thấy sản phẩm nào trong danh mục này.',
+  'products.results.tryDifferentSearch': 'Thử từ khóa tìm kiếm khác hoặc duyệt qua các danh mục.',
   'products.results.loading': 'Đang tải...',
   'products.results.error': 'Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.',
   
@@ -276,6 +302,7 @@ const viTranslations: Record<string, string> = {
   'blog.categories.training': 'Hoạt động đào tạo',
   'blog.professional.title': 'Bài viết chuyên môn',
   'blog.allCategories': 'Tất cả danh mục',
+  'blog.categories': 'Danh mục',
   'blog.noPosts': 'Không có bài viết',
   'blog.noPostsDescription': 'Hiện tại không có bài viết nào trong danh mục này.',
   'blog.breadcrumb.loading': 'Đang tải...',
@@ -286,6 +313,32 @@ const viTranslations: Record<string, string> = {
   'blog.noCategory': 'Không phân loại',
   'blog.relatedPosts': 'Bài viết liên quan',
   'blog.noRelatedPosts': 'Không có bài viết liên quan',
+  'blog.searchPlaceholder': 'Tìm kiếm bài viết...',
+  'blog.recentPosts': 'Bài viết gần đây',
+  'blog.popularTags': 'Thẻ phổ biến',
+  'blog.admin': 'Quản trị viên',
+  'blog.tags.laboratory': 'Phòng thí nghiệm',
+  'blog.tags.research': 'Nghiên cứu',
+  'blog.tags.technology': 'Công nghệ',
+  'blog.tags.science': 'Khoa học',
+  'blog.tags.innovation': 'Đổi mới',
+  'blog.tags.development': 'Phát triển',
+  'blog.comments.title': 'Bình luận cho bài viết',
+  'blog.comments.noComments': 'Chưa có bình luận nào cho bài viết này.',
+  'blog.comments.leaveReply': 'Để lại bình luận',
+  'blog.comments.name': 'Họ tên',
+  'blog.comments.email': 'Email',
+  'blog.comments.comment': 'Bình luận',
+  'blog.comments.namePlaceholder': 'Nhập họ tên của bạn',
+  'blog.comments.emailPlaceholder': 'Nhập email của bạn',
+  'blog.comments.commentPlaceholder': 'Nhập bình luận của bạn',
+  'blog.comments.postComment': 'Gửi bình luận',
+  'blog.search.results': 'Kết quả tìm kiếm',
+  'blog.search.found': 'bài viết được tìm thấy cho',
+  'blog.search.clear': 'Xóa tìm kiếm',
+  'blog.search.noResults': 'Không tìm thấy kết quả',
+  'blog.search.noResultsDescription': 'Không tìm thấy bài viết nào phù hợp với từ khóa',
+  'blog.search.clearSearch': 'Xóa tìm kiếm và xem tất cả bài viết',
 
   // Library page
   'library.pageTitle': 'Thư viện',
@@ -321,16 +374,36 @@ const viTranslations: Record<string, string> = {
   'contact.form.subject': 'Tiêu đề',
   'contact.form.message': 'Nội dung',
   'contact.form.sendMessage': 'Gửi tin nhắn',
+  'contact.form.department': 'Phòng ban quan tâm',
+  'contact.form.departmentPlaceholder': 'Chọn phòng ban',
+  'contact.form.successMessage': 'Tin nhắn đã được gửi thành công! Chúng tôi sẽ liên hệ lại với bạn sớm nhất.',
+  'contact.form.errorMessage': 'Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại.',
+  'contact.form.reset': 'Làm mới',
   'contact.info.title': 'Thông tin liên hệ',
   'contact.info.mainOffice': 'Trụ sở chính',
   'contact.info.branchOffice': 'Cơ sở 2',
+  'contact.info.additional': 'Thông tin thêm',
+  'contact.info.address': 'Địa chỉ',
   'contact.info.phone': 'Điện thoại',
   'contact.info.email': 'Email',
+  'contact.info.website': 'Website',
+  'contact.info.workingHoursTitle': 'Giờ làm việc',
   'contact.info.workingHours': 'Giờ làm việc',
   'contact.location.title': 'Vị trí của chúng tôi',
   'contact.location.getDirections': 'Chỉ đường',
 
   // Footer
+  'footer.about.title': 'Về chúng tôi',
+  'footer.about.description': 'Viện Công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu.',
+  'footer.quickLinks': 'Liên kết nhanh',
+  'footer.services': 'Dịch vụ',
+  'footer.contact': 'Liên hệ',
+  'footer.followUs': 'Theo dõi chúng tôi',
+  'footer.copyright': '© 2024 Viện Công nghệ. Tất cả quyền được bảo lưu.',
+  'footer.privacy': 'Chính sách bảo mật',
+  'footer.terms': 'Điều khoản sử dụng',
+
+  // Footer company
   'footer.company.name': 'VIỆN CÔNG NGHỆ',
   'footer.company.subtitle': 'Research Institute of Technology for Machinery',
   'footer.company.description': 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế.',
@@ -536,8 +609,11 @@ const enTranslations: Record<string, string> = {
   'products.viewDetails': 'View Details',
   'products.special.title': 'Special Products',
   'products.services.title': 'Our Services',
+  'products.brand': 'Brand',
+  'products.noDescription': 'No description available',
   
   // Product search and filters
+  'products.search.title': 'Search Products',
   'products.search.placeholder': 'Search products...',
   'products.search.searching': 'Searching...',
   'products.search.popular.title': 'Popular Keywords',
@@ -557,16 +633,23 @@ const enTranslations: Record<string, string> = {
   'products.categories.showAll': 'Show All',
   
   // Product sorting and filtering
+  'products.sort.sortBy': 'Sort By',
   'products.sort.default': 'Default Order',
   'products.sort.nameAsc': 'Name A-Z',
   'products.sort.nameDesc': 'Name Z-A',
   'products.sort.newest': 'Newest',
   'products.sort.oldest': 'Oldest',
+  'products.sort.popular': 'Popular',
+  'products.sort.name': 'By Name',
   
   // Product results
-  'products.results.showing': 'Showing {from}-{to} of {total} results',
+  'products.results.showing': 'Showing',
+  'products.results.to': '-',
+  'products.results.of': 'of',
+  'products.results.total': 'results',
   'products.results.noProducts': 'No Products',
   'products.results.noProductsMessage': 'No products found in this category.',
+  'products.results.tryDifferentSearch': 'Try different search keywords or browse through categories.',
   'products.results.loading': 'Loading...',
   'products.results.error': 'Unable to load product data. Please try again later.',
   
@@ -591,6 +674,7 @@ const enTranslations: Record<string, string> = {
   'blog.categories.training': 'Training Activities',
   'blog.professional.title': 'Professional Articles',
   'blog.allCategories': 'All Categories',
+  'blog.categories': 'Categories',
   'blog.noPosts': 'No Posts',
   'blog.noPostsDescription': 'There are currently no posts in this category.',
   'blog.breadcrumb.loading': 'Loading...',
@@ -601,6 +685,32 @@ const enTranslations: Record<string, string> = {
   'blog.noCategory': 'Uncategorized',
   'blog.relatedPosts': 'Related Posts',
   'blog.noRelatedPosts': 'No related posts found',
+  'blog.searchPlaceholder': 'Search articles...',
+  'blog.recentPosts': 'Recent Posts',
+  'blog.popularTags': 'Popular Tags',
+  'blog.admin': 'Admin',
+  'blog.tags.laboratory': 'Laboratory',
+  'blog.tags.research': 'Research',
+  'blog.tags.technology': 'Technology',
+  'blog.tags.science': 'Science',
+  'blog.tags.innovation': 'Innovation',
+  'blog.tags.development': 'Development',
+  'blog.comments.title': 'Comments on',
+  'blog.comments.noComments': 'No comments yet for this article.',
+  'blog.comments.leaveReply': 'Leave a Reply',
+  'blog.comments.name': 'Name',
+  'blog.comments.email': 'Email',
+  'blog.comments.comment': 'Comment',
+  'blog.comments.namePlaceholder': 'Enter your name',
+  'blog.comments.emailPlaceholder': 'Enter your email',
+  'blog.comments.commentPlaceholder': 'Enter your comment',
+  'blog.comments.postComment': 'Post Comment',
+  'blog.search.results': 'Search results',
+  'blog.search.found': 'articles found for',
+  'blog.search.clear': 'Clear search',
+  'blog.search.noResults': 'No results found',
+  'blog.search.noResultsDescription': 'No articles found matching the keyword',
+  'blog.search.clearSearch': 'Clear search and view all articles',
 
   // Library page
   'library.pageTitle': 'Library',
@@ -636,16 +746,36 @@ const enTranslations: Record<string, string> = {
   'contact.form.subject': 'Subject',
   'contact.form.message': 'Message',
   'contact.form.sendMessage': 'Send Message',
+  'contact.form.department': 'Department of Interest',
+  'contact.form.departmentPlaceholder': 'Select Department',
+  'contact.form.successMessage': 'Message sent successfully! We will contact you back as soon as possible.',
+  'contact.form.errorMessage': 'An error occurred while sending the message. Please try again.',
+  'contact.form.reset': 'Reset',
   'contact.info.title': 'Contact Information',
   'contact.info.mainOffice': 'Main Office',
   'contact.info.branchOffice': 'Branch Office',
+  'contact.info.additional': 'Additional Information',
+  'contact.info.address': 'Address',
   'contact.info.phone': 'Phone',
   'contact.info.email': 'Email',
+  'contact.info.website': 'Website',
+  'contact.info.workingHoursTitle': 'Working Hours',
   'contact.info.workingHours': 'Working Hours',
   'contact.location.title': 'Our Locations',
   'contact.location.getDirections': 'Get Directions',
 
   // Footer
+  'footer.about.title': 'About Us',
+  'footer.about.description': 'Research Institute of Technology for Machinery (RITM) is an organization for research and development of technology in the field of manufacturing special materials and mechanical processing.',
+  'footer.quickLinks': 'Quick Links',
+  'footer.services': 'Services',
+  'footer.contact': 'Contact',
+  'footer.followUs': 'Follow Us',
+  'footer.copyright': '© 2024 Research Institute of Technology for Machinery. All rights reserved.',
+  'footer.privacy': 'Privacy Policy',
+  'footer.terms': 'Terms of Service',
+
+  // Footer company
   'footer.company.name': 'TECHNOLOGY INSTITUTE',
   'footer.company.subtitle': 'Research Institute of Technology for Machinery',
   'footer.company.description': 'The Technology Institute (RITM) is a research and technology development organization in the field of manufacturing special materials, mechanical engineering for mold making, heat treatment and surface treatment with the goal of practical application.',

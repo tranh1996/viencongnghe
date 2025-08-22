@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { contactTranslations, getCurrentLanguage } from '../../src/config/languages';
-import LanguageSwitcher from '../../src/components/LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ interface ContactSettings {
 }
 
 export default function ContactPage() {
-  const [currentLanguage, setCurrentLanguage] = useState<string>('vi');
+  const { t, language } = useLanguage();
   const [contactSettings, setContactSettings] = useState<ContactSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -39,21 +39,14 @@ export default function ContactPage() {
     address: '',
     subject: '',
     message: '',
-    department: currentLanguage === 'vi' 
-      ? 'Phòng Nghiên cứu Vật liệu, Xử lý nhiệt và bề mặt'
-      : 'Materials Research, Heat Treatment and Surface Processing Department'
+    department: ''
   });
   const [submitStatus, setSubmitStatus] = useState<{
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
 
-  // Get translations for current language
-  const t = contactTranslations[currentLanguage] || contactTranslations['vi'];
-
   useEffect(() => {
-    const lang = getCurrentLanguage();
-    setCurrentLanguage(lang);
     fetchContactSettings();
   }, []);
 
@@ -71,7 +64,7 @@ export default function ContactPage() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -97,20 +90,20 @@ export default function ContactPage() {
       if (data.success) {
         setSubmitStatus({
           type: 'success',
-          message: t.successMessage
+          message: t('contact.form.successMessage')
         });
         handleReset();
       } else {
         setSubmitStatus({
           type: 'error',
-          message: data.message || t.errorMessage
+          message: data.message || t('contact.form.errorMessage')
         });
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus({
         type: 'error',
-        message: t.errorMessage
+        message: t('contact.form.errorMessage')
       });
     }
   };
@@ -123,9 +116,7 @@ export default function ContactPage() {
       address: '',
       subject: '',
       message: '',
-      department: currentLanguage === 'vi' 
-        ? 'Phòng Nghiên cứu Vật liệu, Xử lý nhiệt và bề mặt'
-        : 'Materials Research, Heat Treatment and Surface Processing Department'
+      department: ''
     });
   };
 
@@ -139,311 +130,637 @@ export default function ContactPage() {
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: t('nav.home'), en: t('nav.home') },
+      href: '/'
+    },
+    {
+      label: { vi: t('nav.contact'), en: t('nav.contact') },
+      active: true
+    }
+  ];
+
   return (
     <>
-      {/* Header Section */}
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h1>{t.pageTitle}</h1>
-                  <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                      <li className="breadcrumb-item">
-                        <a href="/">{t.breadcrumbHome}</a>
-                      </li>
-                      <li className="breadcrumb-item active" aria-current="page">
-                        {t.breadcrumbContact}
-                      </li>
-                    </ol>
-                  </nav>
-                </div>
-                <LanguageSwitcher onLanguageChange={setCurrentLanguage} />
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* Contact Form Section */}
-      <section className="py-5">
-        <Container>
-          <Row>
-            <Col lg={6}>
-              <div>
-                <h1 className="display-6 fw-bold text-dark mb-4">{t.contactTitle}</h1>
-              </div>
-            </Col>
-            <Col lg={6}>
-              <div className="p-4 rounded" style={{ backgroundColor: 'var(--themeht-primary-color)', color: 'white' }}>
-                <h5 className="mb-3 text-white">{t.welcomeTitle}</h5>
-                <p className="mb-0">
-                  {t.welcomeMessage}
-                </p>
-              </div>
-            </Col>
-          </Row>
-
-          {/* Contact Form */}
-          <Row className="mt-5">
-            <Col lg={12}>
-              <div className="contact-form-container p-4 border rounded">
-                {/* Success/Error Messages */}
-                {submitStatus.type && (
-                  <div className={`alert alert-${submitStatus.type === 'success' ? 'success' : 'danger'} mb-4`} role="alert">
-                    <i className={`bi bi-${submitStatus.type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2`}></i>
-                    {submitStatus.message}
-                  </div>
-                )}
-                
-                <Form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col lg={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-bold">{t.nameLabel}</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col lg={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-bold">{t.emailLabel}</Form.Label>
-                        <Form.Control
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-bold">{t.phoneLabel}</Form.Label>
-                        <Form.Control
-                          type="tel"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col lg={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-bold">{t.addressLabel}</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-bold">{t.subjectLabel}</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="subject"
-                          value={formData.subject}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col lg={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-bold">{t.messageLabel}</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          rows={5}
-                          name="message"
-                          value={formData.message}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={12}>
-                      <div className="d-flex gap-3">
-                        <Button type="submit" variant="secondary" className="px-4">
-                          {t.sendButton}
-                        </Button>
-                        <Button type="button" variant="secondary" className="px-4" onClick={handleReset}>
-                          {t.resetButton}
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* Company Information Sections */}
-      <section className="py-5 bg-light">
-        <Container>
-          <Row>
-            {/* Main Office Section */}
-            <Col lg={6} className="mb-4">
-              <div className="text-white p-3 rounded-top" style={{ backgroundColor: 'var(--themeht-primary-color)'}}>
-                <h5 className="text-white mb-0 fw-bold">{t.mainOfficeTitle}</h5>
-              </div>
-              <div className="bg-white p-4 border rounded-bottom">
-                <div>
-                  <h6 className="fw-bold mb-3">{contactSettings?.company_info.company_name || 'VIỆN CÔNG NGHỆ'}</h6>
-                  <p className="mb-2">
-                    <strong>{t.companyAddressLabel}</strong><br />
-                    {contactSettings?.company_info.address_main || 'Trụ sở chính: Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}
-                  </p>
-                  <p className="mb-2">
-                    <strong>{t.companyPhoneLabel}</strong> {contactSettings?.company_info.phone || '+84 243 776 3322'}
-                  </p>
-                  <p className="mb-2">
-                    <strong>{t.faxLabel}</strong> {contactSettings?.company_info.fax || '+84 243 835 9235'}
-                  </p>
-                  <p className="mb-2">
-                    <strong>{t.companyEmailLabel}</strong> {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
-                  </p>
-                  <p className="mb-0">
-                    <strong>{t.websiteLabel}</strong><br />
-                    www.viencongnghe.vn - www.ritm.vn
-                  </p>
-                </div>
-              </div>
-            </Col>
-
-            {/* Branch Office Section */}
-            <Col lg={6} className="mb-4">
-              <div className="text-white p-3 rounded-top" style={{ backgroundColor: 'var(--themeht-primary-color)'}}>
-                <h5 className="text-white mb-0 fw-bold">{t.branchOfficeTitle}</h5>
-              </div>
-              <div className="bg-white p-4 border rounded-bottom">
-                <div>
-                  <h6 className="fw-bold mb-3">{contactSettings?.company_info.company_name || 'VIỆN CÔNG NGHỆ'}</h6>
-                    <p className="mb-2">
-                      <strong>{t.companyAddressLabel}</strong><br />
-                      {contactSettings?.company_info.address_branch || 'Cơ sở 2: Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội'}
-                    </p>
-                    <p className="mb-2">
-                      <strong>{t.companyPhoneLabel}</strong> {contactSettings?.company_info.phone || '+84 243 776 3322'}
-                    </p>
-                    <p className="mb-2">
-                      <strong>{t.faxLabel}</strong> {contactSettings?.company_info.fax || '+84 243 835 9235'}
-                    </p>
-                    <p className="mb-2">
-                      <strong>{t.companyEmailLabel}</strong> {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
-                    </p>
-                    <p className="mb-0">
-                      <strong>{t.websiteLabel}</strong><br />
-                      www.viencongnghe.vn - www.ritm.vn
-                    </p>
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* Map Section */}
-      <section className="py-5">
-        <Container>
-          <Row>
-            <Col lg={12}>
-              <div className="d-flex align-items-center mb-4">
-                <h3 className="fw-bold text-dark mb-0 me-3">{t.branchTitle}</h3>
-                <div className="ms-auto">
-                  <i className="bi bi-plus-circle-fill text-primary" style={{ fontSize: '1.5rem' }}></i>
-                </div>
-              </div>
-              
-              {/* Branch Tabs */}
-              <div className="branch-tabs mb-4">
-                <div className="d-flex flex-wrap gap-2">
-                  <button className="btn btn-outline-primary active">{t.mainOfficeTab}</button>
-                  <button className="btn btn-outline-primary">{t.branchTab}</button>
-                  <button className="btn btn-outline-primary">{t.hanoiTab}</button>
-                  <button className="btn btn-outline-primary">{t.hcmTab}</button>
-                  <button className="btn btn-outline-primary">{t.danangTab}</button>
-                  <button className="btn btn-outline-primary">{t.canthoTab}</button>
-                </div>
-              </div>
-
-              {/* Map */}
-              <div className="map-container">
-                {contactSettings?.map_settings.google_map_embed ? (
-                  <iframe
-                    src={contactSettings.map_settings.google_map_embed}
-                    width="100%"
-                    height="450"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="VIỆN CÔNG NGHỆ - Bản đồ"
-                  ></iframe>
-                ) : (
-                  <div className="bg-light d-flex justify-content-center align-items-center" style={{ height: '450px' }}>
-                    <p className="text-muted">{t.mapLoadingText}</p>
-                  </div>
-                )}
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* Social Media Icons */}
-      {contactSettings?.social_media && (
-        <section className="py-3 bg-light">
+      <Breadcrumb
+        title={{ vi: t('nav.contact'), en: t('nav.contact') }}
+        items={breadcrumbItems}
+      />
+      <div className="page-content">
+        {/* Contact Info Section */}
+        <section className="py-5">
           <Container>
-            <Row>
-              <Col lg={12} className="text-center">
-                <div className="social-media-icons">
-                  {contactSettings.social_media.facebook_link && (
-                    <a href={contactSettings.social_media.facebook_link} target="_blank" rel="noopener noreferrer" className="mx-2">
-                      <div className="social-icon bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                        <i className="bi bi-facebook"></i>
+            <Row className="g-4">
+              {/* Main Office */}
+              <Col lg={4} md={6}>
+                <div className="contact-info-card h-100">
+                  <div className="contact-info-header">
+                    <div className="contact-icon">
+                      <i className="bi bi-building"></i>
+                    </div>
+                    <h4>{t('contact.info.mainOffice')}</h4>
+                  </div>
+                  <div className="contact-details">
+                    <div className="contact-item">
+                      <i className="bi bi-geo-alt text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.address')}</span>
+                        <p className="contact-text">{contactSettings?.company_info.address_main || 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}</p>
                       </div>
-                    </a>
-                  )}
-                  {contactSettings.social_media.instagram_link && (
-                    <a href={contactSettings.social_media.instagram_link} target="_blank" rel="noopener noreferrer" className="mx-2">
-                      <div className="social-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                        <i className="bi bi-instagram"></i>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-envelope text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.email')}</span>
+                        <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`} className="contact-link">
+                          {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
+                        </a>
                       </div>
-                    </a>
-                  )}
-                  {contactSettings.social_media.linkedin_link && (
-                    <a href={contactSettings.social_media.linkedin_link} target="_blank" rel="noopener noreferrer" className="mx-2">
-                      <div className="social-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                        <i className="bi bi-linkedin"></i>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-telephone text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.phone')}</span>
+                        <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`} className="contact-link">
+                          {contactSettings?.company_info.phone || '+84 243 776 3322'}
+                        </a>
                       </div>
-                    </a>
-                  )}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+
+              {/* Branch Office */}
+              <Col lg={4} md={6}>
+                <div className="contact-info-card h-100">
+                  <div className="contact-info-header">
+                    <div className="contact-icon">
+                      <i className="bi bi-buildings"></i>
+                    </div>
+                    <h4>{t('contact.info.branchOffice')}</h4>
+                  </div>
+                  <div className="contact-details">
+                    <div className="contact-item">
+                      <i className="bi bi-geo-alt text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.address')}</span>
+                        <p className="contact-text">{contactSettings?.company_info.address_branch || 'Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội'}</p>
+                      </div>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-envelope text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.email')}</span>
+                        <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`} className="contact-link">
+                          {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
+                        </a>
+                      </div>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-telephone text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.phone')}</span>
+                        <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`} className="contact-link">
+                          {contactSettings?.company_info.phone || '+84 243 776 3322'}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Col>
+
+              {/* Additional Information */}
+              <Col lg={4} md={12}>
+                <div className="contact-info-card h-100">
+                  <div className="contact-info-header">
+                    <div className="contact-icon">
+                      <i className="bi bi-info-circle"></i>
+                    </div>
+                    <h4>{t('contact.info.additional')}</h4>
+                  </div>
+                  <div className="contact-details">
+                    <div className="contact-item">
+                      <i className="bi bi-globe text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.website')}</span>
+                        <div className="contact-text">
+                          <a href="https://www.viencongnghe.vn" target="_blank" rel="noopener noreferrer" className="contact-link d-block">
+                            www.viencongnghe.vn
+                          </a>
+                          <a href="https://www.ritm.vn" target="_blank" rel="noopener noreferrer" className="contact-link d-block">
+                            www.ritm.vn
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-printer text-primary"></i>
+                      <div>
+                        <span className="contact-label">Fax</span>
+                        <a href={`tel:${contactSettings?.company_info.fax || '+84243835923'}`} className="contact-link">
+                          {contactSettings?.company_info.fax || '+84 243 835 9235'}
+                        </a>
+                      </div>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-clock text-primary"></i>
+                      <div>
+                        <span className="contact-label">{t('contact.info.workingHoursTitle')}</span>
+                        <div className="contact-text">
+                          <p className="mb-1">Thứ 2 - Thứ 6: 8:00 - 17:00</p>
+                          <p className="mb-0">Thứ 7: 8:00 - 12:00</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </Col>
             </Row>
           </Container>
         </section>
-      )}
+
+        {/* Contact Form Section */}
+        <section className="pt-0">
+          <Container>
+            <Row className="align-items-center">
+              <Col lg={6} md={12} className="order-lg-1">
+                <img className="img-fluid topBottom" src="/images/appointment-img.png" alt="Contact Us" />
+              </Col>
+              <Col lg={6} md={12} className="mt-10 mt-lg-0 pe-lg-10">
+                <div className="box-shadow rounded p-5">
+                  <div className="theme-title">
+                    <h6>{t('contact.form.title')}</h6>
+                  </div>
+
+                  {/* Success/Error Messages */}
+                  {submitStatus.type && (
+                    <div className={`alert alert-${submitStatus.type === 'success' ? 'success' : 'danger'} mb-4`} role="alert">
+                      <i className={`bi bi-${submitStatus.type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2`}></i>
+                      {submitStatus.message}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmit}>
+                    <div className="messages"></div>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>{t('contact.form.fullName')}</label>
+                          <input
+                            type="text"
+                            name="name"
+                            className="form-control"
+                            placeholder="Enter Your Name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>{t('contact.form.email')}</label>
+                          <input
+                            type="email"
+                            name="email"
+                            className="form-control"
+                            placeholder="Enter Email Address"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>{t('contact.form.phone')}</label>
+                          <input
+                            type="tel"
+                            name="phone"
+                            className="form-control"
+                            placeholder="Enter Phone number"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>{t('contact.form.subject')}</label>
+                          <input
+                            type="text"
+                            name="subject"
+                            className="form-control"
+                            placeholder="Enter Subject"
+                            value={formData.subject}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="form-group">
+                          <label>{t('contact.form.department')}</label>
+                          <select
+                            name="department"
+                            className="form-control"
+                            value={formData.department}
+                            onChange={handleInputChange}
+                            required
+                          >
+                            <option value="">{t('contact.form.departmentPlaceholder')}</option>
+                            <option value="Phòng Nghiên cứu Vật liệu, Xử lý nhiệt và bề mặt">Phòng Nghiên cứu Vật liệu, Xử lý nhiệt và bề mặt</option>
+                            <option value="Phòng Nghiên cứu Cơ khí">Phòng Nghiên cứu Cơ khí</option>
+                            <option value="Phòng Nghiên cứu Tự động hóa">Phòng Nghiên cứu Tự động hóa</option>
+                            <option value="Phòng Kỹ thuật Công nghệ">Phòng Kỹ thuật Công nghệ</option>
+                            <option value="Phòng Thí nghiệm">Phòng Thí nghiệm</option>
+                            <option value="Phòng Hành chính - Nhân sự">Phòng Hành chính - Nhân sự</option>
+                            <option value="Phòng Kế toán - Tài chính">Phòng Kế toán - Tài chính</option>
+                            <option value="Phòng Kinh doanh">Phòng Kinh doanh</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="form-group">
+                          <label>{t('contact.form.message')}</label>
+                          <textarea
+                            name="message"
+                            className="form-control"
+                            placeholder="Write Your Message Here..."
+                            rows={4}
+                            value={formData.message}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-12 mt-3">
+                        <button className="themeht-btn primary-btn" type="submit">
+                          {t('contact.form.sendMessage')}
+                        </button>
+                        <button className="themeht-btn secondary-btn ms-3" type="button" onClick={handleReset}>
+                          {t('contact.form.reset')}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+
+        {/* Full-width Map Section */}
+        <section className="overflow-hidden p-0">
+          <div className="container-fluid px-0">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="map-container">
+                  {contactSettings?.map_settings.google_map_embed ? (
+                    <iframe
+                      src={contactSettings.map_settings.google_map_embed}
+                      width="100%"
+                      height="450"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="VIỆN CÔNG NGHỆ - Bản đồ"
+                    />
+                  ) : (
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.0969470394357!2d105.82391631543307!3d21.028511593316544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9bd9861ca1%3A0xe7887f7b72ca17a9!2sHanoi%2C%20Vietnam!5e0!3m2!1sen!2s!4v1703845234567"
+                      width="100%"
+                      height="450"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="VIỆN CÔNG NGHỆ - Bản đồ"
+                    />
+                  )}
+                  
+                  {/* Map Overlay with Contact Info */}
+                  <div className="map-overlay">
+                    <div className="map-info-card">
+                      <div className="map-info-header">
+                        <h5><i className="bi bi-geo-alt-fill text-primary me-2"></i>{t('contact.location.title')}</h5>
+                      </div>
+                      <div className="map-info-content">
+                        <div className="map-address mb-3">
+                          <strong>{t('contact.info.mainOffice')}:</strong><br />
+                          <span>{contactSettings?.company_info.address_main || 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}</span>
+                        </div>
+                        <div className="map-address mb-3">
+                          <strong>{t('contact.info.branchOffice')}:</strong><br />
+                          <span>{contactSettings?.company_info.address_branch || 'Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội'}</span>
+                        </div>
+                        <div className="map-contact">
+                          <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`} className="btn btn-primary btn-sm me-2">
+                            <i className="bi bi-telephone me-1"></i>{t('contact.form.phone')}
+                          </a>
+                          <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`} className="btn btn-outline-primary btn-sm">
+                            <i className="bi bi-envelope me-1"></i>{t('contact.info.email')}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <style jsx>{`
+        .contact-info-card {
+          background: white;
+          border-radius: 12px;
+          padding: 2rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+          transition: all 0.3s ease;
+          border: 1px solid #f0f0f0;
+        }
+        
+        .contact-info-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .contact-info-header {
+          text-align: center;
+          margin-bottom: 2rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 2px solid #f8f9fa;
+        }
+        
+        .contact-icon {
+          width: 60px;
+          height: 60px;
+          background: linear-gradient(135deg, var(--themeht-primary-color), #007bff);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 1rem;
+          box-shadow: 0 4px 15px rgba(var(--themeht-primary-color), 0.3);
+        }
+        
+        .contact-icon i {
+          font-size: 1.5rem;
+          color: white;
+        }
+        
+        .contact-info-header h4 {
+          margin: 0;
+          color: #212529;
+          font-weight: 700;
+          font-size: 1.25rem;
+        }
+        
+        .contact-details {
+          space-y: 1.5rem;
+        }
+        
+        .contact-item {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 1.5rem;
+          padding: 1rem;
+          background: #f8f9fa;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+          background: #e9ecef;
+          transform: translateX(5px);
+        }
+        
+        .contact-item i {
+          font-size: 1.25rem;
+          margin-right: 1rem;
+          margin-top: 0.25rem;
+          flex-shrink: 0;
+          width: 24px;
+          text-align: center;
+        }
+        
+        .contact-item > div {
+          flex: 1;
+        }
+        
+        .contact-label {
+          display: block;
+          font-weight: 600;
+          color: #495057;
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .contact-text {
+          margin: 0;
+          color: #6c757d;
+          line-height: 1.6;
+          font-size: 0.95rem;
+        }
+        
+        .contact-link {
+          color: #495057;
+          text-decoration: none;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        }
+        
+        .contact-link:hover {
+          color: var(--themeht-primary-color);
+          text-decoration: underline;
+        }
+        
+        .theme-title h6 {
+          color: var(--themeht-primary-color);
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+        
+        .theme-title h2 {
+          margin-bottom: 1.5rem;
+          color: #212529;
+        }
+        
+        .theme-title h2 span {
+          color: var(--themeht-primary-color);
+        }
+        
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: #212529;
+        }
+        
+        .form-control {
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 0.75rem;
+          font-size: 0.9rem;
+        }
+        
+        .form-control:focus {
+          border-color: var(--themeht-primary-color);
+          box-shadow: 0 0 0 0.2rem rgba(var(--themeht-primary-color), 0.25);
+        }
+        
+        .themeht-btn {
+          padding: 0.75rem 1.5rem;
+          border-radius: 4px;
+          text-decoration: none;
+          display: inline-block;
+          border: 1px solid transparent;
+          transition: all 0.3s ease;
+          font-weight: 500;
+        }
+        
+        .themeht-btn.primary-btn {
+          background-color: var(--themeht-primary-color);
+          border-color: var(--themeht-primary-color);
+          color: white;
+        }
+        
+        .themeht-btn.primary-btn:hover {
+          background-color: transparent;
+          border-color: var(--themeht-primary-color);
+          color: var(--themeht-primary-color);
+        }
+        
+        .themeht-btn.secondary-btn {
+          background-color: #6c757d;
+          border-color: #6c757d;
+          color: white;
+        }
+        
+        .themeht-btn.secondary-btn:hover {
+          background-color: transparent;
+          border-color: #6c757d;
+          color: #6c757d;
+        }
+        
+        .box-shadow {
+          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .topBottom {
+          animation: topBottom 3s ease-in-out infinite;
+        }
+        
+        @keyframes topBottom {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+        
+        .map-container {
+          position: relative;
+          height: 450px;
+          overflow: hidden;
+        }
+        
+        .map-container iframe {
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+        
+        .map-overlay {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 10;
+          max-width: 350px;
+        }
+        
+        .map-info-card {
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          overflow: hidden;
+        }
+        
+        .map-info-header {
+          background: linear-gradient(135deg, var(--themeht-primary-color), #007bff);
+          padding: 1rem;
+          color: white;
+        }
+        
+        .map-info-header h5 {
+          margin: 0;
+          font-size: 1rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+        }
+        
+        .map-info-content {
+          padding: 1.5rem;
+        }
+        
+        .map-address {
+          font-size: 0.9rem;
+          line-height: 1.5;
+        }
+        
+        .map-address strong {
+          color: #495057;
+        }
+        
+        .map-address span {
+          color: #6c757d;
+        }
+        
+        .map-contact {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+          .map-overlay {
+            position: static;
+            max-width: none;
+            margin: 0;
+            border-radius: 0;
+          }
+          
+          .map-container {
+            height: 300px;
+          }
+          
+          .map-info-card {
+            border-radius: 0;
+            background: white;
+          }
+        }
+      `}</style>
     </>
   );
 }

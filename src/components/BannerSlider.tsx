@@ -104,7 +104,7 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
                   />
                 )}
                 {slide.description && (
-                  <p>{slide.description[language]}</p>
+                  <p dangerouslySetInnerHTML={{ __html: slide.description[language] }} />
                 )}
                 <div className="btn-box mt-5">
                   {slide.primaryButton && (

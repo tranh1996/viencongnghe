@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Footer Widget Component
 interface FooterWidgetProps {
@@ -66,39 +67,43 @@ const SocialIcons: React.FC = () => (
 );
 
 // Contact Info Component
-const ContactInfo: React.FC = () => (
-  <ul className="media-icon">
-    <li>
-      <i className="bi bi-geo-alt-fill"></i>
-      <span>Trụ sở chính</span>
-      <p>Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội</p>
-    </li>
-    <li>
-      <i className="bi bi-geo-alt-fill"></i>
-      <span>Cơ sở 2</span>
-      <p>Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội</p>
-    </li>
-    <li>
-      <i className="bi bi-telephone-fill"></i>
-      <span>Điện thoại</span>
-      <p>
-        <a href="tel:+842437763322">+84 243 776 3322</a>
-      </p>
-    </li>
-    <li>
-      <i className="bi bi-envelope-fill"></i>
-      <span>Email</span>
-      <p>
-        <a href="mailto:viencongnghe@ritm.vn">viencongnghe@ritm.vn</a>
-      </p>
-    </li>
-    <li>
-      <i className="bi bi-clock-fill"></i>
-      <span>Giờ làm việc</span>
-      <p>Thứ 2 - Thứ 6: 8:00 - 17:00</p>
-    </li>
-  </ul>
-);
+const ContactInfo: React.FC = () => {
+  const { t } = useLanguage();
+  
+  return (
+    <ul className="media-icon">
+      <li>
+        <i className="bi bi-geo-alt-fill"></i>
+        <span>{t('contact.info.mainOffice')}</span>
+        <p>Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội</p>
+      </li>
+      <li>
+        <i className="bi bi-geo-alt-fill"></i>
+        <span>{t('contact.info.branchOffice')}</span>
+        <p>Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội</p>
+      </li>
+      <li>
+        <i className="bi bi-telephone-fill"></i>
+        <span>{t('contact.info.phone')}</span>
+        <p>
+          <a href="tel:+842437763322">+84 243 776 3322</a>
+        </p>
+      </li>
+      <li>
+        <i className="bi bi-envelope-fill"></i>
+        <span>{t('contact.info.email')}</span>
+        <p>
+          <a href="mailto:viencongnghe@ritm.vn">viencongnghe@ritm.vn</a>
+        </p>
+      </li>
+      <li>
+        <i className="bi bi-clock-fill"></i>
+        <span>{t('contact.info.workingHours')}</span>
+        <p>{t('header.workingHours')}</p>
+      </li>
+    </ul>
+  );
+};
 
 // Footer Links Component
 interface FooterLinksProps {
@@ -117,25 +122,28 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ links }) => (
 
 // Main Footer Component
 const Footer: React.FC = () => {
+  const { t } = useLanguage();
+
   // Navigation links data
   const aboutLinks = [
-    { to: '/about', text: 'Về chúng tôi' },
-    { to: '/organization', text: 'Cơ cấu tổ chức' },
-    { to: '/products', text: 'Sản phẩm & Dịch vụ' },
-    { to: '/library', text: 'Hình ảnh hoạt động' }
+    { to: '/about', text: t('nav.about') },
+    { to: '/about/vision-mission', text: t('nav.about.visionMission') },
+    { to: '/about/history', text: t('nav.about.history') },
+    { to: '/organization', text: t('nav.organization') }
+  ];
+
+  const servicesLinks = [
+    { to: '/products', text: t('nav.products') },
+    { to: '/services', text: t('footer.services') },
+    { to: '/library', text: t('nav.library') },
+    { to: '/contact', text: t('nav.contact') }
   ];
 
   const newsLinks = [
-    { to: '/blog', text: 'Tin hoạt động' },
-    { to: '/blog#science', text: 'Tin khoa học công nghệ' },
-    { to: '/blog#training', text: 'Hoạt động đào tạo và tư vấn' },
-    { to: '/blog#professional', text: 'Bài viết chuyên môn' }
-  ];
-
-  const legalLinks = [
-    { to: '/privacy-policy', text: 'Chính sách bảo mật' },
-    { to: '/terms-conditions', text: 'Điều khoản sử dụng' },
-    { to: '/sitemap', text: 'Sơ đồ trang' }
+    { to: '/blog', text: t('nav.news.activities') },
+    { to: '/blog', text: t('nav.news.science') },
+    { to: '/blog', text: t('nav.news.training') },
+    { to: '/blog', text: t('nav.news.professional') }
   ];
 
   return (
@@ -147,13 +155,11 @@ const Footer: React.FC = () => {
             {/* Company Information */}
             <Col lg={4} md={6}>
               <FooterWidget 
-                title="VIỆN CÔNG NGHỆ"
-                subtitle="Research Institute of Technology for Machinery"
+                title={t('footer.company.name') || 'VIỆN CÔNG NGHỆ'}
+                subtitle={t('footer.company.subtitle') || 'Research Institute of Technology for Machinery'}
               >
                 <p>
-                  Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực 
-                  chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt 
-                  và bề mặt với mục tiêu ứng dụng vào thực tế.
+                  {t('footer.about.description')}
                 </p>
                 <SocialIcons />
               </FooterWidget>
@@ -161,21 +167,21 @@ const Footer: React.FC = () => {
 
             {/* About Links */}
             <Col lg={2} md={6}>
-              <FooterWidget title="GIỚI THIỆU">
+              <FooterWidget title={t('footer.about.title').toUpperCase()}>
                 <FooterLinks links={aboutLinks} />
               </FooterWidget>
             </Col>
 
-            {/* News Links */}
+            {/* Services Links */}
             <Col lg={2} md={6}>
-              <FooterWidget title="TIN TỨC">
-                <FooterLinks links={newsLinks} />
+              <FooterWidget title={t('footer.services').toUpperCase()}>
+                <FooterLinks links={servicesLinks} />
               </FooterWidget>
             </Col>
 
             {/* Contact Information */}
             <Col lg={4} md={6}>
-              <FooterWidget title="THÔNG TIN CÔNG TY">
+              <FooterWidget title={t('contact.info.title').toUpperCase()}>
                 <ContactInfo />
               </FooterWidget>
             </Col>
@@ -187,27 +193,10 @@ const Footer: React.FC = () => {
       <div className="secondary-footer">
         <Container fluid>
           <Row className="align-items-center">
-            <Col md={6}>
+            <Col md={12} className="text-center">
               <div className="copyright">
-                © Copyright 2024 viencongnghe.vn - All rights reserved. Designed by{' '}
-                <a 
-                  href="https://themeht.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="ThemeHt Website"
-                >
-                  ThemeHt
-                </a>
+                {t('footer.copyright')}
               </div>
-            </Col>
-            <Col md={6}>
-              <ul className="footer-menu list-inline text-md-end">
-                {legalLinks.map((link, index) => (
-                  <li key={index}>
-                    <Link href={link.to}>{link.text}</Link>
-                  </li>
-                ))}
-              </ul>
             </Col>
           </Row>
         </Container>

@@ -282,6 +282,22 @@ export interface ProductCategoryApiResponse {
   };
 }
 
+export interface Banner {
+  id: number;
+  imageUrl: string;
+  isActive: number;
+  priority: number;
+  targetUrl: string;
+  type: string;
+}
+
+export interface BannerApiResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: Banner[];
+}
+
 const API_BASE_URL = api.baseUrl;
 
 export const fetchDepartments = async (language: string, signal?: AbortSignal): Promise<Department[]> => {
@@ -540,10 +556,15 @@ export const fetchProducts = async (
   language: string, 
   page: number = 1, 
   limit: number = 20, 
+  category?: string | null,
   signal?: AbortSignal
 ): Promise<{ products: Product[]; pagination: any }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/products?page=${page}&limit=${limit}`, {
+    let url = `${API_BASE_URL}/products?page=${page}&limit=${limit}`;
+    if (category) {
+      url += `&category=${encodeURIComponent(category)}`;
+    }
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -841,6 +862,93 @@ export const searchProducts = async (
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {
       console.error('Error searching products:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchBanners = async (
+  type: string = 'header',
+  active: number = 1,
+  signal?: AbortSignal
+): Promise<Banner[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/banners?type=${type}&active=${active}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: BannerApiResponse = await response.json();
+    
+    if (data.success) {
+      return data.data || [];
+    } else {
+      throw new Error(data.message || 'Failed to fetch banners');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching banners:', error);
+    }
+    throw error;
+  }
+};
+
+export const searchPosts = async (
+  query: string,
+  language: string = 'vi',
+  signal?: AbortSignal
+): Promise<{ posts: News[]; total: number }> => {
+  try {
+    if (!query.trim()) {
+      return { posts: [], total: 0 };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/posts/search?q=${encodeURIComponent(query)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Handle different possible response formats
+    if (data.success && data.data) {
+      return {
+        posts: data.data.posts || data.data,
+        total: data.data.total || data.data.length || 0
+      };
+    } else if (Array.isArray(data)) {
+      return {
+        posts: data,
+        total: data.length
+      };
+    } else {
+      return {
+        posts: data.posts || [],
+        total: data.total || 0
+      };
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error searching posts:', error);
     }
     throw error;
   }

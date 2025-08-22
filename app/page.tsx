@@ -7,7 +7,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BannerSlider from '@/components/BannerSlider';
 import OptimizedImage from '@/components/OptimizedImage';
-import { fetchLatestNews, News, fetchAboutOverview, AboutOverview } from '@/utils/api';
+import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner } from '@/utils/api';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -16,26 +16,32 @@ export default function HomePage() {
   const { t, language } = useLanguage();
   const [latestNews, setLatestNews] = useState<News[]>([]);
   const [aboutOverview, setAboutOverview] = useState<AboutOverview | null>(null);
+  const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
   const [aboutLoading, setAboutLoading] = useState(true);
+  const [bannerLoading, setBannerLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [newsData, aboutData] = await Promise.all([
+        const [newsData, aboutData, bannerData] = await Promise.all([
           fetchLatestNews(language, 3),
-          fetchAboutOverview(language)
+          fetchAboutOverview(language),
+          fetchBanners('header', 1)
         ]);
         setLatestNews(newsData);
         setAboutOverview(aboutData);
+        setBanners(bannerData);
       } catch (error) {
         console.error('Error fetching data:', error);
         // Fallback to empty array if API fails
         setLatestNews([]);
         setAboutOverview(null);
+        setBanners([]);
       } finally {
         setLoading(false);
         setAboutLoading(false);
+        setBannerLoading(false);
       }
     };
 
@@ -60,6 +66,42 @@ export default function HomePage() {
   const truncateText = (text: string, maxLength: number) => {
     if (!text || text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
+  };
+
+  // Transform API banners to BannerSlider format
+  const transformBanners = (apiBanners: Banner[]) => {
+    return apiBanners
+      .sort((a, b) => a.priority - b.priority) // Sort by priority
+      .map((banner) => ({
+        id: banner.id,
+        image: banner.imageUrl,
+        title: {
+          vi: 'Viện Công nghệ',
+          en: 'Research Institute of Technology for Machinery'
+        },
+        subtitle: {
+          vi: 'Nghiên cứu Khoa học và Công nghệ Quân sự',
+          en: 'Military Science and Technology Research'
+        },
+        description: {
+          vi: 'Viện Công nghệ là một đơn vị nghiên cứu Khoa học và Công nghệ Quân sự trực thuộc Tổng cục Công nghiệp Quốc phòng, thành lập vào ngày 21/8/1973.<br><br>Viện có đội ngũ cán bộ nghiên cứu toàn diện với trên 30% quân số là Tiến sĩ, Thạc sĩ, hoạt động trên các ngành:<br>1. Công nghệ Vật liệu & Luyện kim<br>2. Công nghệ chế tạo tên lửa<br>3. Công nghệ chế tạo súng pháo<br>4. Công nghệ chế tạo đạn<br>5. Thiết kế & chế tạo máy<br>6. Công nghệ Hóa học<br>7. Công nghệ Điện tử, Tin học và Tự động điều khiển<br>8. Công nghệ Đo lường & KCS<br>9. Tư vấn đầu tư công nghệ',
+          en: 'The Research Institute of Technology for Machinery is a Military Science and Technology research unit under the General Department of Defense Industry, established on August 21, 1973.<br><br>The Institute has a comprehensive research staff with over 30% holding PhD and Master\'s degrees, working in various fields:<br>1. Materials & Metallurgy Technology<br>2. Missile Manufacturing Technology<br>3. Artillery Manufacturing Technology<br>4. Ammunition Manufacturing Technology<br>5. Machine Design & Manufacturing<br>6. Chemical Technology<br>7. Electronics, IT and Automation Control Technology<br>8. Measurement & Quality Control Technology<br>9. Technology Investment Consulting'
+        },
+        primaryButton: {
+          text: {
+            vi: 'Tìm hiểu thêm',
+            en: 'Learn More'
+          },
+          link: '/about'
+        },
+        secondaryButton: {
+          text: {
+            vi: 'Liên hệ',
+            en: 'Contact Us'
+          },
+          link: '/contact'
+        }
+      }));
   };
 
   // Banner slides for home page
@@ -189,7 +231,21 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <BannerSlider slides={bannerSlides} />
+      {bannerLoading ? (
+        <div className="banner-loading" style={{ 
+          height: '600px', 
+          background: '#f8f9fa',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div className="spinner-border text-theme" role="status">
+            <span className="visually-hidden">Loading banners...</span>
+          </div>
+        </div>
+      ) : (
+        <BannerSlider slides={banners.length > 0 ? transformBanners(banners) : bannerSlides} />
+      )}
 
       {/* About Section */}
       <section className="light-bg">
