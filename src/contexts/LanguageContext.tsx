@@ -423,9 +423,6 @@ const viTranslations: Record<string, string> = {
   'footer.companyInfo.phone': 'Điện thoại',
   'footer.companyInfo.email': 'Email',
   'footer.companyInfo.workingHours': 'Giờ làm việc',
-  'footer.copyright': '© Copyright 2024 viencongnghe.vn - All rights reserved.',
-  'footer.privacy': 'Chính sách bảo mật',
-  'footer.terms': 'Điều khoản sử dụng',
   'footer.sitemap': 'Sơ đồ trang',
 
   // Organization page
@@ -795,9 +792,6 @@ const enTranslations: Record<string, string> = {
   'footer.companyInfo.phone': 'Phone',
   'footer.companyInfo.email': 'Email',
   'footer.companyInfo.workingHours': 'Working Hours',
-  'footer.copyright': '© Copyright 2024 viencongnghe.vn - All rights reserved.',
-  'footer.privacy': 'Privacy Policy',
-  'footer.terms': 'Terms of Use',
   'footer.sitemap': 'Sitemap',
 
   // Organization page
