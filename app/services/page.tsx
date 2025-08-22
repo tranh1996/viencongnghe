@@ -3,33 +3,29 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 export default function ServicesPage() {
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Lĩnh vực hoạt động', en: 'Services' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      {/* Page Title */}
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <h1>Lĩnh vực hoạt động</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">Trang chủ</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Lĩnh vực hoạt động
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Breadcrumb
+        title={{ vi: 'Lĩnh vực hoạt động', en: 'Services' }}
+        items={breadcrumbItems}
+      />
 
       {/* Services Content */}
       <section>

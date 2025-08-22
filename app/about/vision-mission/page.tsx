@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { fetchAboutVision } from '@/utils/api';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -162,31 +163,27 @@ export default function VisionMissionPage() {
   console.log('Language:', language);
   console.log('Parsed vision sections:', visionSections);
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Giới thiệu', en: 'About' },
+      href: '/about'
+    },
+    {
+      label: { vi: 'Tầm nhìn - Sứ mệnh', en: 'Vision - Mission' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      {/* Page Title */}
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <h1>{t('visionMission.pageTitle')}</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">{t('visionMission.breadcrumb.home')}</a>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <a href="/about">{t('visionMission.breadcrumb.about')}</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {t('visionMission.breadcrumb.visionMission')}
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Breadcrumb
+        title={{ vi: 'Tầm nhìn - Sứ mệnh', en: 'Vision - Mission' }}
+        items={breadcrumbItems}
+      />
 
       {/* Vision & Mission Section */}
       {vision && (

@@ -1,32 +1,44 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
-import { supportedLanguages, getCurrentLanguage, setLanguage } from '../config/languages';
+import { useLanguage } from '../contexts/LanguageContext';
+
+// Define supported languages to match LanguageContext
+const supportedLanguages = [
+  {
+    code: 'vi' as const,
+    name: 'Tiếng Việt',
+    flag: '🇻🇳',
+    direction: 'ltr'
+  },
+  {
+    code: 'en' as const,
+    name: 'English',
+    flag: '🇺🇸',
+    direction: 'ltr'
+  }
+];
 
 interface LanguageSwitcherProps {
   onLanguageChange?: (languageCode: string) => void;
 }
 
 export default function LanguageSwitcher({ onLanguageChange }: LanguageSwitcherProps) {
-  const [currentLang, setCurrentLang] = useState<string>('vi');
+  const { language, setLanguage, t } = useLanguage();
 
-  useEffect(() => {
-    const lang = getCurrentLanguage();
-    setCurrentLang(lang);
-  }, []);
-
-  const handleLanguageChange = (languageCode: string) => {
-    setCurrentLang(languageCode);
+  const handleLanguageChange = (languageCode: 'vi' | 'en') => {
     setLanguage(languageCode);
     if (onLanguageChange) {
       onLanguageChange(languageCode);
     }
-    // Reload the page to apply language changes
-    window.location.reload();
+    // Store in localStorage for persistence
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferred-language', languageCode);
+    }
   };
 
-  const currentLanguage = supportedLanguages.find(lang => lang.code === currentLang);
+  const currentLanguage = supportedLanguages.find(lang => lang.code === language);
 
   return (
     <DropdownButton
@@ -40,14 +52,14 @@ export default function LanguageSwitcher({ onLanguageChange }: LanguageSwitcherP
       size="sm"
       className="language-switcher"
     >
-      {supportedLanguages.map((language) => (
+      {supportedLanguages.map((lang) => (
         <Dropdown.Item
-          key={language.code}
-          onClick={() => handleLanguageChange(language.code)}
-          active={language.code === currentLang}
+          key={lang.code}
+          onClick={() => handleLanguageChange(lang.code)}
+          active={lang.code === language}
         >
-          <span className="me-2">{language.flag}</span>
-          {language.name}
+          <span className="me-2">{lang.flag}</span>
+          {lang.name}
         </Dropdown.Item>
       ))}
     </DropdownButton>

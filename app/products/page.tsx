@@ -2,10 +2,13 @@
 
 import type { Metadata } from 'next';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
+import OptimizedImage from '@/components/OptimizedImage';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { fetchProducts, fetchProductCategories, searchProducts, Product, ProductCategory } from '../../src/utils/api';
 import { useLanguage } from '../../src/contexts/LanguageContext';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -22,10 +25,14 @@ export default function ProductsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<string>('default');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [sortOption, setSortOption] = useState<string>('');
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
-    totalItems: 0,
+    total: 0,
+    from: 0,
+    to: 0,
     itemsPerPage: 20
   });
   
@@ -82,7 +89,7 @@ export default function ProductsPage() {
       try {
         setLoading(true);
         const [productsResponse, categoriesData] = await Promise.all([
-          fetchProducts(language, page, limit),
+          fetchProducts(language, page, limit, category),
           fetchProductCategories(language)
         ]);
         
@@ -94,7 +101,9 @@ export default function ProductsPage() {
           setPagination({
             currentPage: productsResponse.pagination.current_page,
             totalPages: productsResponse.pagination.last_page,
-            totalItems: productsResponse.pagination.total,
+            total: productsResponse.pagination.total,
+            from: productsResponse.pagination.from,
+            to: productsResponse.pagination.to,
             itemsPerPage: productsResponse.pagination.per_page
           });
         }
@@ -121,7 +130,7 @@ export default function ProductsPage() {
     };
 
     fetchData();
-  }, [searchParams, language]);
+  }, [searchParams, language, t]);
 
   // Function to update URL parameters
   const updateURL = (params: { page?: number; category?: string | null; sort?: string }) => {
@@ -317,11 +326,8 @@ export default function ProductsPage() {
   if (isSearchSubmitted && searchResults.length > 0) {
     // Show search results
     displayProducts = searchResults;
-  } else if (selectedCategory) {
-    // Show filtered products by category
-    displayProducts = products.filter(product => product.product_category.slug === selectedCategory);
   } else {
-    // Show all products
+    // Show products from API (already filtered by category if selected)
     displayProducts = products;
   }
 
@@ -362,502 +368,283 @@ export default function ProductsPage() {
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Sản phẩm', en: 'Products' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      <section className="page-title dark-bg">
+      <Breadcrumb
+        title={{ vi: 'Sản phẩm', en: 'Products' }}
+        items={breadcrumbItems}
+      />
+      
+      <section>
         <Container>
-          <Row>
-            <Col>
-              <h1>{t('products.pageTitle')}</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">{t('products.breadcrumb.home')}</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {t('products.breadcrumb.products')}
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      <section className="py-5">
-        <Container>
-          {/* Search Bar */}
+          {/* Filter/Sort Toolbar */}
           <Row className="mb-5">
-            <Col lg={8} md={10} className="mx-auto">
-              <div className="position-relative">
-                <form onSubmit={handleSearchSubmit} className="d-flex">
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    className="form-control form-control-lg"
-                    placeholder={t('products.search.placeholder')}
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                    onKeyDown={handleKeyDown}
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => {
-                      // Delay hiding suggestions to allow for clicks
-                      setTimeout(() => setIsSearchFocused(false), 200);
-                    }}
-                    style={{ 
-                      borderTopRightRadius: 0, 
-                      borderBottomRightRadius: 0,
-                      borderRight: 'none'
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    className="btn btn-theme btn-lg"
-                    style={{ 
-                      borderTopLeftRadius: 0, 
-                      borderBottomLeftRadius: 0 
-                    }}
-                  >
-                    <i className="bi bi-search"></i>
-                  </button>
-                </form>
-                
-                {/* Search Suggestions Dropdown */}
-                {showSuggestions && (
-                  <div 
-                    ref={suggestionsRef}
-                    className="position-absolute w-100 bg-white rounded-bottom search-suggestions-dropdown"
-                    style={{ 
-                      top: '100%', 
-                      zIndex: 1000,
-                      maxHeight: '400px',
-                      overflowY: 'auto'
-                    }}
-                  >
-                    {isSearching ? (
-                      <div className="p-3 text-center">
-                        <div className="spinner-border spinner-border-sm text-theme" role="status">
-                          <span className="visually-hidden">{t('products.search.searching')}</span>
-                        </div>
-                        <span className="ms-2">{t('products.search.searching')}</span>
-                      </div>
-                    ) : searchSuggestions.length > 0 ? (
-                      <>
-                        {Object.entries(groupedSuggestions).map(([categoryName, products]) => (
-                          <div key={categoryName}>
-                            {/* Category Header */}
-                            <div className="p-2 bg-light border-bottom">
-                              <div className="d-flex align-items-center">
-                                <i className="bi bi-tag-fill text-success me-2"></i>
-                                <span className="fw-medium text-dark">{categoryName}</span>
-                                <span className="ms-auto text-muted small">{t('products.search.viewMore')}</span>
-                              </div>
-                            </div>
-                            
-                            {/* Products in this category */}
-                            {products.slice(0, 3).map((product, productIndex) => {
-                              const globalIndex = flattenedSuggestions.findIndex(p => p.id === product.id);
-                              const isSelected = globalIndex === selectedSuggestionIndex;
-                              
-                              return (
-                                <div
-                                  key={product.id}
-                                  className={`suggestion-item p-3 border-bottom ${isSelected ? 'selected' : ''}`}
-                                  onClick={() => handleSuggestionClick(product)}
-                                  style={{ 
-                                    cursor: 'pointer',
-                                    backgroundColor: isSelected ? '#e3f2fd' : 'white'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    if (!isSelected) {
-                                      e.currentTarget.style.backgroundColor = '#f8f9fa';
-                                    }
-                                    setSelectedSuggestionIndex(globalIndex);
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    if (!isSelected) {
-                                      e.currentTarget.style.backgroundColor = 'white';
-                                    }
-                                  }}
-                                >
-                                <div className="d-flex align-items-center">
-                                  <div className="flex-shrink-0 me-3">
-                                    <img
-                                      src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'}
-                                      alt={product.name}
-                                      style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        objectFit: 'cover',
-                                        borderRadius: '4px'
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="flex-grow-1">
-                                    <div className="fw-medium text-dark">{product.name}</div>
-                                    <div className="text-muted small">
-                                      {product.brand && `${product.brand} • `}{product.product_category.name}
-                                    </div>
-                                  </div>
-                                  <div className="flex-shrink-0">
-                                    <i className="bi bi-chevron-right text-muted"></i>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                            
-                            {/* Show "View more" if there are more products in this category */}
-                            {products.length > 3 && (
-                              <div className="p-2 text-center border-bottom">
-                                <small className="text-primary" style={{ cursor: 'pointer' }}>
-                                  {t('products.search.viewMoreInCategory', { count: products.length - 3, category: categoryName })}
-                                </small>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                        
-                        <div className="p-3 text-center border-top">
-                          <small className="text-muted">
-                            {t('products.search.enterToSearch', { query: searchQuery })}
-                          </small>
-                        </div>
-                      </>
-                    ) : searchQuery.trim().length >= 2 ? (
-                      <div className="p-3 text-center text-muted">
-                        <i className="bi bi-search me-2"></i>
-                        {t('products.search.results.notFound', { query: searchQuery })}
-                      </div>
-                    ) : isSearchFocused && searchQuery.trim().length === 0 ? (
-                      <div>
-                        <div className="p-3 text-center text-muted border-bottom">
-                          <i className="bi bi-lightbulb me-2"></i>
-                          {t('products.search.popular.title')}
-                        </div>
-                        <div className="p-3">
-                          <div className="d-flex flex-wrap gap-2">
-                            {popularSearchTerms.map((term, index) => (
-                              <button
-                                key={index}
-                                className="btn btn-outline-secondary btn-sm popular-search-term"
-                                onClick={() => {
-                                  setSearchQuery(term);
-                                  setShowSuggestions(false);
-                                }}
-                                style={{ fontSize: '0.875rem' }}
-                              >
-                                {term}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-            </Col>
-          </Row>
-
-          {/* Category Filter Cards */}
-          {categories.length > 0 && (
-            <Row className="mb-5">
-              <Col>
-                <h2 className="text-center mb-4">{t('products.categories.title')}</h2>
-                <Row>
-                  {/* Category Cards */}
-                  {categories.slice(0, 4).map((category) => (
-                    <Col lg={3} md={6} className="mb-4" key={category.id}>
-                      <div 
-                        className={`card category-card h-100 ${selectedCategory === category.slug ? 'active' : ''}`}
-                        onClick={() => handleCategorySelect(category.slug === selectedCategory ? null : category.slug)}
-                        style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                      >
-                        <div className="card-img-top position-relative" style={{ height: '200px', overflow: 'hidden' }}>
-                          <img 
-                            src={category.image_url || '/images/product/01.jpg'} 
-                            className="w-100 h-100" 
-                            alt={category.name}
-                            style={{ objectFit: 'cover' }}
-                          />
-                          <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark" style={{ opacity: 0.7 }}></div>
-                        </div>
-                        <div className="card-body text-center">
-                          <h5 className="card-title position-relative" style={{ zIndex: 2, color: 'var(--themeht-primary-color)', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
-                            {category.name}
-                          </h5>
-                        </div>
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
-              </Col>
-            </Row>
-          )}
-
-          {/* Results Counter and Sorting */}
-          <Row className="mb-4 align-items-center">
-            <Col md={6}>
-              <div className="d-flex align-items-center gap-3">
-                {isSearchSubmitted && searchResults.length > 0 ? (
-                  <>
-                    <p className="mb-0">
-                      {t('products.search.results.found', { count: searchResults.length, query: searchQuery })}
-                    </p>
-                    <button 
-                      className="btn btn-outline-theme btn-sm"
-                      onClick={clearSearch}
-                    >
-                      <i className="bi bi-x-circle me-1"></i>
-                      {t('products.search.clear')}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="mb-0">
-                      {t('products.results.showing', { 
-                        from: pagination.currentPage === 1 ? 1 : ((pagination.currentPage - 1) * pagination.itemsPerPage) + 1,
-                        to: Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems),
-                        total: pagination.totalItems
-                      })}
-                    </p>
-                    {selectedCategory && (
+            <Col>
+              <div className="border border-light rounded p-3">
+                <Row className="align-items-center">
+                  <Col md={5} className="mb-3 mb-md-0">
+                    <span>
+                      {t('products.results.showing')} {pagination.from} {t('products.results.to')} {pagination.to} {t('products.results.of')} {pagination.total} {t('products.results.total')}
+                    </span>
+                  </Col>
+                  <Col md={7} className="d-flex align-items-center justify-content-md-end">
+                    <div className="view-filter me-3">
                       <button 
-                        className="btn btn-outline-theme btn-sm"
-                        onClick={() => handleCategorySelect(null)}
+                        className={`align-middle me-2 ${viewMode === 'grid' ? 'text-theme' : 'text-black'}`}
+                        onClick={() => setViewMode('grid')}
+                        style={{ background: 'none', border: 'none' }}
                       >
-                        {t('products.categories.showAll')}
+                        <i className="fs-3 bi bi-grid-3x2"></i>
                       </button>
-                    )}
-                  </>
-                )}
+                      <button 
+                        className={`align-middle ${viewMode === 'list' ? 'text-theme' : 'text-black'}`}
+                        onClick={() => setViewMode('list')}
+                        style={{ background: 'none', border: 'none' }}
+                      >
+                        <i className="fs-3 bi bi-card-list"></i>
+                      </button>
+                    </div>
+                    <div className="sort-filter ms-3 d-flex align-items-center">
+                      <select 
+                        className="form-select"
+                        value={sortOption}
+                        onChange={(e) => setSortOption(e.target.value)}
+                      >
+                        <option value="">{t('products.sort.sortBy')}</option>
+                        <option value="newest">{t('products.sort.newest')}</option>
+                        <option value="popular">{t('products.sort.popular')}</option>
+                        <option value="name">{t('products.sort.name')}</option>
+                      </select>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Col>
-            <Col md={6} className="text-md-end">
-              <select 
-                className="form-select d-inline-block w-auto"
-                value={sortOrder}
-                onChange={(e) => handleSortChange(e.target.value)}
-              >
-                <option value="default">{t('products.sort.default')}</option>
-                <option value="name-asc">{t('products.sort.nameAsc')}</option>
-                <option value="name-desc">{t('products.sort.nameDesc')}</option>
-                <option value="newest">{t('products.sort.newest')}</option>
-                <option value="oldest">{t('products.sort.oldest')}</option>
-              </select>
-            </Col>
           </Row>
-
-          {/* Products Grid */}
+          
           <Row>
-            {sortedProducts.map((product) => (
-              <Col lg={3} md={6} className="mb-4" key={product.id}>
-                <div className="card product-card h-100">
-                  <div className="position-relative">
-                    <img 
-                      src={product.primary_image || product.product_category.image_url || '/images/product/01.jpg'} 
-                      className="card-img-top" 
-                      alt={product.name}
-                      style={{ height: '200px', objectFit: 'cover' }}
-                    />
-                    <div className="position-absolute top-0 start-0 m-2">
-                      <span className="badge" style={{ backgroundColor: 'var(--themeht-primary-color)', color: 'white', fontWeight: 'bold' }}>
-                        {product.product_category.name}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="card-body d-flex flex-column">
-                    <h6 className="card-title">{product.name}</h6>
-                    <p className="card-text flex-grow-1">
-                      {product.description || product.content?.substring(0, 100) + '...' || 'Sản phẩm của Viện Công Nghệ'}
-                    </p>
-                    <a href={`/products/${product.slug}`} className="btn btn-outline-theme btn-sm">
-                      {t('products.viewDetails')}
-                    </a>
+            <Col lg={9} md={12} className="order-lg-1">
+              {loading ? (
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+                  <div className="spinner-border text-theme" role="status">
+                    <span className="visually-hidden">{t('products.results.loading')}</span>
                   </div>
                 </div>
-              </Col>
-            ))}
-          </Row>
+              ) : products.length === 0 ? (
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+                  <div className="text-center">
+                    <i className="bi bi-search display-1 text-muted mb-3"></i>
+                    <h4 className="text-muted">{t('products.results.noProducts')}</h4>
+                    <p className="text-muted">{t('products.results.tryDifferentSearch')}</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {viewMode === 'list' ? (
+                    // List View - Template Style
+                    products.map((product) => (
+                      <div key={product.id} className="product-item mb-5">
+                        <Row className="align-items-center">
+                          <Col lg={4} md={5}>
+                            <div className="product-img">
+                              <OptimizedImage 
+                                className="img-fluid" 
+                                src={product.primary_image || '/images/product/01.jpg'} 
+                                alt={product.name}
+                                context="product-list-view"
+                                width={300}
+                                height={250}
+                                style={{
+                                  width: '100%',
+                                  height: 'auto',
+                                  objectFit: 'cover'
+                                }}
+                                sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
+                                priority={false}
+                              />
+                            </div>
+                          </Col>
+                          <Col lg={8} md={7}>
+                            <div className="product-desc">
+                              <Link href={`/products/${product.slug}`} className="product-name">
+                                {product.name}
+                              </Link>
+                              {product.brand && (
+                                <span className="product-price d-block mt-2">
+                                  {t('products.brand')}: {product.brand}
+                                </span>
+                              )}
+                              <p className="my-3">
+                                {product.description && product.description.length > 200 
+                                  ? `${product.description.substring(0, 200)}...` 
+                                  : product.description || t('products.noDescription')}
+                              </p>
+                              <div className="product-link mt-3">
+                                <Link href={`/products/${product.slug}`} className="add-cart">
+                                  <i className="bi bi-eye me-2"></i>{t('products.viewDetails')}
+                                </Link>
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    ))
+                  ) : (
+                    // Grid View - Existing Style
+                    <Row>
+                      {products.map((product) => (
+                        <Col key={product.id} lg={4} md={6} className="mb-4">
+                          <div className="card product-card h-100">
+                            <div className="position-relative overflow-hidden">
+                              <OptimizedImage 
+                                src={product.primary_image || '/images/product/01.jpg'} 
+                                className="card-img-top product-image" 
+                                alt={product.name}
+                                context="product-grid-view"
+                                width={300}
+                                height={200}
+                                style={{
+                                  width: '100%',
+                                  height: '200px',
+                                  objectFit: 'cover'
+                                }}
+                                sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
+                                priority={false}
+                              />
+                            </div>
+                            <div className="card-body d-flex flex-column">
+                              <h6 className="card-title product-title mb-2">{product.name}</h6>
+                              {product.brand && (
+                                <p className="text-muted small mb-2">{t('products.brand')}: {product.brand}</p>
+                              )}
+                              <p className="card-text text-muted small flex-grow-1">
+                                {product.description && product.description.length > 100 
+                                  ? `${product.description.substring(0, 100)}...` 
+                                  : product.description || t('products.noDescription')}
+                              </p>
+                              <div className="mt-auto">
+                                <Link 
+                                  href={`/products/${product.slug}`}
+                                  className="btn btn-sm btn-outline-primary w-100"
+                                >
+                                  {t('products.viewDetails')}
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+                  )}
 
-          {/* No Products Message */}
-          {sortedProducts.length === 0 && (
-            <Row>
-              <Col className="text-center py-5">
-                <i className="bi bi-box text-muted" style={{ fontSize: '4rem' }}></i>
-                <h4 className="mt-3">
-                  {isSearchSubmitted ? t('products.search.results.notFound', { query: '' }).replace(' ""', '') : t('products.results.noProducts')}
-                </h4>
-                <p className="text-muted">
-                  {isSearchSubmitted 
-                    ? t('products.search.results.notFoundMessage', { query: searchQuery })
-                    : t('products.results.noProductsMessage')
-                  }
-                </p>
-                {isSearchSubmitted && (
-                  <button 
-                    className="btn btn-theme"
-                    onClick={clearSearch}
-                  >
-                    <i className="bi bi-arrow-left me-2"></i>
-                    {t('products.search.backToAll')}
-                  </button>
-                )}
-              </Col>
-            </Row>
-          )}
-
-          {/* Pagination Controls */}
-          {pagination.totalPages > 1 && (
-            <Row className="mt-5">
-              <Col className="text-center">
-                <nav aria-label="Product pagination">
-                  <ul className="pagination justify-content-center">
-                    {/* Previous Page */}
-                    <li className={`page-item ${pagination.currentPage === 1 ? 'disabled' : ''}`}>
-                      <button 
-                        className="page-link" 
-                        onClick={() => updateURL({ page: pagination.currentPage - 1 })}
-                        disabled={pagination.currentPage === 1}
-                      >
-                        <i className="bi bi-chevron-left"></i>
-                      </button>
-                    </li>
-                    
-                    {/* Page Numbers */}
-                    {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                      let pageNum: number;
-                      if (pagination.totalPages <= 5) {
-                        pageNum = i + 1;
-                      } else if (pagination.currentPage <= 3) {
-                        pageNum = i + 1;
-                      } else if (pagination.currentPage >= pagination.totalPages - 2) {
-                        pageNum = pagination.totalPages - 4 + i;
-                      } else {
-                        pageNum = pagination.currentPage - 2 + i;
-                      }
-                      
-                      return (
-                        <li key={pageNum} className={`page-item ${pagination.currentPage === pageNum ? 'active' : ''}`}>
+                  {/* Pagination */}
+                  {pagination.totalPages > 1 && (
+                    <nav aria-label="Page navigation" className="mt-8 text-center">
+                      <ul className="pagination justify-content-center">
+                        <li className={`page-item ${pagination.currentPage === 1 ? 'disabled' : ''}`}>
                           <button 
                             className="page-link"
-                            onClick={() => updateURL({ page: pageNum })}
+                            onClick={() => updateURL({ page: pagination.currentPage - 1 })}
+                            disabled={pagination.currentPage === 1}
                           >
-                            {pageNum}
+                            <i className="bi bi-arrow-left"></i>
                           </button>
                         </li>
-                      );
-                    })}
-                    
-                    {/* Next Page */}
-                    <li className={`page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}`}>
+                        {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
+                          <li key={page} className={`page-item ${page === pagination.currentPage ? 'active' : ''}`}>
+                            <button 
+                              className="page-link"
+                              onClick={() => updateURL({ page })}
+                            >
+                              {page}
+                            </button>
+                          </li>
+                        ))}
+                        <li className={`page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}`}>
+                          <button 
+                            className="page-link"
+                            onClick={() => updateURL({ page: pagination.currentPage + 1 })}
+                            disabled={pagination.currentPage === pagination.totalPages}
+                          >
+                            <i className="bi bi-arrow-right"></i>
+                          </button>
+                        </li>
+                      </ul>
+                    </nav>
+                  )}
+                </>
+              )}
+            </Col>
+            
+            {/* Sidebar */}
+            <Col lg={3} md={12} className="mt-8 mt-lg-0">
+              <div className="themeht-sidebar">
+                {/* Categories Filter */}
+                <div className="widget widget-categories">
+                  <h4 className="widget-title">{t('products.categories.title')}</h4>
+                  <ul className="widget-categories list-unstyled">
+                    <li>
                       <button 
-                        className="page-link" 
-                        onClick={() => updateURL({ page: pagination.currentPage + 1 })}
-                        disabled={pagination.currentPage === pagination.totalPages}
+                        onClick={() => handleCategorySelect(null)}
+                        className={`category-filter-btn ${!selectedCategory ? 'active' : ''}`}
+                        style={{ background: 'none', border: 'none', textAlign: 'left', width: '100%', padding: '0.5rem 0' }}
                       >
-                        <i className="bi bi-chevron-right"></i>
+                        <i className="bi bi-chevron-right me-1"></i>
+                        {t('products.categories.all')}
                       </button>
                     </li>
+                    {categories.map((category) => (
+                      <li key={category.id}>
+                        <button 
+                          onClick={() => handleCategorySelect(category.slug)}
+                          className={`category-filter-btn ${selectedCategory === category.slug ? 'active' : ''}`}
+                          style={{ background: 'none', border: 'none', textAlign: 'left', width: '100%', padding: '0.5rem 0' }}
+                        >
+                          <i className="bi bi-chevron-right me-1"></i>
+                          {category.name}
+                        </button>
+                      </li>
+                    ))}
                   </ul>
-                </nav>
-              </Col>
-            </Row>
-          )}
+                </div>
+
+                {/* Search Widget */}
+                <div className="widget widget-search">
+                  <h4 className="widget-title">{t('products.search.title')}</h4>
+                  <form onSubmit={handleSearchSubmit} className="d-flex">
+                    <input
+                      ref={searchInputRef}
+                      type="search"
+                      className="form-control"
+                      placeholder={t('products.search.placeholder')}
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn-primary ms-2"
+                    >
+                      <i className="bi bi-search"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </Col>
+          </Row>
         </Container>
       </section>
 
-                   <style jsx>{`
-        .category-card {
-          border: 2px solid transparent;
-          transition: all 0.3s ease;
-        }
-        
-        .category-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-        
-        .category-card.active {
-          border-color: var(--themeht-primary-color);
-          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .product-card {
-          transition: all 0.3s ease;
-          border: 1px solid #e9ecef;
-        }
-        
-        .product-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        
-        .card-img-top {
-          transition: transform 0.3s ease;
-        }
-        
-        .product-card:hover .card-img-top {
-          transform: scale(1.05);
-        }
-
-        /* Search suggestions styling */
-        .suggestion-item {
-          transition: background-color 0.2s ease;
-        }
-        
-        .suggestion-item:hover {
-          background-color: #f8f9fa !important;
-        }
-        
-        .suggestion-item.selected {
-          background-color: #e3f2fd !important;
-          border-left: 3px solid var(--themeht-primary-color);
-        }
-        
-        .suggestion-item:last-child {
-          border-bottom: none !important;
-        }
-        
-        /* Search dropdown styling */
-        .search-suggestions-dropdown {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          border: 1px solid #dee2e6;
-          border-top: none;
-        }
-        
-        /* Popular search terms styling */
-        .popular-search-term {
-          transition: all 0.2s ease;
-        }
-        
-        .popular-search-term:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Search input focus styling */
-        // .form-control:focus {
-        //   border-color: var(--themeht-primary-color);
-        //   box-shadow: 0 0 0 0.2rem rgba(var(--themeht-primary-color-rgb), 0.25);
-        // }
-        
-        /* Search button styling */
-        .btn-theme {
-          background-color: var(--themeht-primary-color);
-          border-color: var(--themeht-primary-color);
-          color: white;
-        }
-        
-        // .btn-theme:hover {
-        //   background-color: var(--themeht-primary-color-dark);
-        //   border-color: var(--themeht-primary-color-dark);
-        //   color: white;
-        // }
-        
-
-      `}</style>
     </>
   );
 }

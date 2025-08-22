@@ -5,6 +5,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { fetchAboutOverview, fetchOrganization } from '@/utils/api';
 import OptimizedImage from '@/components/OptimizedImage';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -74,28 +75,23 @@ export default function AboutPage() {
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Giới thiệu', en: 'About' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      {/* Page Title */}
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <h1>{t('about.pageTitle')}</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">{t('about.breadcrumb.home')}</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {t('about.breadcrumb.about')}
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Breadcrumb
+        title={{ vi: 'Giới thiệu', en: 'About Us' }}
+        items={breadcrumbItems}
+      />
 
       {/* Overview Section */}
       {overview && (

@@ -2,7 +2,6 @@
 const nextConfig = {
   images: {
     domains: ['localhost', 'admin-viencn.anf-technology.com', 'viencongnghe.com'],
-    unoptimized: true,
   },
   trailingSlash: false,
   async redirects() {

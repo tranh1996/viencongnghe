@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Department, fetchDepartmentBySlug, fetchDepartments } from '../utils/api';
 import OptimizedImage from './OptimizedImage';
 import { useLanguage } from '../contexts/LanguageContext';
+import Breadcrumb from './Breadcrumb';
 
 interface DepartmentDetailProps {
   departmentSlug: string;
@@ -86,30 +87,27 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Cơ cấu tổ chức', en: 'Organization' },
+      href: '/organization'
+    },
+    {
+      label: { vi: department?.name || '', en: department?.name || '' },
+      active: true
+    }
+  ];
+
   return (
     <>
-            {/* Dark Banner Section */}
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <div className="text-center">
-                <h1 className="mb-0 fw-bold text-white">{department.name}</h1>
-              </div>
-              <nav aria-label="breadcrumb" className="mt-4">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/" className="text-decoration-none">Trang chủ</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {department.name}
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Breadcrumb
+        title={{ vi: department?.name || '', en: department?.name || '' }}
+        items={breadcrumbItems}
+      />
 
       {/* Main Content */}
       <section className="py-5">

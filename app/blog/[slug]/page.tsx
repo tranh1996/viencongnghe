@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Spinner, Alert, Breadcrumb, Card } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { fetchPostBySlug, fetchRelatedPosts, News } from '@/utils/api';
+import { fetchPostBySlug, fetchRelatedPosts, fetchBlogCategories, searchPosts, News, NewsCategory } from '@/utils/api';
 import OptimizedImage from '@/components/OptimizedImage';
 import { useParams } from 'next/navigation';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -17,9 +18,11 @@ export default function BlogDetailPage() {
   
   const [post, setPost] = useState<News | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<News[]>([]);
+  const [categories, setCategories] = useState<NewsCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [relatedLoading, setRelatedLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -44,8 +47,12 @@ export default function BlogDetailPage() {
       
       setRelatedLoading(true);
       try {
-        const relatedData = await fetchRelatedPosts(slug, language, 5);
+        const [relatedData, categoriesData] = await Promise.all([
+          fetchRelatedPosts(slug, language, 3),
+          fetchBlogCategories(language)
+        ]);
         setRelatedPosts(relatedData);
+        setCategories(categoriesData);
       } catch (err) {
         console.error('Error fetching related posts:', err);
         // Don't set error for related posts as it's not critical
@@ -73,44 +80,40 @@ export default function BlogDetailPage() {
     });
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    // Navigate to blog list page with search query
+    window.location.href = `/blog?search=${encodeURIComponent(searchQuery)}`;
+  };
+
   if (loading) {
     return (
       <>
-        <section className="page-title dark-bg">
-          <Container>
-            <Row>
-              <Col>
-                <h1>{t('blog.pageTitle')}</h1>
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <a href="/">{t('blog.breadcrumb.home')}</a>
-                    </li>
-                    <li className="breadcrumb-item">
-                      <a href="/blog">{t('blog.breadcrumb.news')}</a>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      {t('blog.breadcrumb.loading')}
-                    </li>
-                  </ol>
-                </nav>
-              </Col>
-            </Row>
-          </Container>
-        </section>
+        <Breadcrumb
+          title={{ vi: t('blog.breadcrumb.loading'), en: t('blog.breadcrumb.loading') }}
+          items={[
+            { label: { vi: 'Trang chủ', en: 'Home' }, href: '/' },
+            { label: { vi: 'Tin tức', en: 'News' }, href: '/blog' },
+            { label: { vi: t('blog.breadcrumb.loading'), en: t('blog.breadcrumb.loading') }, active: true }
+          ]}
+        />
 
-        <section>
-          <Container>
-            <Row className="text-center">
-              <Col>
-                <Spinner animation="border" role="status" className="mb-3">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-                <p>{t('organization.loading')}</p>
-              </Col>
-            </Row>
-          </Container>
-        </section>
+        <div className="page-content">
+          <section>
+            <Container>
+              <Row className="text-center">
+                <Col>
+                  <Spinner animation="border" role="status" className="mb-3">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                  <p>{t('organization.loading')}</p>
+                </Col>
+              </Row>
+            </Container>
+          </section>
+        </div>
       </>
     );
   }
@@ -118,260 +121,487 @@ export default function BlogDetailPage() {
   if (error || !post) {
     return (
       <>
-        <section className="page-title dark-bg">
-          <Container>
-            <Row>
-              <Col>
-                <h1>{t('blog.pageTitle')}</h1>
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <a href="/">{t('blog.breadcrumb.home')}</a>
-                    </li>
-                    <li className="breadcrumb-item">
-                      <a href="/blog">{t('blog.breadcrumb.news')}</a>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      {t('blog.breadcrumb.error')}
-                    </li>
-                  </ol>
-                </nav>
-              </Col>
-            </Row>
-          </Container>
-        </section>
+        <Breadcrumb
+          title={{ vi: t('blog.breadcrumb.error'), en: t('blog.breadcrumb.error') }}
+          items={[
+            { label: { vi: 'Trang chủ', en: 'Home' }, href: '/' },
+            { label: { vi: 'Tin tức', en: 'News' }, href: '/blog' },
+            { label: { vi: t('blog.breadcrumb.error'), en: t('blog.breadcrumb.error') }, active: true }
+          ]}
+        />
 
-        <section>
-          <Container>
-            <Row>
-              <Col>
-                <Alert variant="danger">
-                  <Alert.Heading>{t('organization.error')}</Alert.Heading>
-                  <p>{error || t('blog.postNotFound')}</p>
-                </Alert>
-              </Col>
-            </Row>
-          </Container>
-        </section>
+        <div className="page-content">
+          <section>
+            <Container>
+              <Row>
+                <Col>
+                  <Alert variant="danger">
+                    <Alert.Heading>{t('organization.error')}</Alert.Heading>
+                    <p>{error || t('blog.postNotFound')}</p>
+                  </Alert>
+                </Col>
+              </Row>
+            </Container>
+          </section>
+        </div>
       </>
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Tin tức', en: 'News' },
+      href: '/blog'
+    },
+    {
+      label: { vi: post.title, en: post.title },
+      active: true
+    }
+  ];
+
   return (
     <>
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <h1>{t('blog.pageTitle')}</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">{t('blog.breadcrumb.home')}</a>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <a href="/blog">{t('blog.breadcrumb.news')}</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {post.title}
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      <section className="py-5">
-        <Container>
-          <Row>
-            <Col lg={8} className="mx-auto">
-              {/* Post Header */}
-              <div className="mb-4">
-                <div className="mb-3">
-                  {post.categories && post.categories.length > 0 ? (
-                    post.categories.map((category) => (
-                      <span key={category.id} className="badge bg-theme me-2">
-                        {language === 'vi' ? category.name : (category.name_en || category.name)}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="badge bg-secondary me-2">
-                      {t('blog.noCategory')}
-                    </span>
+      <Breadcrumb
+        title={{ vi: post.title, en: post.title }}
+        items={breadcrumbItems}
+      />
+      
+      <div className="page-content">
+        <section className="post-single-page">
+          <Container>
+            <Row>
+              {/* Main Content */}
+              <Col lg={8} md={12}>
+                <div className="post-card">
+                  {/* Post Image */}
+                  {post.image_url && (
+                    <div className="post-image">
+                      <OptimizedImage 
+                        src={post.image_url} 
+                        className="img-fluid" 
+                        alt={post.title}
+                        width={800}
+                        height={400}
+                        context="blog-detail"
+                      />
+                    </div>
                   )}
-                </div>
-                <h1 className="mb-3">{post.title}</h1>
-                <div className="d-flex align-items-center text-muted mb-4">
-                  <i className="bi bi-calendar3 me-2"></i>
-                  <span>{formatDate(post.created_at)}</span>
-                  {post.author && (
-                    <>
-                      <i className="bi bi-person ms-3 me-2"></i>
-                      <span>{post.author}</span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Featured Image */}
-              {post.image_url && (
-                <div className="mb-4">
-                  <OptimizedImage 
-                    src={post.image_url} 
-                    className="img-fluid rounded" 
-                    alt={post.title}
-                    width={800}
-                    height={400}
-                    context="blog-detail"
-                  />
-                </div>
-              )}
-
-              {/* Post Content */}
-              <div className="post-content">
-                {post.description && (
-                  <div className="lead mb-4">
-                    {post.description}
-                  </div>
-                )}
-                
-                {post.content && (
-                  <div 
-                    className="content-body"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  />
-                )}
-              </div>
-
-              {/* Tags */}
-              {post.tags && (
-                <div className="mt-5 pt-4 border-top">
-                  <h6 className="mb-3">
-                    <i className="bi bi-tags me-2"></i>
-                    {t('blog.tags')}
-                  </h6>
-                  <div>
-                    {(() => {
-                      try {
-                        const tagsArray = JSON.parse(post.tags);
-                        return Array.isArray(tagsArray) ? tagsArray.map((tag, index) => (
-                          <span key={index} className="badge bg-light text-dark me-2 mb-2">
-                            {tag}
-                          </span>
-                        )) : null;
-                      } catch (e) {
-                        // Fallback to comma-separated parsing
-                        return post.tags.split(',').map((tag, index) => (
-                          <span key={index} className="badge bg-light text-dark me-2 mb-2">
-                            {tag.trim()}
-                          </span>
-                        ));
-                      }
-                    })()}
-                  </div>
-                </div>
-              )}
-
-              {/* Related Posts */}
-              <div className="mt-5 pt-4 border-top">
-                <h4 className="mb-4">
-                  <i className="bi bi-arrow-right-circle me-2"></i>
-                  {t('blog.relatedPosts') || 'Related Posts'}
-                </h4>
-                
-                {relatedLoading ? (
-                  <div className="text-center py-4">
-                    <Spinner animation="border" size="sm" role="status">
-                      <span className="visually-hidden">Loading related posts...</span>
-                    </Spinner>
-                    <p className="mt-2 text-muted">Loading related posts...</p>
-                  </div>
-                ) : relatedPosts.length > 0 ? (
-                  <Row>
-                    {relatedPosts.map((relatedPost) => (
-                      <Col key={relatedPost.id} lg={6} md={6} sm={12} className="mb-4">
-                        <Card className="h-100 shadow-sm">
-                          {relatedPost.image_url && (
-                            <div className="position-relative">
-                              <OptimizedImage
-                                src={relatedPost.image_url}
-                                className="card-img-top"
-                                alt={relatedPost.title}
-                                width={400}
-                                height={250}
-                                context="blog-related"
-                              />
-                              {relatedPost.categories && relatedPost.categories.length > 0 && (
-                                <div className="position-absolute top-0 start-0 m-2">
-                                  <span className="badge bg-theme">
-                                    {language === 'vi' 
-                                      ? relatedPost.categories[0].name 
-                                      : (relatedPost.categories[0].name_en || relatedPost.categories[0].name)
-                                    }
-                                  </span>
-                                </div>
-                              )}
-                            </div>
+                  
+                  <div className="post-desc">
+                    {/* Post Meta */}
+                    <div className="post-bottom">
+                      <ul className="list-inline">
+                        <li className="list-inline-item">
+                          <i className="bi bi-person"></i> {t('blog.admin')}
+                        </li>
+                        <li className="list-inline-item">
+                          <i className="bi bi-calendar3"></i> {formatDate(post.created_at)}
+                        </li>
+                        <li className="list-inline-item">
+                          <i className="bi bi-tag"></i> 
+                          {post.categories && post.categories.length > 0 ? (
+                            post.categories.map((category, index) => (
+                              <span key={category.id}>
+                                {language === 'vi' ? category.name : (category.name_en || category.name)}
+                                {index < post.categories.length - 1 ? ', ' : ''}
+                              </span>
+                            ))
+                          ) : (
+                            t('blog.noCategory')
                           )}
-                          <Card.Body className="d-flex flex-column">
-                            <div className="mb-2">
-                              <small className="text-muted">
-                                <i className="bi bi-calendar3 me-1"></i>
-                                {formatDate(relatedPost.created_at)}
-                              </small>
-                            </div>
-                            <Card.Title className="h6 mb-3">
-                              <a 
-                                href={`/blog/${relatedPost.slug}`} 
-                                className="text-decoration-none text-dark"
-                              >
-                                {relatedPost.title}
-                              </a>
-                            </Card.Title>
-                            {relatedPost.description && (
-                              <Card.Text className="text-muted small flex-grow-1">
-                                {relatedPost.description.length > 100 
-                                  ? `${relatedPost.description.substring(0, 100)}...` 
-                                  : relatedPost.description
-                                }
-                              </Card.Text>
-                            )}
-                            <div className="mt-auto">
-                              <a 
-                                href={`/blog/${relatedPost.slug}`} 
-                                className="btn btn-sm btn-outline-theme"
-                              >
-                                {t('blog.readMore') || 'Read More'}
-                                <i className="bi bi-arrow-right ms-1"></i>
-                              </a>
-                            </div>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                ) : (
-                  <div className="text-center py-4">
-                    <i className="bi bi-newspaper display-4 text-muted"></i>
-                    <p className="mt-2 text-muted">
-                      {t('blog.noRelatedPosts') || 'No related posts found'}
-                    </p>
-                  </div>
-                )}
-              </div>
+                        </li>
+                      </ul>
+                    </div>
 
-              {/* Back to Blog */}
-              <div className="mt-5 pt-4 border-top text-center">
-                <a href="/blog" className="btn btn-outline-theme">
-                  <i className="bi bi-arrow-left me-2"></i>
-                  {t('blog.backToBlog')}
-                </a>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+                    {/* Post Content */}
+                    {post.description && (
+                      <p className="ht-first-letter">
+                        {post.description}
+                      </p>
+                    )}
+                    
+                    {post.content && (
+                      <div 
+                        className="content-body"
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                      />
+                    )}
+
+                    {/* Tags */}
+                    {post.tags && (
+                      <div className="theme-tags blog-tag-link tags-links">
+                        {t('blog.tags')}: 
+                        {(() => {
+                          try {
+                            const tagsArray = JSON.parse(post.tags);
+                            return Array.isArray(tagsArray) ? tagsArray.map((tag, index) => (
+                              <a key={index} href="#">{tag}</a>
+                            )) : null;
+                          } catch (e) {
+                            return post.tags.split(',').map((tag, index) => (
+                              <a key={index} href="#">{tag.trim()}</a>
+                            ));
+                          }
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Comments Section */}
+                <div className="post-comment">
+                  <h2 className="comments-title mb-7">
+                    {t('blog.comments.title')} &ldquo;<span>{post.title}</span>&rdquo;
+                  </h2>
+                  <div className="text-center py-4 text-muted">
+                    <i className="bi bi-chat-dots display-4"></i>
+                    <p className="mt-2">{t('blog.comments.noComments')}</p>
+                  </div>
+                </div>
+
+                {/* Comment Form */}
+                <div className="post-comments mt-10 box-shadow white-bg p-5 rounded">
+                  <h3 className="comment-reply-title">{t('blog.comments.leaveReply')}</h3>
+                  <form>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>{t('blog.comments.name')} *</label>
+                          <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder={t('blog.comments.namePlaceholder')} 
+                            required 
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>{t('blog.comments.email')} *</label>
+                          <input 
+                            type="email" 
+                            className="form-control" 
+                            placeholder={t('blog.comments.emailPlaceholder')} 
+                            required 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form-group mb-0">
+                      <label>{t('blog.comments.comment')} *</label>
+                      <textarea 
+                        className="form-control h-100" 
+                        placeholder={t('blog.comments.commentPlaceholder')} 
+                        rows={4} 
+                        required
+                      ></textarea>
+                    </div>
+                    <button className="themeht-btn primary-btn mt-5" type="button">
+                      {t('blog.comments.postComment')}
+                    </button>
+                  </form>
+                </div>
+              </Col>
+
+              {/* Sidebar */}
+              <Col lg={4} md={12} className="mt-7 mt-lg-0 ps-lg-10">
+                <div className="themeht-sidebar">
+                  {/* Search Widget */}
+                  <div className="widget">
+                    <div className="widget-search">
+                      <form onSubmit={handleSearch}>
+                        <div className="widget-searchbox">
+                          <input 
+                            type="text" 
+                            placeholder={t('blog.searchPlaceholder')} 
+                            className="form-control"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                          />
+                          <button type="submit" className="search-btn">
+                            <i className="bi bi-search"></i>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  {/* Recent Posts Widget */}
+                  <div className="widget">
+                    <h5 className="widget-title">{t('blog.recentPosts')}</h5>
+                    <div className="recent-post">
+                      <ul className="list-unstyled">
+                        {relatedPosts.slice(0, 3).map((relatedPost) => (
+                          <li key={relatedPost.id} className="mb-3">
+                            <div className="recent-post-thumb">
+                              <OptimizedImage 
+                                src={relatedPost.image_url || "/images/blog/01.jpg"} 
+                                className="img-fluid" 
+                                alt={relatedPost.title}
+                                width={80}
+                                height={60}
+                                context="blog-thumb"
+                              />
+                            </div>
+                            <div className="recent-post-desc">
+                              <a href={`/blog/${relatedPost.slug}`}>{relatedPost.title}</a>
+                              <div className="post-date-small">{formatDate(relatedPost.created_at)}</div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Categories Widget */}
+                  <div className="widget">
+                    <h5 className="widget-title">{t('blog.categories')}</h5>
+                    <ul className="widget-categories list-unstyled">
+                      {categories.map((category) => (
+                        <li key={category.id}>
+                          <a href={`/blog?category=${category.slug}`}>
+                            {language === 'vi' ? category.name : (category.name_en || category.name)}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Popular Tags Widget */}
+                  <div className="widget">
+                    <h5 className="widget-title">{t('blog.popularTags')}</h5>
+                    <ul className="widget-tags list-inline">
+                      <li><a href="#">{t('blog.tags.laboratory')}</a></li>
+                      <li><a href="#">{t('blog.tags.research')}</a></li>
+                      <li><a href="#">{t('blog.tags.technology')}</a></li>
+                      <li><a href="#">{t('blog.tags.science')}</a></li>
+                      <li><a href="#">{t('blog.tags.innovation')}</a></li>
+                      <li><a href="#">{t('blog.tags.development')}</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+      </div>
+
+      <style jsx>{`
+        .post-card {
+          margin-bottom: 2rem;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+          overflow: hidden;
+          background: white;
+        }
+        
+        .post-desc {
+          padding: 2rem;
+        }
+        
+        .post-bottom ul {
+          margin-bottom: 1rem;
+          color: #6c757d;
+          font-size: 0.875rem;
+        }
+        
+        .post-bottom .list-inline-item {
+          margin-right: 1.5rem;
+        }
+        
+        .ht-first-letter:first-letter {
+          font-size: 3em;
+          font-weight: bold;
+          float: left;
+          line-height: 1;
+          margin-right: 8px;
+          margin-top: 4px;
+          color: var(--themeht-primary-color);
+        }
+        
+        .theme-tags {
+          margin-top: 2rem;
+          padding-top: 1rem;
+          border-top: 1px solid #e9ecef;
+        }
+        
+        .theme-tags a {
+          display: inline-block;
+          margin: 0 0.5rem 0.5rem 0;
+          padding: 0.25rem 0.75rem;
+          background: #f8f9fa;
+          color: #6c757d;
+          text-decoration: none;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          transition: all 0.3s ease;
+        }
+        
+        .theme-tags a:hover {
+          background: var(--themeht-primary-color);
+          color: white;
+        }
+        
+        .post-comment {
+          margin-top: 2rem;
+          padding-top: 2rem;
+          border-top: 1px solid #e9ecef;
+        }
+        
+        .comments-title {
+          font-size: 1.5rem;
+          margin-bottom: 2rem;
+        }
+        
+        .post-comments {
+          background: white;
+          box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .comment-reply-title {
+          margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+        }
+        
+        .themeht-btn.primary-btn {
+          background-color: var(--themeht-primary-color);
+          border-color: var(--themeht-primary-color);
+          color: white;
+          padding: 0.75rem 1.5rem;
+          text-decoration: none;
+          border-radius: 4px;
+          display: inline-block;
+          border: 1px solid transparent;
+          transition: all 0.3s ease;
+        }
+        
+        .themeht-btn.primary-btn:hover {
+          background-color: transparent;
+          border-color: var(--themeht-primary-color);
+          color: var(--themeht-primary-color);
+        }
+        
+        .widget {
+          margin-bottom: 2rem;
+          background: white;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+          padding: 1.5rem;
+        }
+        
+        .widget-title {
+          margin-bottom: 1rem;
+          color: #212529;
+          font-weight: 600;
+        }
+        
+        .widget-searchbox {
+          position: relative;
+        }
+        
+        .widget-searchbox input {
+          padding-right: 3rem;
+        }
+        
+        .search-btn {
+          position: absolute;
+          right: 0.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          color: var(--themeht-primary-color);
+        }
+        
+        .recent-post-thumb {
+          width: 80px;
+          height: 60px;
+          overflow: hidden;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        
+        .recent-post {
+          margin-top: 1rem;
+        }
+        
+        .recent-post li {
+          display: flex;
+          gap: 1rem;
+          align-items: flex-start;
+        }
+        
+        .recent-post-desc a {
+          color: #212529;
+          text-decoration: none;
+          font-weight: 500;
+          line-height: 1.3;
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+        
+        .recent-post-desc a:hover {
+          color: var(--themeht-primary-color);
+        }
+        
+        .post-date-small {
+          color: #6c757d;
+          font-size: 0.875rem;
+        }
+        
+        .widget-categories li {
+          border-bottom: 1px solid #e9ecef;
+          padding: 0.5rem 0;
+        }
+        
+        .widget-categories li:last-child {
+          border-bottom: none;
+        }
+        
+        .widget-categories a {
+          color: #212529;
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
+        
+        .widget-categories a:hover {
+          color: var(--themeht-primary-color);
+        }
+        
+        .widget-tags li {
+          margin-bottom: 0.5rem;
+          margin-right: 0.5rem;
+        }
+        
+        .widget-tags a {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          background: #f8f9fa;
+          color: #6c757d;
+          text-decoration: none;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          transition: all 0.3s ease;
+        }
+        
+        .widget-tags a:hover {
+          background: var(--themeht-primary-color);
+          color: white;
+        }
+      `}</style>
     </>
   );
 }

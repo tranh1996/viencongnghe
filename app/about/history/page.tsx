@@ -5,6 +5,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { fetchAboutHistory } from '@/utils/api';
 import OptimizedImage from '@/components/OptimizedImage';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -69,43 +70,27 @@ export default function HistoryPage() {
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Giới thiệu', en: 'About' },
+      href: '/about'
+    },
+    {
+      label: { vi: 'Lịch sử phát triển', en: 'History' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      {/* Page Title */}
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <h1>{t('history.pageTitle')}</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">{t('history.breadcrumb.home')}</a>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <a href="/about">{t('history.breadcrumb.about')}</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {t('history.breadcrumb.history')}
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* History Introduction */}
-      <section>
-        <Container>
-          <Row className="text-center mb-5">
-            <Col>
-              <h2 className="mb-4">{t('history.title')}</h2>
-              <p className="lead">{t('history.subtitle')}</p>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Breadcrumb
+        title={{ vi: 'Lịch sử phát triển', en: 'Development History' }}
+        items={breadcrumbItems}
+      />
 
       {/* Timeline Section */}
       {milestones && milestones.length > 0 && (

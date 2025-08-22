@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import BannerSlider from '@/components/BannerSlider';
 import { fetchDepartments, Department } from '@/utils/api';
 import DepartmentDetail from '@/components/DepartmentDetail';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -100,10 +101,23 @@ export default function OrganizationPage() {
     );
   }
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Cơ cấu tổ chức', en: 'Organization' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      {/* Banner Slider */}
-      <BannerSlider slides={bannerSlides} />
+      <Breadcrumb
+        title={{ vi: 'Cơ cấu tổ chức', en: 'Organizational Structure' }}
+        items={breadcrumbItems}
+      />
 
       {/* Organizational Structure Overview */}
       <section className="light-bg py-5">

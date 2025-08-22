@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import { fetchDepartments, fetchBlogCategories, Department, NewsCategory } from '../utils/api';
+import { fetchDepartments, fetchBlogCategories, Department, NewsCategory } from '@/utils/api';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -14,8 +14,103 @@ const Header: React.FC = () => {
   const [blogCategories, setBlogCategories] = useState<NewsCategory[]>([]);
   const [loading, setLoading] = useState(false);
   const [blogCategoriesLoading, setBlogCategoriesLoading] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [hoveredDropdown, setHoveredDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const { t, language } = useLanguage();
+
+  // Helper function to check if a menu item should be active
+  const isActiveRoute = (route: string | string[], exact = false) => {
+    if (typeof route === 'string') {
+      if (exact) {
+        return pathname === route;
+      }
+      // Handle special cases for dynamic routes
+      if (route === '/blog' && (pathname.startsWith('/blog') || pathname.startsWith('/news'))) {
+        return true;
+      }
+      if (route === '/products' && pathname.match(/^\/products(\/.*)?$/)) {
+        return true;
+      }
+      if (route === '/organization' && pathname.match(/^\/organization(\/.*)?$/)) {
+        return true;
+      }
+      return pathname.startsWith(route);
+    }
+    return route.some(r => exact ? pathname === r : pathname.startsWith(r));
+  };
+
+  const handleMenuItemClick = () => {
+    setExpanded(false);
+  };
+
+  const handleDropdownEnter = (dropdownId: string) => {
+    // Only show on hover for desktop (screen width > 991px)
+    if (window.innerWidth > 991) {
+      setHoveredDropdown(dropdownId);
+    }
+  };
+
+  const handleDropdownLeave = () => {
+    if (window.innerWidth > 991) {
+      setHoveredDropdown(null);
+    }
+  };
+
+  const handleSearchClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowSearchOverlay(true);
+  };
+
+  const handleCloseSearch = () => {
+    setShowSearchOverlay(false);
+    setSearchQuery('');
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to products page with search query
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      handleCloseSearch();
+    }
+  };
+
+  // Close search overlay when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCloseSearch();
+      }
+    };
+
+    if (showSearchOverlay) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showSearchOverlay]);
+
+  // Reset hover state on window resize to handle desktop/mobile switching
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 991) {
+        setHoveredDropdown(null);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -147,81 +242,22 @@ const Header: React.FC = () => {
       {/* Main Header */}
       <div id="header-wrap" className={isScrolled ? 'fixed-header' : ''}>
         <Container fluid>
-          {/* Logo and Header Elements Row */}
+          {/* Single Row with Logo, Navigation, and Search */}
           <div className="row align-items-center">
-            <div className="col-lg-3 col-md-6">
-              <Navbar.Brand as={Link} href="/" className="logo">
-                <img 
-                  className="img-fluid" 
-                  src="/images/logo.png"
-                  alt="Viện Công nghệ" 
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/logo.png';
-                  }}
-                />
-              </Navbar.Brand>
-            </div>
-            <div className="col-lg-9 col-md-6">
-              <div className="header-right d-flex align-items-center justify-content-end">
-                {/* Desktop Search Icon */}
-                <div className="search-icon d-none d-lg-block">
-                  <button 
-                    id="search" 
-                    className="btn btn-link p-0 border-0 bg-transparent"
-                    onClick={() => {
-                      // TODO: Implement search functionality
-                      console.log('Search clicked');
-                    }}
-                  >
-                    <i className="bi bi-search"></i>
-                  </button>
-                </div>
-                <div className="social-icons mx-4 d-none d-lg-flex">
-                  <ul className="list-inline">
-                    <li>
-                      <button 
-                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
-                        onClick={() => {
-                          // TODO: Add Facebook URL when available
-                          console.log('Facebook clicked');
-                        }}
-                      >
-                        <i className="bi bi-facebook"></i>
-                      </button>
-                    </li>
-                    <li>
-                      <button 
-                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
-                        onClick={() => {
-                          // TODO: Add YouTube URL when available
-                          console.log('YouTube clicked');
-                        }}
-                      >
-                        <i className="bi bi-youtube"></i>
-                      </button>
-                    </li>
-                    <li>
-                      <button 
-                        className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
-                        onClick={() => {
-                          // TODO: Add LinkedIn URL when available
-                          console.log('LinkedIn clicked');
-                        }}
-                      >
-                        <i className="bi bi-linkedin"></i>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation Menu Row */}
-          <div className="row">
             <div className="col-12">
-              <Navbar expand="xl" className="navbar-menu">
+              <Navbar expand="xl" className="navbar-menu" expanded={expanded} onToggle={setExpanded}>
+                {/* Logo */}
+                <Navbar.Brand as={Link} href="/" className="logo">
+                  <img 
+                    className="img-fluid" 
+                    src="/images/logo.png"
+                    alt="Viện Công nghệ" 
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/logo.png';
+                    }}
+                  />
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarNav" className="ht-toggler">
                   <svg width="100" height="100" viewBox="0 0 100 100">
                     <path className="line line1"
@@ -247,11 +283,12 @@ const Header: React.FC = () => {
                     </div>
                   </div>
 
-                  <Nav className="navbar-nav">
+                  <Nav className="navbar-nav me-auto">
                     <Nav.Link
                         as={Link}
                       href="/"
-                      className={pathname === '/' ? 'active' : ''}
+                      className={isActiveRoute('/', true) ? 'active' : ''}
+                      onClick={handleMenuItemClick}
                     >
                       {t('nav.home')}
                     </Nav.Link>
@@ -259,16 +296,23 @@ const Header: React.FC = () => {
                     <NavDropdown 
                       title={t('nav.about')} 
                       id="about-dropdown"
-                      className={pathname === '/about' ? 'active' : ''}
+                      className={isActiveRoute('/about') ? 'active' : ''}
+                      show={hoveredDropdown === 'about'}
+                      onMouseEnter={() => handleDropdownEnter('about')}
+                      onMouseLeave={handleDropdownLeave}
                     >
-                      <NavDropdown.Item as={Link} href="/about">{t('nav.about.general')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} href="/about/vision-mission">{t('nav.about.visionMission')}</NavDropdown.Item>
-                      <NavDropdown.Item as={Link} href="/about/history">{t('nav.about.history')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about" onClick={handleMenuItemClick}>{t('nav.about.general')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about/vision-mission" onClick={handleMenuItemClick}>{t('nav.about.visionMission')}</NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/about/history" onClick={handleMenuItemClick}>{t('nav.about.history')}</NavDropdown.Item>
                     </NavDropdown>
 
                     <NavDropdown 
                       title={t('nav.organization')} 
                       id="organization-dropdown"
+                      className={isActiveRoute('/organization') ? 'active' : ''}
+                      show={hoveredDropdown === 'organization'}
+                      onMouseEnter={() => handleDropdownEnter('organization')}
+                      onMouseLeave={handleDropdownLeave}
                     >
                       {loading ? (
                         <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
@@ -279,28 +323,29 @@ const Header: React.FC = () => {
                               key={department.id} 
                               as={Link} 
                               href={`/organization/${department.slug}`}
+                              onClick={handleMenuItemClick}
                             >
                               {department.name}
                             </NavDropdown.Item>
                           ))}
                           <NavDropdown.Divider />
-                          <NavDropdown.Item as={Link} href="/organization">
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>
                             {t('organization.viewAllDepartments')}
                           </NavDropdown.Item>
                         </>
                       ) : (
                         // Fallback to static menu items if API fails
                         <>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.admin')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.accounting')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.testing')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.technology')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.quality')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.mold')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.research')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/organization">{t('nav.organization.company')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.admin')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.accounting')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.testing')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.technology')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.quality')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.mold')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.research')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>{t('nav.organization.company')}</NavDropdown.Item>
                           <NavDropdown.Divider />
-                          <NavDropdown.Item as={Link} href="/organization">
+                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>
                             {t('organization.viewAllDepartments')}
                           </NavDropdown.Item>
                         </>
@@ -310,7 +355,8 @@ const Header: React.FC = () => {
                     <Nav.Link 
                       as={Link} 
                       href="/products"
-                      className={pathname === '/products' ? 'active' : ''}
+                      className={isActiveRoute('/products') ? 'active' : ''}
+                      onClick={handleMenuItemClick}
                     >
                       {t('nav.products')}
                     </Nav.Link>
@@ -318,7 +364,10 @@ const Header: React.FC = () => {
                     <NavDropdown 
                       title={t('nav.news')} 
                       id="news-dropdown"
-                      className={pathname === '/blog' ? 'active' : ''}
+                      className={isActiveRoute('/blog') ? 'active' : ''}
+                      show={hoveredDropdown === 'news'}
+                      onMouseEnter={() => handleDropdownEnter('news')}
+                      onMouseLeave={handleDropdownLeave}
                     >
                       {blogCategoriesLoading ? (
                         <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
@@ -332,22 +381,23 @@ const Header: React.FC = () => {
                                 key={category.id} 
                                 as={Link} 
                                 href={`/blog?category=${category.slug}`}
+                                onClick={handleMenuItemClick}
                               >
                                 {category.name}
                               </NavDropdown.Item>
                             ))}
                           <NavDropdown.Divider />
-                          <NavDropdown.Item as={Link} href="/blog">
+                          <NavDropdown.Item as={Link} href="/blog" onClick={handleMenuItemClick}>
                             {t('nav.news.viewAll')}
                           </NavDropdown.Item>
                         </>
                       ) : (
                         // Fallback to static menu items if API fails
                         <>
-                          <NavDropdown.Item as={Link} href="/blog">{t('nav.news.activities')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/blog#science">{t('nav.news.science')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/blog#professional">{t('nav.news.professional')}</NavDropdown.Item>
-                          <NavDropdown.Item as={Link} href="/blog#training">{t('nav.news.training')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog" onClick={handleMenuItemClick}>{t('nav.news.activities')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog#science" onClick={handleMenuItemClick}>{t('nav.news.science')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog#professional" onClick={handleMenuItemClick}>{t('nav.news.professional')}</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} href="/blog#training" onClick={handleMenuItemClick}>{t('nav.news.training')}</NavDropdown.Item>
                         </>
                       )}
                     </NavDropdown>
@@ -355,7 +405,8 @@ const Header: React.FC = () => {
                     <Nav.Link 
                       as={Link} 
                       href="/library"
-                      className={pathname === '/library' ? 'active' : ''}
+                      className={isActiveRoute('/library') ? 'active' : ''}
+                      onClick={handleMenuItemClick}
                     >
                       {t('nav.library')}
                     </Nav.Link>
@@ -363,48 +414,108 @@ const Header: React.FC = () => {
                     <Nav.Link 
                       as={Link} 
                       href="/contact"
-                      className={pathname === '/contact' ? 'active' : ''}
+                      className={isActiveRoute('/contact') ? 'active' : ''}
+                      onClick={handleMenuItemClick}
                     >
                       {t('nav.contact')}
                     </Nav.Link>
                   </Nav>
+
+                  {/* Desktop Search and Social Icons */}
+                  <div className="d-flex align-items-center d-none d-lg-flex">
+                    {/* Search Icon */}
+                    <div className="search-icon me-3">
+                      <a 
+                        id="search" 
+                        href="#"
+                        onClick={handleSearchClick}
+                      >
+                        <i className="bi bi-search"></i>
+                      </a>
+                    </div>
+                    
+                    {/* Social Icons */}
+                    <div className="social-icons">
+                      <ul className="list-inline mb-0">
+                        <li>
+                          <a 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // TODO: Add Facebook URL when available
+                              console.log('Facebook clicked');
+                            }}
+                          >
+                            <i className="flaticon flaticon-facebook"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // TODO: Add YouTube URL when available
+                              console.log('YouTube clicked');
+                            }}
+                          >
+                            <i className="flaticon flaticon-youtube"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // TODO: Add LinkedIn URL when available
+                              console.log('LinkedIn clicked');
+                            }}
+                          >
+                            <i className="flaticon flaticon-linkedin"></i>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
 
                   {/* Mobile Social Icons */}
                   <div className="mobile-social d-lg-none">
                     <div className="social-icons">
                       <ul className="list-inline">
                         <li>
-                          <button 
-                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
-                            onClick={() => {
+                          <a 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
                               // TODO: Add Facebook URL when available
                               console.log('Facebook clicked');
                             }}
                           >
-                            <i className="bi bi-facebook"></i>
-                          </button>
+                            <i className="flaticon flaticon-facebook"></i>
+                          </a>
                         </li>
                         <li>
-                          <button 
-                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
-                            onClick={() => {
+                          <a 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
                               // TODO: Add YouTube URL when available
                               console.log('YouTube clicked');
                             }}
                           >
-                            <i className="bi bi-youtube"></i>
-                          </button>
+                            <i className="flaticon flaticon-youtube"></i>
+                          </a>
                         </li>
                         <li>
-                          <button 
-                            className="btn btn-link p-0 border-0 bg-transparent social-icon-btn"
-                            onClick={() => {
+                          <a 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
                               // TODO: Add LinkedIn URL when available
                               console.log('LinkedIn clicked');
                             }}
                           >
-                            <i className="bi bi-linkedin"></i>
-                          </button>
+                            <i className="flaticon flaticon-linkedin"></i>
+                          </a>
                         </li>
                       </ul>
                     </div>
@@ -415,6 +526,47 @@ const Header: React.FC = () => {
           </div>
         </Container>
       </div>
+
+      {/* Search Overlay Modal */}
+      {showSearchOverlay && (
+        <div className="search-input" id="search-input-box">
+          <div className="search-inner-box">
+            <Container>
+              <div className="row justify-content-center">
+                <div className="col-lg-6">
+                  <form 
+                    role="search" 
+                    id="search-form" 
+                    className="search-form d-flex justify-content-between search-inner"
+                    onSubmit={handleSearchSubmit}
+                  >
+                    <label className="w-100">
+                      <input 
+                        type="search" 
+                        className="search-field form-control" 
+                        placeholder={t('products.search.placeholder') || 'Search Here'} 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        autoFocus
+                      />
+                    </label>
+                    <button type="submit" className="search-submit">
+                      <i className="bi bi-search"></i>
+                    </button>
+                    <span 
+                      className="bi bi-x close-search" 
+                      id="close-search" 
+                      title="Close Search"
+                      onClick={handleCloseSearch}
+                      style={{ cursor: 'pointer' }}
+                    ></span>
+                  </form>
+                </div>
+              </div>
+            </Container>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -10,27 +11,23 @@ export const dynamic = 'force-dynamic';
 export default function LibraryPage() {
   const { t } = useLanguage();
 
+  const breadcrumbItems = [
+    {
+      label: { vi: 'Trang chủ', en: 'Home' },
+      href: '/'
+    },
+    {
+      label: { vi: 'Thư viện', en: 'Library' },
+      active: true
+    }
+  ];
+
   return (
     <>
-      <section className="page-title dark-bg">
-        <Container>
-          <Row>
-            <Col>
-              <h1>Thư viện</h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a href="/">Trang chủ</a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Thư viện
-                  </li>
-                </ol>
-              </nav>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+      <Breadcrumb
+        title={{ vi: 'Thư viện', en: 'Library' }}
+        items={breadcrumbItems}
+      />
 
       <section>
         <Container>
