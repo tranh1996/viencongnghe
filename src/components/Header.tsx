@@ -49,13 +49,13 @@ const Header: React.FC = () => {
 
   const handleDropdownEnter = (dropdownId: string) => {
     // Only show on hover for desktop (screen width > 991px)
-    if (window.innerWidth > 991) {
+    if (typeof window !== 'undefined' && window.innerWidth > 991) {
       setHoveredDropdown(dropdownId);
     }
   };
 
   const handleDropdownLeave = () => {
-    if (window.innerWidth > 991) {
+    if (typeof window !== 'undefined' && window.innerWidth > 991) {
       setHoveredDropdown(null);
     }
   };
@@ -103,13 +103,15 @@ const Header: React.FC = () => {
   // Reset hover state on window resize to handle desktop/mobile switching
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 991) {
+      if (typeof window !== 'undefined' && window.innerWidth <= 991) {
         setHoveredDropdown(null);
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
   }, []);
 
   useEffect(() => {
@@ -283,7 +285,7 @@ const Header: React.FC = () => {
                     </div>
                   </div>
 
-                  <Nav className="navbar-nav me-auto">
+                  <Nav className="navbar-nav">
                     <Nav.Link
                         as={Link}
                       href="/"
@@ -297,7 +299,7 @@ const Header: React.FC = () => {
                       title={t('nav.about')} 
                       id="about-dropdown"
                       className={isActiveRoute('/about') ? 'active' : ''}
-                      show={hoveredDropdown === 'about'}
+                      show={typeof window !== 'undefined' && window.innerWidth <= 991 ? undefined : hoveredDropdown === 'about'}
                       onMouseEnter={() => handleDropdownEnter('about')}
                       onMouseLeave={handleDropdownLeave}
                     >
@@ -310,7 +312,7 @@ const Header: React.FC = () => {
                       title={t('nav.organization')} 
                       id="organization-dropdown"
                       className={isActiveRoute('/organization') ? 'active' : ''}
-                      show={hoveredDropdown === 'organization'}
+                      show={typeof window !== 'undefined' && window.innerWidth <= 991 ? undefined : hoveredDropdown === 'organization'}
                       onMouseEnter={() => handleDropdownEnter('organization')}
                       onMouseLeave={handleDropdownLeave}
                     >
@@ -365,7 +367,7 @@ const Header: React.FC = () => {
                       title={t('nav.news')} 
                       id="news-dropdown"
                       className={isActiveRoute('/blog') ? 'active' : ''}
-                      show={hoveredDropdown === 'news'}
+                      show={typeof window !== 'undefined' && window.innerWidth <= 991 ? undefined : hoveredDropdown === 'news'}
                       onMouseEnter={() => handleDropdownEnter('news')}
                       onMouseLeave={handleDropdownLeave}
                     >
@@ -421,62 +423,6 @@ const Header: React.FC = () => {
                     </Nav.Link>
                   </Nav>
 
-                  {/* Desktop Search and Social Icons */}
-                  <div className="d-flex align-items-center d-none d-lg-flex">
-                    {/* Search Icon */}
-                    <div className="search-icon me-3">
-                      <a 
-                        id="search" 
-                        href="#"
-                        onClick={handleSearchClick}
-                      >
-                        <i className="bi bi-search"></i>
-                      </a>
-                    </div>
-                    
-                    {/* Social Icons */}
-                    <div className="social-icons">
-                      <ul className="list-inline mb-0">
-                        <li>
-                          <a 
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // TODO: Add Facebook URL when available
-                              console.log('Facebook clicked');
-                            }}
-                          >
-                            <i className="flaticon flaticon-facebook"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a 
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // TODO: Add YouTube URL when available
-                              console.log('YouTube clicked');
-                            }}
-                          >
-                            <i className="flaticon flaticon-youtube"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a 
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // TODO: Add LinkedIn URL when available
-                              console.log('LinkedIn clicked');
-                            }}
-                          >
-                            <i className="flaticon flaticon-linkedin"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
                   {/* Mobile Social Icons */}
                   <div className="mobile-social d-lg-none">
                     <div className="social-icons">
@@ -521,6 +467,62 @@ const Header: React.FC = () => {
                     </div>
                   </div>
                 </Navbar.Collapse>
+
+                {/* Desktop Search and Social Icons */}
+                <div className="header-right d-flex align-items-center justify-content-end">
+                  {/* Search Icon */}
+                  <div className="search-icon">
+                    <a 
+                      id="search" 
+                      href="#"
+                      onClick={handleSearchClick}
+                    >
+                      <i className="bi bi-search"></i>
+                    </a>
+                  </div>
+                  
+                  {/* Social Icons */}
+                  <div className="social-icons mx-4">
+                    <ul className="list-inline">
+                      <li>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            // TODO: Add Facebook URL when available
+                            console.log('Facebook clicked');
+                          }}
+                        >
+                          <i className="flaticon flaticon-facebook"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            // TODO: Add YouTube URL when available
+                            console.log('YouTube clicked');
+                          }}
+                        >
+                          <i className="flaticon flaticon-youtube"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            // TODO: Add LinkedIn URL when available
+                            console.log('LinkedIn clicked');
+                          }}
+                        >
+                          <i className="flaticon flaticon-linkedin"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </Navbar>
             </div>
           </div>

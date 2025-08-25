@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans, Familjen_Grotesk } from 'next/font/google';
 import { Suspense } from 'react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
@@ -11,13 +11,22 @@ import BootstrapScript from '@/components/BootstrapScript';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-// Import icon fonts
-import '@/assets/css/flaticon.css';
-
 // Then import custom styles
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const plusJakartaSans = Plus_Jakarta_Sans({ 
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-plus-jakarta-sans',
+  display: 'swap',
+});
+
+const familjenGrotesk = Familjen_Grotesk({ 
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-familjen-grotesk',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Viện Công nghệ (RITM) - Research Institute of Technology for Machinery',
@@ -92,7 +101,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#1253BE" />
         <meta name="msapplication-TileImage" content="/logo192.png" />
       </head>
-      <body className={inter.className}>
+      <body className={`${plusJakartaSans.variable} ${familjenGrotesk.variable}`}>
         <LanguageProvider>
           <div className="page-wrapper">
             <Suspense fallback={null}>
