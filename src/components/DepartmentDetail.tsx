@@ -115,32 +115,60 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
           <Row>
             {/* Left Sidebar - Organizational Structure */}
             <Col lg={3} md={4} className="mb-4">
-              <div className="page-title dark-bg text-white p-3 mb-4">
-                <h5 className="mb-0 text-white">CƠ CẤU TỔ CHỨC</h5>
+              <div className="widget widget-categories">
+                <h4 className="widget-title mb-3">CƠ CẤU TỔ CHỨC</h4>
+                {departmentsLoading ? (
+                  <div className="text-center py-3">
+                    <Spinner animation="border" size="sm" />
+                  </div>
+                ) : (
+                  <ul className="widget-categories list-unstyled">
+                    {departments.map((dept) => (
+                      <li key={dept.id}>
+                        <a
+                          href={`/organization/${dept.slug}`}
+                          className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                            dept.slug === departmentSlug ? 'active' : ''
+                          }`}
+                          style={{
+                            borderBottom: '1px dashed #e0e0e0',
+                            color: dept.slug === departmentSlug ? '#1253be' : '#6c757d',
+                            transition: 'all 0.3s ease',
+                            fontWeight: dept.slug === departmentSlug ? '600' : '400'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (dept.slug !== departmentSlug) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#1253be';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (dept.slug !== departmentSlug) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#6c757d';
+                            }
+                          }}
+                        >
+                          <div className="d-flex align-items-center">
+                            <span 
+                              style={{ 
+                                width: '6px', 
+                                height: '6px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#1253be',
+                                marginRight: '10px',
+                                flexShrink: 0
+                              }}
+                            ></span>
+                            <span>{dept.name}</span>
+                          </div>
+                          <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              
-              {departmentsLoading ? (
-                <div className="text-center py-3">
-                  <Spinner animation="border" size="sm" />
-                </div>
-              ) : (
-                <div className="list-group">
-                  {departments.map((dept) => (
-                    <a
-                      key={dept.id}
-                      href={`/organization/${dept.slug}`}
-                      className={`list-group-item list-group-item-action d-flex align-items-center ${
-                        dept.slug === departmentSlug ? 'active' : ''
-                      }`}
-                    >
-                      <span className="me-2">&gt;</span>
-                      <span className={dept.slug === departmentSlug ? 'fw-bold' : ''}>
-                        {dept.name}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              )}
 
               {/* Library Sections */}
               <div className="mt-4">
@@ -182,7 +210,16 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
               {/* Department Header with Contact Button */}
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="mb-0">{department.name}</h2>
-                <Button variant="primary" href="/contact" className="px-4 py-2" style={{ minWidth: '120px' }}>
+                <Button 
+                  variant="primary" 
+                  href="/contact" 
+                  className="px-4 py-2" 
+                  style={{ 
+                    minWidth: '120px',
+                    backgroundColor: '#1253be',
+                    borderColor: '#1253be'
+                  }}
+                >
                   Liên hệ
                 </Button>
               </div>
