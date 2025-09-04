@@ -455,11 +455,11 @@ export default function ProductsPage() {
                     // List View - Template Style
                     products.map((product) => (
                       <div key={product.id} className="product-item mb-5">
-                        <Row className="align-items-center">
-                          <Col lg={4} md={5}>
-                            <div className="product-img">
+                        <Row className="align-items-stretch">
+                          <Col lg={4} md={5} className="d-flex">
+                            <div className="product-img w-100">
                               <OptimizedImage 
-                                className="img-fluid" 
+                                className="img-fluid product-image-fixed" 
                                 src={product.primary_image || '/images/product/01.jpg'} 
                                 alt={product.name}
                                 context="product-list-view"
@@ -467,7 +467,7 @@ export default function ProductsPage() {
                                 height={250}
                                 style={{
                                   width: '100%',
-                                  height: 'auto',
+                                  height: '250px',
                                   objectFit: 'cover'
                                 }}
                                 sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
@@ -491,7 +491,7 @@ export default function ProductsPage() {
                                   : product.description || t('products.noDescription')}
                               </p>
                               <div className="product-link mt-3">
-                                <Link href={`/products/${product.slug}`} className="add-cart">
+                                <Link href={`/products/${product.slug}`} className="add-cart btn-primary-custom">
                                   <i className="bi bi-eye me-2"></i>{t('products.viewDetails')}
                                 </Link>
                               </div>
@@ -733,6 +733,97 @@ export default function ProductsPage() {
         </Container>
       </section>
 
+      <style jsx global>{`
+        .btn-primary-custom {
+          display: inline-flex;
+          align-items: center;
+          padding: 5px 20px;
+          background-color: var(--themeht-primary-color);
+          color: white;
+          text-decoration: none;
+          border-radius: 4px;
+          font-weight: 500;
+          font-size: 14px;
+          transition: all 0.3s ease;
+          border: 2px solid var(--themeht-primary-color);
+        }
+
+        .btn-primary-custom:hover {
+          background-color: transparent;
+          color: var(--themeht-primary-color);
+          text-decoration: none;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-link {
+          text-align: left;
+        }
+
+        .add-cart {
+          width: auto;
+          display: inline-flex;
+        }
+
+        .product-item {
+          min-height: 250px;
+        }
+
+        .product-item .row {
+          min-height: 250px;
+        }
+
+        .product-img {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 250px;
+          overflow: hidden;
+          background-color: #f8f9fa;
+          border-radius: 8px;
+        }
+
+        .product-image-fixed {
+          width: 100%;
+          height: 250px;
+          object-fit: cover;
+          object-position: center;
+        }
+
+        .product-desc {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 1rem 0;
+        }
+
+        .btn-primary, 
+        button[type="submit"] {
+          background-color: var(--themeht-primary-color) !important;
+          border-color: var(--themeht-primary-color) !important;
+          color: white !important;
+        }
+
+        .btn-primary:hover,
+        button[type="submit"]:hover {
+          background-color: transparent !important;
+          border-color: var(--themeht-primary-color) !important;
+          color: var(--themeht-primary-color) !important;
+        }
+
+        .btn-outline-primary {
+          background-color: var(--themeht-primary-color) !important;
+          border-color: var(--themeht-primary-color) !important;
+          color: white !important;
+        }
+
+        .btn-outline-primary:hover {
+          background-color: transparent !important;
+          border-color: var(--themeht-primary-color) !important;
+          color: var(--themeht-primary-color) !important;
+        }
+      `}</style>
     </>
   );
 }
