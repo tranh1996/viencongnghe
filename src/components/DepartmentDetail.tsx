@@ -115,8 +115,17 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
           <Row>
             {/* Left Sidebar - Organizational Structure */}
             <Col lg={3} md={4} className="mb-4">
-              <div className="widget widget-categories">
-                <h4 className="widget-title mb-3">CƠ CẤU TỔ CHỨC</h4>
+              <div 
+                className="widget widget-categories"
+                style={{
+                  boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                  padding: '30px',
+                  borderRadius: '24px',
+                  marginBottom: '50px',
+                  background: 'var(--themeht-white-color)'
+                }}
+              >
+                <h4 className="widget-title mb-3 fw-bold">CƠ CẤU TỔ CHỨC</h4>
                 {departmentsLoading ? (
                   <div className="text-center py-3">
                     <Spinner animation="border" size="sm" />
@@ -134,7 +143,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                             borderBottom: '1px dashed #e0e0e0',
                             color: dept.slug === departmentSlug ? '#1253be' : '#6c757d',
                             transition: 'all 0.3s ease',
-                            fontWeight: dept.slug === departmentSlug ? '600' : '400'
+                            fontWeight: dept.slug === departmentSlug ? '700' : '600'
                           }}
                           onMouseEnter={(e) => {
                             if (dept.slug !== departmentSlug) {

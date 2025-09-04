@@ -289,7 +289,17 @@ export default function BlogPage() {
               <Col lg={4} md={12} className="mt-7 mt-lg-0 pe-lg-10">
                 <div className="themeht-sidebar">
                   {/* Search Widget */}
-                  <div className="widget">
+                  <div 
+                    className="widget widget-search"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'var(--themeht-white-color)'
+                    }}
+                  >
+                    <h4 className="widget-title mb-3 fw-bold">{t('blog.searchTitle')}</h4>
                     <div className="widget-search">
                       <form onSubmit={handleSearchSubmit}>
                         <div className="widget-searchbox">
@@ -323,7 +333,16 @@ export default function BlogPage() {
                   </div>
 
                   {/* Recent Posts Widget */}
-                  <div className="widget">
+                  <div 
+                    className="widget"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'var(--themeht-white-color)'
+                    }}
+                  >
                     <h5 className="widget-title">{t('blog.recentPosts')}</h5>
                     <div className="recent-post">
                       <ul className="list-unstyled">
@@ -350,34 +369,124 @@ export default function BlogPage() {
                   </div>
 
                   {/* Categories Widget */}
-                  <div className="widget">
-                    <h5 className="widget-title">{t('blog.categories')}</h5>
+                  <div 
+                    className="widget widget-categories"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'var(--themeht-white-color)'
+                    }}
+                  >
+                    <h4 className="widget-title mb-3 fw-bold">{t('blog.categories')}</h4>
                     <ul className="widget-categories list-unstyled">
                       <li>
-                        <button 
-                          onClick={() => handleCategoryChange('')}
-                          className={`category-filter-btn ${!selectedCategory ? 'active' : ''}`}
-                          style={{ background: 'none', border: 'none', textAlign: 'left', width: '100%', padding: '0.5rem 0' }}
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCategoryChange('');
+                          }}
+                          className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                            !selectedCategory ? 'active' : ''
+                          }`}
+                          style={{
+                            borderBottom: '1px dashed #e0e0e0',
+                            color: !selectedCategory ? '#1253be' : '#6c757d',
+                            transition: 'all 0.3s ease',
+                            fontWeight: !selectedCategory ? '700' : '600'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedCategory) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#1253be';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedCategory) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#6c757d';
+                            }
+                          }}
                         >
-                          {t('blog.allCategories')}
-                        </button>
+                          <div className="d-flex align-items-center">
+                            <span 
+                              style={{ 
+                                width: '6px', 
+                                height: '6px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#1253be',
+                                marginRight: '10px',
+                                flexShrink: 0
+                              }}
+                            ></span>
+                            <span>{t('blog.allCategories')}</span>
+                          </div>
+                          <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                        </a>
                       </li>
                       {categories.map((category) => (
                         <li key={category.id}>
-                          <button 
-                            onClick={() => handleCategoryChange(category.slug)}
-                            className={`category-filter-btn ${selectedCategory === category.slug ? 'active' : ''}`}
-                            style={{ background: 'none', border: 'none', textAlign: 'left', width: '100%', padding: '0.5rem 0' }}
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleCategoryChange(category.slug);
+                            }}
+                            className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                              selectedCategory === category.slug ? 'active' : ''
+                            }`}
+                            style={{
+                              borderBottom: '1px dashed #e0e0e0',
+                              color: selectedCategory === category.slug ? '#1253be' : '#6c757d',
+                              transition: 'all 0.3s ease',
+                              fontWeight: selectedCategory === category.slug ? '700' : '600'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (selectedCategory !== category.slug) {
+                                const linkElement = e.currentTarget as HTMLElement;
+                                linkElement.style.color = '#1253be';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (selectedCategory !== category.slug) {
+                                const linkElement = e.currentTarget as HTMLElement;
+                                linkElement.style.color = '#6c757d';
+                              }
+                            }}
                           >
-                            {language === 'vi' ? category.name : (category.name_en || category.name)}
-                          </button>
+                            <div className="d-flex align-items-center">
+                              <span 
+                                style={{ 
+                                  width: '6px', 
+                                  height: '6px', 
+                                  borderRadius: '50%', 
+                                  backgroundColor: '#1253be',
+                                  marginRight: '10px',
+                                  flexShrink: 0
+                                }}
+                              ></span>
+                              <span>{language === 'vi' ? category.name : (category.name_en || category.name)}</span>
+                            </div>
+                            <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                          </a>
                         </li>
                       ))}
                     </ul>
                   </div>
 
                   {/* Popular Tags Widget */}
-                  <div className="widget">
+                  <div 
+                    className="widget"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'var(--themeht-white-color)'
+                    }}
+                  >
                     <h5 className="widget-title">{t('blog.popularTags')}</h5>
                     <ul className="widget-tags list-inline">
                       <li><a href="#">{t('blog.tags.laboratory')}</a></li>
@@ -642,7 +751,6 @@ export default function BlogPage() {
         }
         
         .widget-categories li {
-          border-bottom: 1px solid #e9ecef;
           padding: 0.5rem 0;
         }
         
