@@ -591,37 +591,125 @@ export default function ProductsPage() {
             <Col lg={3} md={12} className="mt-8 mt-lg-0">
               <div className="themeht-sidebar">
                 {/* Categories Filter */}
-                <div className="widget widget-categories">
-                  <h4 className="widget-title">{t('products.categories.title')}</h4>
+                <div 
+                  className="widget widget-categories"
+                  style={{
+                    boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                    padding: '30px',
+                    borderRadius: '24px',
+                    marginBottom: '50px',
+                    background: 'var(--themeht-white-color)'
+                  }}
+                >
+                  <h4 className="widget-title mb-3 fw-bold">{t('products.categories.title')}</h4>
                   <ul className="widget-categories list-unstyled">
                     <li>
-                      <button 
-                        onClick={() => handleCategorySelect(null)}
-                        className={`category-filter-btn ${!selectedCategory ? 'active' : ''}`}
-                        style={{ background: 'none', border: 'none', textAlign: 'left', width: '100%', padding: '0.5rem 0' }}
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCategorySelect(null);
+                        }}
+                        className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                          !selectedCategory ? 'active' : ''
+                        }`}
+                        style={{
+                          borderBottom: '1px dashed #e0e0e0',
+                          color: !selectedCategory ? '#1253be' : '#6c757d',
+                          transition: 'all 0.3s ease',
+                          fontWeight: !selectedCategory ? '700' : '600'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (selectedCategory) {
+                            const linkElement = e.currentTarget as HTMLElement;
+                            linkElement.style.color = '#1253be';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (selectedCategory) {
+                            const linkElement = e.currentTarget as HTMLElement;
+                            linkElement.style.color = '#6c757d';
+                          }
+                        }}
                       >
-                        <i className="bi bi-chevron-right me-1"></i>
-                        {t('products.categories.all')}
-                      </button>
+                        <div className="d-flex align-items-center">
+                          <span 
+                            style={{ 
+                              width: '6px', 
+                              height: '6px', 
+                              borderRadius: '50%', 
+                              backgroundColor: '#1253be',
+                              marginRight: '10px',
+                              flexShrink: 0
+                            }}
+                          ></span>
+                          <span>{t('products.categories.all')}</span>
+                        </div>
+                        <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                      </a>
                     </li>
                     {categories.map((category) => (
                       <li key={category.id}>
-                        <button 
-                          onClick={() => handleCategorySelect(category.slug)}
-                          className={`category-filter-btn ${selectedCategory === category.slug ? 'active' : ''}`}
-                          style={{ background: 'none', border: 'none', textAlign: 'left', width: '100%', padding: '0.5rem 0' }}
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCategorySelect(category.slug);
+                          }}
+                          className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                            selectedCategory === category.slug ? 'active' : ''
+                          }`}
+                          style={{
+                            borderBottom: '1px dashed #e0e0e0',
+                            color: selectedCategory === category.slug ? '#1253be' : '#6c757d',
+                            transition: 'all 0.3s ease',
+                            fontWeight: selectedCategory === category.slug ? '700' : '600'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedCategory !== category.slug) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#1253be';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedCategory !== category.slug) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#6c757d';
+                            }
+                          }}
                         >
-                          <i className="bi bi-chevron-right me-1"></i>
-                          {category.name}
-                        </button>
+                          <div className="d-flex align-items-center">
+                            <span 
+                              style={{ 
+                                width: '6px', 
+                                height: '6px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#1253be',
+                                marginRight: '10px',
+                                flexShrink: 0
+                              }}
+                            ></span>
+                            <span>{category.name}</span>
+                          </div>
+                          <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                        </a>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Search Widget */}
-                <div className="widget widget-search">
-                  <h4 className="widget-title">{t('products.search.title')}</h4>
+                <div 
+                  className="widget widget-search"
+                  style={{
+                    boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                    padding: '30px',
+                    borderRadius: '24px',
+                    marginBottom: '50px',
+                    background: 'var(--themeht-white-color)'
+                  }}
+                >
+                  <h4 className="widget-title mb-3 fw-bold">{t('products.search.title')}</h4>
                   <form onSubmit={handleSearchSubmit} className="d-flex">
                     <input
                       ref={searchInputRef}

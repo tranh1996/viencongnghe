@@ -149,131 +149,95 @@ export default function ContactPage() {
       />
       <div className="page-content">
         {/* Contact Info Section */}
-        <section className="py-5">
+        <section>
           <Container>
-            <Row className="g-4">
+            <Row className="align-items-stretch">
               {/* Main Office */}
-              <Col lg={4} md={6}>
-                <div className="contact-info-card h-100">
-                  <div className="contact-info-header">
-                    <div className="contact-icon">
-                      <i className="bi bi-building"></i>
-                    </div>
-                    <h4>{t('contact.info.mainOffice')}</h4>
-                  </div>
-                  <div className="contact-details">
-                    <div className="contact-item">
-                      <i className="bi bi-geo-alt text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.address')}</span>
-                        <p className="contact-text">{contactSettings?.company_info.address_main || 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}</p>
-                      </div>
-                    </div>
-                    <div className="contact-item">
-                      <i className="bi bi-envelope text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.email')}</span>
-                        <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`} className="contact-link">
-                          {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="contact-item">
-                      <i className="bi bi-telephone text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.phone')}</span>
-                        <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`} className="contact-link">
-                          {contactSettings?.company_info.phone || '+84 243 776 3322'}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+              <Col lg={4} md={12} className="d-flex">
+                <div className="contact-info flex-fill">
+                  <h4>{t('contact.info.mainOffice')}</h4>
+                  <ul className="list-unstyled">
+                    <li>
+                      <i className="bi bi-geo-alt-fill"></i>
+                      <span>{t('contact.info.address')}</span>
+                      <p>{contactSettings?.company_info.address_main || 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}</p>
+                    </li>
+                    <li>
+                      <i className="bi bi-envelope-fill"></i>
+                      <span>{t('contact.info.email')}</span>
+                      <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`}>
+                        {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
+                      </a>
+                    </li>
+                    <li>
+                      <i className="bi bi-telephone-fill"></i>
+                      <span>{t('contact.info.phone')}</span>
+                      <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`}>
+                        {contactSettings?.company_info.phone || '+84 243 776 3322'}
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </Col>
 
               {/* Branch Office */}
-              <Col lg={4} md={6}>
-                <div className="contact-info-card h-100">
-                  <div className="contact-info-header">
-                    <div className="contact-icon">
-                      <i className="bi bi-buildings"></i>
-                    </div>
-                    <h4>{t('contact.info.branchOffice')}</h4>
-                  </div>
-                  <div className="contact-details">
-                    <div className="contact-item">
-                      <i className="bi bi-geo-alt text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.address')}</span>
-                        <p className="contact-text">{contactSettings?.company_info.address_branch || 'Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội'}</p>
-                      </div>
-                    </div>
-                    <div className="contact-item">
-                      <i className="bi bi-envelope text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.email')}</span>
-                        <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`} className="contact-link">
-                          {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="contact-item">
-                      <i className="bi bi-telephone text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.phone')}</span>
-                        <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`} className="contact-link">
-                          {contactSettings?.company_info.phone || '+84 243 776 3322'}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+              <Col lg={4} md={6} className="mt-5 mt-lg-0 d-flex">
+                <div className="contact-info flex-fill">
+                  <h4>{t('contact.info.branchOffice')}</h4>
+                  <ul className="list-unstyled">
+                    <li>
+                      <i className="bi bi-geo-alt-fill"></i>
+                      <span>{t('contact.info.address')}</span>
+                      <p>{contactSettings?.company_info.address_branch || 'Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội'}</p>
+                    </li>
+                    <li>
+                      <i className="bi bi-envelope-fill"></i>
+                      <span>{t('contact.info.email')}</span>
+                      <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`}>
+                        {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
+                      </a>
+                    </li>
+                    <li>
+                      <i className="bi bi-telephone-fill"></i>
+                      <span>{t('contact.info.phone')}</span>
+                      <a href={`tel:${contactSettings?.company_info.phone || '+84243776332'}`}>
+                        {contactSettings?.company_info.phone || '+84 243 776 3322'}
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </Col>
 
               {/* Additional Information */}
-              <Col lg={4} md={12}>
-                <div className="contact-info-card h-100">
-                  <div className="contact-info-header">
-                    <div className="contact-icon">
-                      <i className="bi bi-info-circle"></i>
-                    </div>
-                    <h4>{t('contact.info.additional')}</h4>
-                  </div>
-                  <div className="contact-details">
-                    <div className="contact-item">
-                      <i className="bi bi-globe text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.website')}</span>
-                        <div className="contact-text">
-                          <a href="https://www.viencongnghe.vn" target="_blank" rel="noopener noreferrer" className="contact-link d-block">
-                            www.viencongnghe.vn
-                          </a>
-                          <a href="https://www.ritm.vn" target="_blank" rel="noopener noreferrer" className="contact-link d-block">
-                            www.ritm.vn
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="contact-item">
-                      <i className="bi bi-printer text-primary"></i>
-                      <div>
-                        <span className="contact-label">Fax</span>
-                        <a href={`tel:${contactSettings?.company_info.fax || '+84243835923'}`} className="contact-link">
-                          {contactSettings?.company_info.fax || '+84 243 835 9235'}
+              <Col lg={4} md={6} className="mt-5 mt-lg-0 d-flex">
+                <div className="contact-info flex-fill">
+                  <h4>{t('contact.info.additional')}</h4>
+                  <ul className="list-unstyled">
+                    <li>
+                      <i className="bi bi-globe"></i>
+                      <span>{t('contact.info.website')}</span>
+                      <p>
+                        <a href="https://www.viencongnghe.vn" target="_blank" rel="noopener noreferrer">
+                          www.viencongnghe.vn
+                        </a><br />
+                        <a href="https://www.ritm.vn" target="_blank" rel="noopener noreferrer">
+                          www.ritm.vn
                         </a>
-                      </div>
-                    </div>
-                    <div className="contact-item">
-                      <i className="bi bi-clock text-primary"></i>
-                      <div>
-                        <span className="contact-label">{t('contact.info.workingHoursTitle')}</span>
-                        <div className="contact-text">
-                          <p className="mb-1">Thứ 2 - Thứ 6: 8:00 - 17:00</p>
-                          <p className="mb-0">Thứ 7: 8:00 - 12:00</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                      </p>
+                    </li>
+                    <li>
+                      <i className="bi bi-printer-fill"></i>
+                      <span>Fax</span>
+                      <a href={`tel:${contactSettings?.company_info.fax || '+84243835923'}`}>
+                        {contactSettings?.company_info.fax || '+84 243 835 9235'}
+                      </a>
+                    </li>
+                    <li>
+                      <i className="bi bi-clock-fill"></i>
+                      <span>{t('contact.info.workingHoursTitle')}</span>
+                      <p>Thứ 2 - Thứ 6: 8:00 - 17:00<br />Thứ 7: 8:00 - 12:00</p>
+                    </li>
+                  </ul>
                 </div>
               </Col>
             </Row>
@@ -482,110 +446,64 @@ export default function ContactPage() {
       </div>
 
       <style jsx>{`
-        .contact-info-card {
-          background: white;
-          border-radius: 12px;
-          padding: 2rem;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
-          border: 1px solid #f0f0f0;
+        section {
+          padding: 120px 0;
+          position: relative;
         }
         
-        .contact-info-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        .contact-info {
+          padding: 30px;
         }
         
-        .contact-info-header {
-          text-align: center;
-          margin-bottom: 2rem;
-          padding-bottom: 1.5rem;
-          border-bottom: 2px solid #f8f9fa;
+        .contact-info li {
+          padding-left: 50px;
+          padding-top: 5px;
+          position: relative;
+          margin-bottom: 20px;
         }
         
-        .contact-icon {
-          width: 60px;
-          height: 60px;
-          background: linear-gradient(135deg, var(--themeht-primary-color), #007bff);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 1rem;
-          box-shadow: 0 4px 15px rgba(var(--themeht-primary-color), 0.3);
+        .contact-info li:last-child {
+          margin-bottom: 0;
         }
         
-        .contact-icon i {
-          font-size: 1.5rem;
-          color: white;
-        }
-        
-        .contact-info-header h4 {
-          margin: 0;
-          color: #212529;
-          font-weight: 700;
-          font-size: 1.25rem;
-        }
-        
-        .contact-details {
-          space-y: 1.5rem;
-        }
-        
-        .contact-item {
-          display: flex;
-          align-items: flex-start;
-          margin-bottom: 1.5rem;
-          padding: 1rem;
-          background: #f8f9fa;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-        }
-        
-        .contact-item:hover {
-          background: #e9ecef;
-          transform: translateX(5px);
-        }
-        
-        .contact-item i {
-          font-size: 1.25rem;
-          margin-right: 1rem;
-          margin-top: 0.25rem;
-          flex-shrink: 0;
-          width: 24px;
-          text-align: center;
-        }
-        
-        .contact-item > div {
-          flex: 1;
-        }
-        
-        .contact-label {
-          display: block;
-          font-weight: 600;
-          color: #495057;
-          margin-bottom: 0.5rem;
-          font-size: 0.9rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        
-        .contact-text {
-          margin: 0;
-          color: #6c757d;
-          line-height: 1.6;
-          font-size: 0.95rem;
-        }
-        
-        .contact-link {
-          color: #495057;
-          text-decoration: none;
-          font-weight: 500;
-          transition: all 0.3s ease;
-        }
-        
-        .contact-link:hover {
+        .contact-info li i {
+          position: absolute;
+          left: 0;
+          top: 0;
+          line-height: 50px;
+          font-size: 36px;
           color: var(--themeht-primary-color);
-          text-decoration: underline;
+          display: inline-block;
+        }
+        
+        .contact-info li span {
+          font-size: 12px;
+          line-height: 1;
+          color: var(--themeht-body-color);
+          font-weight: 700;
+          display: block;
+          margin-bottom: 4px;
+          text-transform: uppercase;
+        }
+        
+        .contact-info li p {
+          margin-bottom: 0;
+          line-height: 24px;
+          color: var(--themeht-text-color);
+        }
+        
+        .contact-info li a {
+          color: var(--themeht-text-color);
+        }
+        
+        .contact-info li a:hover {
+          color: var(--themeht-primary-color);
+        }
+        
+        .contact-info h4 {
+          margin-bottom: 1.5rem;
+          color: #212529;
+          font-weight: 600;
         }
         
         .theme-title h6 {
