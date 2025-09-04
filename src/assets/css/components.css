@@ -363,14 +363,14 @@
 }
 
 .department-sidebar .list-group-item.active {
-    background: #0d6efd;
+    background: var(--themeht-primary-color);
     color: white !important;
-    border-color: #0d6efd;
+    border-color: var(--themeht-primary-color);
     transform: translateX(5px);
 }
 
 .department-sidebar .list-group-item.active:hover {
-    background: #0d6efd;
+    background: var(--themeht-primary-color);
     color: white !important;
 }
 
@@ -452,7 +452,7 @@
 .department-sidebar .loading-state .spinner-border {
     width: 2rem;
     height: 2rem;
-    color: #0d6efd;
+    color: var(--themeht-primary-color);
 }
 
 .department-sidebar .empty-state {
