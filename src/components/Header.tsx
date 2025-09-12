@@ -60,10 +60,6 @@ const Header: React.FC = () => {
     }
   };
 
-  const handleSearchClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowSearchOverlay(true);
-  };
 
   const handleCloseSearch = () => {
     setShowSearchOverlay(false);
@@ -207,59 +203,74 @@ const Header: React.FC = () => {
 
   return (
     <header id="site-header" className="header">
-      {/* Header Top */}
-      <div className="header-top">
-        <Container fluid>
+      {/* Top Row - Logo, Search, Language Switcher */}
+      <div className="header-top-row py-3">
+        <Container>
           <div className="row align-items-center">
-            <div className="col-lg-4 col-md-6 d-flex align-items-center">
-              <h6 className="mb-0">{t('header.freeConsultation')}</h6>
-              <div className="header-number ms-4">
-                <i className="bi bi-telephone-fill"></i>
-                <a href="tel:+842437763322">+84 243 776 3322</a>
-              </div>
+            <div className="col-lg-6">
+              {/* Logo */}
+              <Link href="/" className="logo">
+                <img 
+                  className="img-fluid" 
+                  src="/images/logo.png"
+                  alt="Viện Công nghệ" 
+                  style={{ maxHeight: '60px' }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/logo.png';
+                  }}
+                />
+              </Link>
             </div>
-            <div className="col-lg-8 col-md-6 d-flex align-items-center justify-content-end">
-              <div className="topbar-link">
-                <ul className="list-inline">
-                  <li>
-                    <i className="bi bi-geo-alt-fill"></i>
-                    <span>{t('header.mainOffice')}</span>
-                  </li>
-                  <li>
-                    <i className="bi bi-envelope-fill"></i>
-                    <a href="mailto:viencongnghe@ritm.vn">viencongnghe@ritm.vn</a>
-                  </li>
-                  <li>
-                    <i className="bi bi-clock-fill"></i>
-                    <span>{t('header.workingHours')}</span>
-                  </li>
-                </ul>
+            <div className="col-lg-6 d-flex align-items-center justify-content-end gap-3">
+              {/* Search Bar */}
+              <div className="input-group" style={{ maxWidth: '300px' }}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Tìm kiếm từ khóa"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (searchQuery.trim()) {
+                        router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                      }
+                    }
+                  }}
+                />
+                <button 
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => {
+                    if (searchQuery.trim()) {
+                      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                    }
+                  }}
+                >
+                  <i className="bi bi-search"></i>
+                </button>
               </div>
+              
+              {/* Language Switcher */}
               <LanguageSwitcher />
             </div>
           </div>
         </Container>
       </div>
 
-      {/* Main Header */}
-      <div id="header-wrap" className={isScrolled ? 'fixed-header' : ''}>
-        <Container fluid>
-          {/* Single Row with Logo, Navigation, and Search */}
+      {/* HR Divider */}
+      <Container>
+        <hr className="m-0" style={{ borderColor: '#6c757d' }} />
+      </Container>
+
+      {/* Bottom Row - Navigation Menu and Contact Icons */}
+      <div id="header-wrap" className={`header-nav-row ${isScrolled ? 'fixed-header' : ''}`}>
+        <Container>
           <div className="row align-items-center">
             <div className="col-12">
               <Navbar expand="xl" className="navbar-menu" expanded={expanded} onToggle={setExpanded}>
-                {/* Logo */}
-                <Navbar.Brand as={Link} href="/" className="logo">
-                  <img 
-                    className="img-fluid" 
-                    src="/images/logo.png"
-                    alt="Viện Công nghệ" 
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/images/logo.png';
-                    }}
-                  />
-                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarNav" className="ht-toggler">
                   <svg width="100" height="100" viewBox="0 0 100 100">
                     <path className="line line1"
@@ -272,22 +283,33 @@ const Header: React.FC = () => {
 
                 <Navbar.Collapse id="navbarNav">
                   {/* Mobile Search Bar */}
-                  <div className="mobile-search d-lg-none">
-                    <div className="search-container">
+                  <div className="mobile-search d-lg-none mb-3">
+                    <div className="input-group">
                       <input
-                          type="text"
-                          placeholder="Tìm kiếm..."
-                          className="search-input"
+                        type="text"
+                        className="form-control"
+                        placeholder="Tìm kiếm..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                       />
-                      <button className="search-btn">
+                      <button 
+                        className="btn btn-primary" 
+                        type="button"
+                        onClick={() => {
+                          if (searchQuery.trim()) {
+                            router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                            setExpanded(false);
+                          }
+                        }}
+                      >
                         <i className="bi bi-search"></i>
                       </button>
                     </div>
                   </div>
 
-                  <Nav className="navbar-nav">
+                  <Nav className="navbar-nav me-auto">
                     <Nav.Link
-                        as={Link}
+                      as={Link}
                       href="/"
                       className={isActiveRoute('/', true) ? 'active' : ''}
                       onClick={handleMenuItemClick}
@@ -423,105 +445,30 @@ const Header: React.FC = () => {
                     </Nav.Link>
                   </Nav>
 
-                  {/* Mobile Social Icons */}
-                  <div className="mobile-social d-lg-none">
-                    <div className="social-icons">
-                      <ul className="list-inline">
-                        <li>
-                          <a 
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // TODO: Add Facebook URL when available
-                              console.log('Facebook clicked');
-                            }}
-                          >
-                            <i className="flaticon flaticon-facebook"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a 
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // TODO: Add YouTube URL when available
-                              console.log('YouTube clicked');
-                            }}
-                          >
-                            <i className="flaticon flaticon-youtube"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a 
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // TODO: Add LinkedIn URL when available
-                              console.log('LinkedIn clicked');
-                            }}
-                          >
-                            <i className="flaticon flaticon-linkedin"></i>
-                          </a>
-                        </li>
-                      </ul>
+                  {/* Mobile Language Switcher and Contact Icons */}
+                  <div className="mobile-footer d-lg-none mt-3 pt-3 border-top">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <LanguageSwitcher />
+                      <div className="contact-icons">
+                        <a href="tel:+842437763322" className="me-3">
+                          <i className="bi bi-telephone-fill"></i>
+                        </a>
+                        <a href="mailto:viencongnghe@ritm.vn">
+                          <i className="bi bi-envelope-fill"></i>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </Navbar.Collapse>
 
-                {/* Desktop Search and Social Icons */}
-                <div className="header-right d-flex align-items-center justify-content-end">
-                  {/* Search Icon */}
-                  <div className="search-icon">
-                    <a 
-                      id="search" 
-                      href="#"
-                      onClick={handleSearchClick}
-                    >
-                      <i className="bi bi-search"></i>
-                    </a>
-                  </div>
-                  
-                  {/* Social Icons */}
-                  <div className="social-icons mx-4">
-                    <ul className="list-inline">
-                      <li>
-                        <a 
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // TODO: Add Facebook URL when available
-                            console.log('Facebook clicked');
-                          }}
-                        >
-                          <i className="flaticon flaticon-facebook"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a 
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // TODO: Add YouTube URL when available
-                            console.log('YouTube clicked');
-                          }}
-                        >
-                          <i className="flaticon flaticon-youtube"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a 
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // TODO: Add LinkedIn URL when available
-                            console.log('LinkedIn clicked');
-                          }}
-                        >
-                          <i className="flaticon flaticon-linkedin"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                {/* Desktop Contact Icons */}
+                <div className="header-contact d-flex align-items-center">
+                  <a href="mailto:viencongnghe@ritm.vn" className="contact-icon me-3">
+                    <i className="bi bi-envelope-fill"></i>
+                  </a>
+                  <a href="tel:+842437763322" className="contact-icon">
+                    <i className="bi bi-telephone-fill"></i>
+                  </a>
                 </div>
               </Navbar>
             </div>
