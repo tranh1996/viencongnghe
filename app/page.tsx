@@ -76,30 +76,23 @@ export default function HomePage() {
         id: banner.id,
         image: banner.imageUrl,
         title: {
-          vi: 'Viện Công nghệ',
-          en: 'Research Institute of Technology for Machinery'
+          vi: 'Giá trị trong từng hành động',
+          en: 'VALUE IN EVERY ACTION'
         },
         subtitle: {
-          vi: 'Nghiên cứu Khoa học và Công nghệ Quân sự',
-          en: 'Military Science and Technology Research'
+          vi: '',
+          en: ''
         },
         description: {
-          vi: 'Viện Công nghệ là một đơn vị nghiên cứu Khoa học và Công nghệ Quân sự trực thuộc Tổng cục Công nghiệp Quốc phòng, thành lập vào ngày 21/8/1973.<br><br>Viện có đội ngũ cán bộ nghiên cứu toàn diện với trên 30% quân số là Tiến sĩ, Thạc sĩ, hoạt động trên các ngành:<br>1. Công nghệ Vật liệu & Luyện kim<br>2. Công nghệ chế tạo tên lửa<br>3. Công nghệ chế tạo súng pháo<br>4. Công nghệ chế tạo đạn<br>5. Thiết kế & chế tạo máy<br>6. Công nghệ Hóa học<br>7. Công nghệ Điện tử, Tin học và Tự động điều khiển<br>8. Công nghệ Đo lường & KCS<br>9. Tư vấn đầu tư công nghệ',
-          en: 'The Research Institute of Technology for Machinery is a Military Science and Technology research unit under the General Department of Defense Industry, established on August 21, 1973.<br><br>The Institute has a comprehensive research staff with over 30% holding PhD and Master\'s degrees, working in various fields:<br>1. Materials & Metallurgy Technology<br>2. Missile Manufacturing Technology<br>3. Artillery Manufacturing Technology<br>4. Ammunition Manufacturing Technology<br>5. Machine Design & Manufacturing<br>6. Chemical Technology<br>7. Electronics, IT and Automation Control Technology<br>8. Measurement & Quality Control Technology<br>9. Technology Investment Consulting'
+          vi: 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu',
+          en: 'The Research Institute of Technology for Machinery (RITM) is a research and development organization focused on manufacturing materials with special properties, mechanical processing for mold making, heat treatment and surface processing, aimed at practical applications as well as localizing imported products.'
         },
         primaryButton: {
           text: {
-            vi: 'Tìm hiểu thêm',
-            en: 'Learn More'
+            vi: 'VỀ CHÚNG TÔI',
+            en: 'ABOUT US'
           },
           link: '/about'
-        },
-        secondaryButton: {
-          text: {
-            vi: 'Liên hệ',
-            en: 'Contact Us'
-          },
-          link: '/contact'
         }
       }));
   };
@@ -110,30 +103,23 @@ export default function HomePage() {
       id: 1,
       image: '/images/banner/01.jpg',
       title: {
-        vi: 'Dịch vụ chất lượng cao <span>Phòng thí nghiệm</span>',
-        en: 'High Laboratory <span>Quality Service</span>'
+        vi: 'Giá trị trong từng hành động',
+        en: 'VALUE IN EVERY ACTION'
       },
       subtitle: {
-        vi: 'Chuyên môn nghiên cứu xuất sắc',
-        en: 'Lab Research Excellence'
+        vi: '',
+        en: ''
       },
       description: {
-        vi: 'Chào mừng đến với trung tâm phòng thí nghiệm nghiên cứu của chúng tôi, nơi nghiên cứu đột phá gặp gỡ ứng dụng thực tế. Chúng tôi tập hợp chuyên môn đa dạng để giải quyết các vấn đề toàn cầu.',
-        en: 'Welcome to our research laboratory center, where groundbreaking research meets practical applications. We bring together diverse expertise to tackle global issues.'
+        vi: 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu',
+        en: 'The Research Institute of Technology for Machinery (RITM) is a research and development organization focused on manufacturing materials with special properties, mechanical processing for mold making, heat treatment and surface processing, aimed at practical applications as well as localizing imported products.'
       },
       primaryButton: {
         text: {
-          vi: 'Tìm hiểu thêm',
-          en: 'Explore More'
+          vi: 'VỀ CHÚNG TÔI',
+          en: 'ABOUT US'
         },
         link: '/about'
-      },
-      secondaryButton: {
-        text: {
-          vi: 'Liên hệ',
-          en: 'Contact Us'
-        },
-        link: '/contact'
       }
     },
     {
@@ -248,7 +234,7 @@ export default function HomePage() {
       )}
 
       {/* About Section */}
-      <section className="light-bg">
+      <section className="light-bg" style={{ paddingTop: '140px' }}>
         <Container>
           <Row className="align-items-center">
             <Col lg={6} className="mb-4 mb-lg-0">
