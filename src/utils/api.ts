@@ -7,7 +7,7 @@ export interface Department {
   code: string | null;
   description: string | null;
   content: string;
-  image: string | null;
+  image_url: string | null;
   video_url: string | null;
   contact_email: string | null;
   contact_phone: string | null;

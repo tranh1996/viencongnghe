@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '../contexts/LanguageContext';
+import { fetchDepartments, Department } from '../utils/api';
 
 interface BannerSlide {
   id: number;
@@ -51,7 +53,9 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
   showIndicators = true
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { language } = useLanguage();
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { language, t } = useLanguage();
 
   // Auto-play is disabled by default
   useEffect(() => {
@@ -68,6 +72,39 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
     setCurrentSlide(index);
   };
 
+  // Fetch departments
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    
+    const loadDepartments = async () => {
+      try {
+        const departmentsData = await fetchDepartments(language, controller.signal);
+        if (isMounted) {
+          // Show all departments from API
+          setDepartments(departmentsData);
+          setLoading(false);
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
+        if (isMounted) {
+          console.error('Failed to load departments:', error);
+          setDepartments([]);
+          setLoading(false);
+        }
+      }
+    };
+
+    loadDepartments();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [language]);
+
   // Check if mobile view
   const [isMobile, setIsMobile] = useState(false);
 
@@ -82,7 +119,7 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const totalSlides = isMobile ? 6 : 3;
+  const totalSlides = isMobile ? departments.length : Math.ceil(departments.length / 2);
 
   const goToPrevious = () => {
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
@@ -92,12 +129,36 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
     setCurrentSlide((prev) => (prev + 1) % totalSlides);
   };
 
+
   if (!slides || slides.length === 0) {
     return null;
   }
 
   // Only show first slide
   const firstSlide = slides[0];
+
+
+  const DepartmentCard = ({ department }: { department: Department }) => (
+    <div className={`banner-card ${department.image_url ? 'banner-card-with-bg' : ''}`}>
+      {department.image_url && (
+        <Image
+          src={department.image_url}
+          alt={department.name}
+          fill
+          className="card-bg-image"
+          style={{ objectFit: 'cover' }}
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+      )}
+      <div className="card-overlay">
+        <div className="card-icon">
+          <i className="bi bi-building"></i>
+        </div>
+        <div className="card-category">{language === 'vi' ? 'Phòng ban' : 'Department'}</div>
+        <h3 className="card-title">{department.name}</h3>
+      </div>
+    </div>
+  );
 
   return (
     <div className="swiper banner-swiper banner-slider">
@@ -108,9 +169,9 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
       
       <div className="swiper-wrapper">
         <div className="swiper-slide swiper-slide-active">
-          <div 
-            className="slider-img" 
-            style={{ backgroundImage: `url(${firstSlide.image})` }}
+          <div
+            className="slider-img"
+            style={{ '--bg-image': `url(${firstSlide.image})` } as React.CSSProperties}
           ></div>
           <div className="banner-content">
             <div className="container">
@@ -145,172 +206,90 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
       </div>
 
       {/* Featured Cards Slider */}
-      <div className="banner-featured-cards">
-        <div className="container">
-          <div className="cards-slider-wrapper position-relative">
-            <div className="cards-slider" id="cardsSlider">
-              <div 
-                className="cards-track" 
-                style={{ 
-                  transform: `translateX(-${currentSlide * 100}%)`,
-                  width: isMobile ? '600%' : '300%' // 6 slides for mobile, 3 for desktop
-                }}
-              >
-                {/* Desktop Layout - 3 slides with 2 cards each */}
-                {!isMobile && (
-                  <>
-                    <div className="card-slide desktop-slide">
-                      <div className="row">
-                        <div className="col-lg-6 mb-4 mb-lg-0">
-                          <div className="banner-card">
-                            <div className="card-icon">
-                              <i className="bi bi-gear-fill"></i>
-                            </div>
-                            <div className="card-category">Phòng ban</div>
-                            <h3 className="card-title">Trung tâm Chế tạo Khuôn mẫu</h3>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="banner-card">
-                            <div className="card-icon">
-                              <i className="bi bi-building"></i>
-                            </div>
-                            <div className="card-category">Đơn vị trực thuộc</div>
-                            <h3 className="card-title">Công ty TNHH MTV Cơ khí Mê Linh</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card-slide desktop-slide">
-                      <div className="row">
-                        <div className="col-lg-6 mb-4 mb-lg-0">
-                          <div className="banner-card">
-                            <div className="card-icon">
-                              <i className="bi bi-layers-fill"></i>
-                            </div>
-                            <div className="card-category">Phòng ban</div>
-                            <h3 className="card-title">Trung tâm Thử nghiệm Vật liệu</h3>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="banner-card">
-                            <div className="card-icon">
-                              <i className="bi bi-cpu"></i>
-                            </div>
-                            <div className="card-category">Phòng ban</div>
-                            <h3 className="card-title">Trung tâm Nhiệt luyện</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card-slide desktop-slide">
-                      <div className="row">
-                        <div className="col-lg-6 mb-4 mb-lg-0">
-                          <div className="banner-card">
-                            <div className="card-icon">
-                              <i className="bi bi-tools"></i>
-                            </div>
-                            <div className="card-category">Phòng ban</div>
-                            <h3 className="card-title">Trung tâm Gia công Cơ khí</h3>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="banner-card">
-                            <div className="card-icon">
-                              <i className="bi bi-mortarboard"></i>
-                            </div>
-                            <div className="card-category">Phòng ban</div>
-                            <h3 className="card-title">Trung tâm Đào tạo</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
+      {!loading && departments.length > 0 && (
+        <div className="banner-featured-cards">
+          <div className="container">
+            <div className="cards-slider-wrapper position-relative">
+              <div className="cards-slider" id="cardsSlider">
+                <div
+                  className="cards-track"
+                  style={{
+                    transform: `translateX(-${currentSlide * 100}%)`,
+                  
+                  } as React.CSSProperties}
+                >
+                  {/* Desktop Layout - slides with 2 cards each */}
+                  {!isMobile && (
+                    <>
+                      {Array.from({ length: Math.ceil(departments.length / 2) }, (_, slideIndex) => {
+                        const startIndex = slideIndex * 2;
+                        let cardsForSlide = departments.slice(startIndex, startIndex + 2);
 
-                {/* Mobile Layout - 6 slides with 1 card each */}
-                {isMobile && (
-                  <>
-                    <div className="card-slide mobile-slide">
-                      <div className="banner-card">
-                        <div className="card-icon">
-                          <i className="bi bi-gear-fill"></i>
+                        // If this is the last slide and it has only 1 card, add the first card
+                        if (cardsForSlide.length === 1 && departments.length > 1) {
+                          cardsForSlide.push(departments[0]);
+                        }
+
+                        return (
+                          <div key={slideIndex} className="card-slide desktop-slide">
+                            <div className="row">
+                              {cardsForSlide.map((department, cardIndex) => (
+                                <div key={`${department.id}-${slideIndex}-${cardIndex}`} className={`col-lg-6 ${cardIndex === 0 ? 'mb-4 mb-lg-0' : ''}`}>
+                                  <Link href={`/organization/${department.slug}`} className="banner-card-link">
+                                    <DepartmentCard department={department} />
+                                  </Link>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
+
+                  {/* Mobile Layout - 1 card per slide */}
+                  {isMobile && (
+                    <>
+                      {departments.map((department) => (
+                        <div key={department.id} className="card-slide mobile-slide">
+                          <Link href={`/organization/${department.slug}`} className="banner-card-link">
+                            <DepartmentCard department={department} />
+                          </Link>
                         </div>
-                        <div className="card-category">Phòng ban</div>
-                        <h3 className="card-title">Trung tâm Chế tạo Khuôn mẫu</h3>
-                      </div>
-                    </div>
-                    <div className="card-slide mobile-slide">
-                      <div className="banner-card">
-                        <div className="card-icon">
-                          <i className="bi bi-building"></i>
-                        </div>
-                        <div className="card-category">Đơn vị trực thuộc</div>
-                        <h3 className="card-title">Công ty TNHH MTV Cơ khí Mê Linh</h3>
-                      </div>
-                    </div>
-                    <div className="card-slide mobile-slide">
-                      <div className="banner-card">
-                        <div className="card-icon">
-                          <i className="bi bi-layers-fill"></i>
-                        </div>
-                        <div className="card-category">Phòng ban</div>
-                        <h3 className="card-title">Trung tâm Thử nghiệm Vật liệu</h3>
-                      </div>
-                    </div>
-                    <div className="card-slide mobile-slide">
-                      <div className="banner-card">
-                        <div className="card-icon">
-                          <i className="bi bi-cpu"></i>
-                        </div>
-                        <div className="card-category">Phòng ban</div>
-                        <h3 className="card-title">Trung tâm Nhiệt luyện</h3>
-                      </div>
-                    </div>
-                    <div className="card-slide mobile-slide">
-                      <div className="banner-card">
-                        <div className="card-icon">
-                          <i className="bi bi-tools"></i>
-                        </div>
-                        <div className="card-category">Phòng ban</div>
-                        <h3 className="card-title">Trung tâm Gia công Cơ khí</h3>
-                      </div>
-                    </div>
-                    <div className="card-slide mobile-slide">
-                      <div className="banner-card">
-                        <div className="card-icon">
-                          <i className="bi bi-mortarboard"></i>
-                        </div>
-                        <div className="card-category">Phòng ban</div>
-                        <h3 className="card-title">Trung tâm Đào tạo</h3>
-                      </div>
-                    </div>
-                  </>
-                )}
+                      ))}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
             
-            {/* Cards Navigation Controls */}
-            <div className="cards-nav-prev" onClick={goToPrevious}>
-              <i className="bi bi-chevron-left"></i>
-            </div>
-            <div className="cards-nav-next" onClick={goToNext}>
-              <i className="bi bi-chevron-right"></i>
-            </div>
-            
-            {/* Cards Indicators */}
-            <div className="cards-pagination">
-              {Array.from({ length: totalSlides }, (_, index) => (
-                <span
-                  key={index}
-                  className={`cards-pagination-bullet ${index === currentSlide ? 'active' : ''}`}
-                  onClick={() => goToSlide(index)}
-                ></span>
-              ))}
+              {/* Cards Navigation Controls */}
+              {totalSlides > 1 && (
+                <>
+                  <div className="cards-nav-prev" onClick={goToPrevious}>
+                    <i className="bi bi-chevron-left"></i>
+                  </div>
+                  <div className="cards-nav-next" onClick={goToNext}>
+                    <i className="bi bi-chevron-right"></i>
+                  </div>
+                </>
+              )}
+              
+              {/* Cards Indicators */}
+              {totalSlides > 1 && (
+                <div className="cards-pagination">
+                  {Array.from({ length: totalSlides }, (_, index) => (
+                    <span
+                      key={index}
+                      className={`cards-pagination-bullet ${index === currentSlide ? 'active' : ''}`}
+                      onClick={() => goToSlide(index)}
+                    ></span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
