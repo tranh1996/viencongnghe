@@ -234,10 +234,10 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
               </div>
 
               {/* Department Image */}
-              {department.image && (
+              {department.image_url && (
                 <div className="mb-4">
                   <OptimizedImage
-                    src={department.image}
+                    src={department.image_url}
                     alt={department.name}
                     className="img-fluid rounded"
                     style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
