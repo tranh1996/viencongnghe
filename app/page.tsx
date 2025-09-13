@@ -7,7 +7,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BannerSlider from '@/components/BannerSlider';
 import OptimizedImage from '@/components/OptimizedImage';
-import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner } from '@/utils/api';
+import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner, fetchProducts, Product } from '@/utils/api';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -17,36 +17,94 @@ export default function HomePage() {
   const [latestNews, setLatestNews] = useState<News[]>([]);
   const [aboutOverview, setAboutOverview] = useState<AboutOverview | null>(null);
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [aboutLoading, setAboutLoading] = useState(true);
   const [bannerLoading, setBannerLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [newsData, aboutData, bannerData] = await Promise.all([
+        const [newsData, aboutData, bannerData, productsData] = await Promise.all([
           fetchLatestNews(language, 3),
           fetchAboutOverview(language),
-          fetchBanners('header', 1)
+          fetchBanners('header', 1),
+          fetchProducts(language, 1, 4) // Fetch 4 products for homepage
         ]);
         setLatestNews(newsData);
         setAboutOverview(aboutData);
         setBanners(bannerData);
+        setProducts(productsData.products);
       } catch (error) {
         console.error('Error fetching data:', error);
         // Fallback to empty array if API fails
         setLatestNews([]);
         setAboutOverview(null);
         setBanners([]);
+        setProducts([]);
       } finally {
         setLoading(false);
         setAboutLoading(false);
         setBannerLoading(false);
+        setProductsLoading(false);
       }
     };
 
     fetchData();
   }, [language]);
+
+  // Auto-play functionality for partners slider
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const track = document.getElementById('partnersTrack');
+      const slides = track?.querySelectorAll('.partner-slide');
+      const activeSlide = track?.querySelector('.partner-slide.active');
+
+      if (slides && activeSlide) {
+        const activeIndex = Array.from(slides).indexOf(activeSlide as Element);
+        const nextIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
+
+        activeSlide.classList.remove('active');
+        slides[nextIndex]?.classList.add('active');
+
+        // Update indicators
+        const indicators = document.querySelectorAll('.partners-indicator');
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+        indicators[nextIndex]?.classList.add('active');
+      }
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Auto-play functionality for products slider
+  useEffect(() => {
+    // Only enable auto-play if we have more than 4 products (multiple slides)
+    if (productsLoading || products.length <= 4) return;
+
+    const interval = setInterval(() => {
+      const track = document.getElementById('productsTrack');
+      const slides = track?.querySelectorAll('.product-slide');
+      const activeSlide = track?.querySelector('.product-slide.active');
+
+      if (slides && activeSlide && slides.length > 1) {
+        const activeIndex = Array.from(slides).indexOf(activeSlide as Element);
+        const nextIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
+
+        activeSlide.classList.remove('active');
+        slides[nextIndex]?.classList.add('active');
+
+        // Update indicators
+        const indicators = document.querySelectorAll('.products-indicator');
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+        indicators[nextIndex]?.classList.add('active');
+      }
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [productsLoading, products.length]);
+
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) {
@@ -316,6 +374,11 @@ export default function HomePage() {
                 <p className="mb-4">
                   {aboutOverview?.description || t('home.about.description')}
                 </p>
+                <div className="mt-4">
+                  <Link href="/about" className="themeht-btn primary-btn">
+                    {t('home.about.readMore')}
+                  </Link>
+                </div>
                 
                 {/* Video Section - Only show if videos are available */}
                 {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
@@ -345,12 +408,6 @@ export default function HomePage() {
                     </Row>
                   </div>
                 )}
-                
-                <div className="mt-4">
-                  <Link href="/about" className="themeht-btn primary-btn">
-                    {t('home.about.readMore')}
-                  </Link>
-                </div>
               </div>
             </Col>
           </Row>
@@ -358,138 +415,184 @@ export default function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section>
+      <section className="services-section py-5">
         <Container>
           <Row className="text-center mb-5">
-            <Col lg={8} className="mx-auto">
-              <h6 className="text-theme mb-3">{t('home.services.title')}</h6>
-              <h2 className="mb-4">{t('home.services.heading')}</h2>
-              <p>
-                {t('home.services.description')}
+            <Col lg={12}>
+              <p className="section-subtitle text-uppercase mb-2">
+                {language === 'vi' ? 'FIELDS OF OPERATION' : 'FIELDS OF OPERATION'}
               </p>
+              <h2 className="section-main-title mb-4">
+                {language === 'vi' ? 'LĨNH VỰC HOẠT ĐỘNG' : 'FIELDS OF OPERATION'}
+              </h2>
             </Col>
           </Row>
           <Row>
+            {/* Service 1: Casting Technology */}
             <Col lg={4} md={6} className="mb-4">
-              <div className="service-item text-center p-4 rounded">
-                <div className="service-icon mb-4">
-                  <i className="bi bi-gear text-theme" style={{ fontSize: '3rem' }}></i>
+              <div className="service-card position-relative">
+                <div className="service-number-badge">
+                  <span>01</span>
                 </div>
-                <h3 className="h5 mb-3">{t('home.services.casting')}</h3>
-                <p>
-                  {t('home.services.casting')} - Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh. 
-                  Mô phỏng thiết kế đúc bằng phần mềm MAGMASoft.
-                </p>
-                <Link href="/services" className="text-theme text-decoration-none">
-                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
+                <div className="service-image">
+                  <OptimizedImage
+                    src="/images/services/casting.jpg"
+                    alt={language === 'vi' ? 'Công nghệ đúc và vật liệu mới' : 'Casting Technology and New Materials'}
+                    context="Dịch vụ - Công nghệ đúc"
+                    className="service-img"
+                  />
+                </div>
+                <div className="service-content">
+                  <h3 className="service-title">
+                    {language === 'vi' ? 'Công nghệ đúc và vật liệu mới' : 'Casting Technology and New Materials'}
+                  </h3>
+                  <p className="service-description">
+                    {language === 'vi'
+                      ? 'Nghiên cứu, phát triển các nhóm hợp kim đặc biệt dùng trong quốc phòng, y sinh, phòng thiết kế đúc bằng phần mềm MAGMASoft.'
+                      : 'Research and development of special alloy groups for defense and medical use, casting design software MAGMASoft.'
+                    }
+                  </p>
+                </div>
               </div>
             </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="service-item text-center p-4 rounded">
-                <div className="service-icon mb-4">
-                  <i className="bi bi-thermometer-half text-theme" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <h3 className="h5 mb-3">{t('home.services.heatTreatment')}</h3>
-                <p>
-                  {t('home.services.heatTreatment')} - Nghiên cứu, dịch vụ nhiệt luyện chân không, nhiệt luyện truyền thống và hóa nhiệt luyện 
-                  (thấm C, C-N, N) các loại khuôn và các sản phẩm cơ khí.
-                </p>
-                <Link href="/services" className="text-theme text-decoration-none">
-                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="service-item text-center p-4 rounded">
-                <div className="service-icon mb-4">
-                  <i className="bi bi-tools text-theme" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <h3 className="h5 mb-3">{t('home.services.machining')}</h3>
-                <p>
-                  {t('home.services.machining')} - Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại dùng trong các lĩnh vực 
-                  rèn, dập, ép và đúc áp lực.
-                </p>
-                <Link href="/services" className="text-theme text-decoration-none">
-                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="service-item text-center p-4 rounded">
-                <div className="service-icon mb-4">
-                  <i className="bi bi-clipboard-check text-theme" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <h3 className="h5 mb-3">{t('home.services.testing')}</h3>
-                <p>
-                  {t('home.services.testing')} - Thử nghiệm, kiểm định trong lĩnh vực hóa, cơ, không phá huỷ các loại vật liệu, 
-                  kết cấu hàn và chi tiết máy.
-                </p>
-                <Link href="/services" className="text-theme text-decoration-none">
-                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="service-item text-center p-4 rounded">
-                <div className="service-icon mb-4">
-                  <i className="bi bi-arrow-repeat text-theme" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <h3 className="h5 mb-3">{t('home.services.transfer')}</h3>
-                <p>
-                  {t('home.services.transfer')} - Cung cấp và chuyển giao công nghệ các thiết bị về xử lý nhiệt, Các dây chuyền/ 
-                  hệ thống kết cấu cơ khí.
-                </p>
-                <Link href="/services" className="text-theme text-decoration-none">
-                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
-              </div>
-            </Col>
-            <Col lg={4} md={6} className="mb-4">
-              <div className="service-item text-center p-4 rounded">
-                <div className="service-icon mb-4">
-                  <i className="bi bi-mortarboard text-theme" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <h3 className="h5 mb-3">{t('home.services.training')}</h3>
-                <p>
-                  {t('home.services.training')} - Đào tạo, tư vấn trong lĩnh vực như Công nghệ Đúc; Xử lý nhiệt; Kiểm định vật liệu; 
-                  và các lĩnh vực khác.
-                </p>
-                <Link href="/services" className="text-theme text-decoration-none">
-                  {t('home.services.viewDetails')} <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
 
-      {/* Stats Section */}
-      <section className="primary-bg text-white">
-        <Container>
-          <Row className="text-center">
-            <Col lg={3} md={6} className="mb-4">
-              <div className="counter">
-                <h3 className="mb-2">50+</h3>
-                <p>{t('home.stats.years')}</p>
+            {/* Service 2: Heat Treatment */}
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-card position-relative">
+                <div className="service-number-badge">
+                  <span>02</span>
+                </div>
+                <div className="service-image">
+                  <OptimizedImage
+                    src="/images/services/heat-treatment.jpg"
+                    alt={language === 'vi' ? 'Công nghệ xử lý nhiệt' : 'Heat Treatment Technology'}
+                    context="Dịch vụ - Xử lý nhiệt"
+                    className="service-img"
+                  />
+                </div>
+                <div className="service-content">
+                  <h3 className="service-title">
+                    {language === 'vi' ? 'Công nghệ xử lý nhiệt' : 'Heat Treatment Technology'}
+                  </h3>
+                  <p className="service-description">
+                    {language === 'vi'
+                      ? 'Nhiệt luyện chân không, nhiệt luyện truyền thống và hóa nhiệt luyện (thấm C, C-N, N) các loại khuôn và các sản phẩm cơ khí.'
+                      : 'Vacuum heat treatment, traditional heat treatment and chemical heat treatment (C, C-N, N diffusion) for molds and mechanical products.'
+                    }
+                  </p>
+                </div>
               </div>
             </Col>
-            <Col lg={3} md={6} className="mb-4">
-              <div className="counter">
-                <h3 className="mb-2">100+</h3>
-                <p>{t('home.stats.projects')}</p>
+
+            {/* Service 3: Mold Manufacturing */}
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-card position-relative">
+                <div className="service-number-badge">
+                  <span>03</span>
+                </div>
+                <div className="service-image">
+                  <OptimizedImage
+                    src="/images/services/machining.jpg"
+                    alt={language === 'vi' ? 'Cơ khí chế tạo khuôn mẫu' : 'Mechanical Mold Manufacturing'}
+                    context="Dịch vụ - Gia công cơ khí"
+                    className="service-img"
+                  />
+                </div>
+                <div className="service-content">
+                  <h3 className="service-title">
+                    {language === 'vi' ? 'Cơ khí chế tạo khuôn mẫu' : 'Mechanical Mold Manufacturing'}
+                  </h3>
+                  <p className="service-description">
+                    {language === 'vi'
+                      ? 'Thiết kế, chế tạo hoàn chỉnh các loại khuôn kim loại dùng trong các lĩnh vực rèn, dập, ép và đúc áp lực.'
+                      : 'Complete design and manufacturing of metal molds for forging, stamping, pressing and pressure casting fields.'
+                    }
+                  </p>
+                </div>
               </div>
             </Col>
-            <Col lg={3} md={6} className="mb-4">
-              <div className="counter">
-                <h3 className="mb-2">500+</h3>
-                <p>{t('home.stats.products')}</p>
+
+            {/* Service 4: Material Testing */}
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-card position-relative">
+                <div className="service-number-badge">
+                  <span>04</span>
+                </div>
+                <div className="service-image">
+                  <OptimizedImage
+                    src="/images/services/testing.jpg"
+                    alt={language === 'vi' ? 'Kiểm định vật liệu' : 'Material Testing'}
+                    context="Dịch vụ - Kiểm định"
+                    className="service-img"
+                  />
+                </div>
+                <div className="service-content">
+                  <h3 className="service-title">
+                    {language === 'vi' ? 'Kiểm định vật liệu' : 'Material Testing'}
+                  </h3>
+                  <p className="service-description">
+                    {language === 'vi'
+                      ? 'Thử nghiệm, kiểm định trong lĩnh vực hóa, cơ, không phá huỷ các loại vật liệu, kết cấu hàn và chi tiết máy.'
+                      : 'Testing and inspection in chemical, mechanical, non-destructive fields for materials, welded structures and machine parts.'
+                    }
+                  </p>
+                </div>
               </div>
             </Col>
-            <Col lg={3} md={6} className="mb-4">
-              <div className="counter">
-                <h3 className="mb-2">1000+</h3>
-                <p>{t('home.stats.customers')}</p>
+
+            {/* Service 5: Technology Transfer */}
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-card position-relative">
+                <div className="service-number-badge">
+                  <span>05</span>
+                </div>
+                <div className="service-image">
+                  <OptimizedImage
+                    src="/images/services/transfer.jpg"
+                    alt={language === 'vi' ? 'Chuyển giao thiết bị/công nghệ' : 'Equipment/Technology Transfer'}
+                    context="Dịch vụ - Chuyển giao công nghệ"
+                    className="service-img"
+                  />
+                </div>
+                <div className="service-content">
+                  <h3 className="service-title">
+                    {language === 'vi' ? 'Chuyển giao thiết bị/công nghệ' : 'Equipment/Technology Transfer'}
+                  </h3>
+                  <p className="service-description">
+                    {language === 'vi'
+                      ? 'Cung cấp và chuyển giao công nghệ các thiết bị về xử lý nhiệt, các dây chuyển hệ thống kết cấu cơ khí.'
+                      : 'Supply and transfer of heat treatment equipment technology, mechanical structure system production lines.'
+                    }
+                  </p>
+                </div>
+              </div>
+            </Col>
+
+            {/* Service 6: Training & Consulting */}
+            <Col lg={4} md={6} className="mb-4">
+              <div className="service-card position-relative">
+                <div className="service-number-badge">
+                  <span>06</span>
+                </div>
+                <div className="service-image">
+                  <OptimizedImage
+                    src="/images/services/training.jpg"
+                    alt={language === 'vi' ? 'Đào tạo, tư vấn công nghệ' : 'Technology Training and Consulting'}
+                    context="Dịch vụ - Đào tạo"
+                    className="service-img"
+                  />
+                </div>
+                <div className="service-content">
+                  <h3 className="service-title">
+                    {language === 'vi' ? 'Đào tạo, tư vấn công nghệ' : 'Technology Training and Consulting'}
+                  </h3>
+                  <p className="service-description">
+                    {language === 'vi'
+                      ? 'Đào tạo, tư vấn trong lĩnh vực như Công nghệ Đúc; Xử lý nhiệt; Kiểm định vật liệu; và các lĩnh vực khác.'
+                      : 'Training and consulting in fields such as Casting Technology; Heat Treatment; Material Testing; and other fields.'
+                    }
+                  </p>
+                </div>
               </div>
             </Col>
           </Row>
@@ -497,14 +600,20 @@ export default function HomePage() {
       </section>
 
       {/* News Section */}
-      <section className="light-bg">
+      <section className="light-bg py-5">
         <Container>
-          <Row className="text-center mb-5">
-            <Col lg={8} className="mx-auto">
-              <h6 className="text-theme mb-3">{t('home.news.title')}</h6>
-              <h2 className="mb-4">{t('home.news.heading')}</h2>
+          {/* News Section Title */}
+          <Row className="mb-5">
+            <Col lg={12}>
+              <div className="news-section-header">
+                <h2 className="news-section-title">
+                  {language === 'vi' ? 'TIN TỨC' : 'NEWS'}
+                </h2>
+              </div>
             </Col>
           </Row>
+
+          {/* News Content */}
           <Row>
             {loading ? (
               <Col lg={12} className="text-center py-5">
@@ -517,52 +626,825 @@ export default function HomePage() {
                 <p>{t('home.news.noNews')}</p>
               </Col>
             ) : (
-              latestNews.map((news, index) => (
-                <Col lg={4} md={6} className="mb-4" key={news.id}>
-                  <div className="card h-100">
-                    <OptimizedImage 
-                      src={news.image_url || "/images/blog/01.jpg"} 
-                      alt={news.title}
-                      context="Tin tức - Hoạt động"
-                      className="card-img-top"
-                    />
-                    <div className="card-body">
-                      <h6 className="text-muted mb-2">
-                        {news.created_at ? formatDate(news.created_at) : t('common.recentlyUpdated')}
-                      </h6>
-                      <h3 className="h5 card-title">{news.title}</h3>
-                      <p className="card-text">
-                        {truncateText(news.description || '', 150)}
-                      </p>
-                      <Link href={`/news/${news.slug}`} className="text-theme text-decoration-none">
-                        {t('home.news.readMore')} <i className="bi bi-arrow-right ms-1"></i>
-                      </Link>
-                    </div>
+              <>
+                {/* Featured News - Large Card on Left */}
+                <Col lg={8} className="mb-4">
+                  <div className="featured-news-large">
+                    <Link href={`/blog/${latestNews[0].slug}`} className="text-decoration-none">
+                      <div className="featured-news-card-large position-relative">
+                        <OptimizedImage
+                          src={latestNews[0].image_url || "/images/blog/01.jpg"}
+                          alt={latestNews[0].title}
+                          context="Tin tức nổi bật"
+                          className="featured-news-bg"
+                        />
+                        <div className="featured-news-overlay">
+                          <div className="featured-news-content">
+                            <h2 className="featured-news-title text-white">
+                              {latestNews[0].title}
+                            </h2>
+                            <div className="featured-news-meta d-flex align-items-center text-white mt-3">
+                              <i className="bi bi-person-fill me-2"></i>
+                              <span className="me-3">viencongnghe</span>
+                              <i className="bi bi-calendar3 me-2"></i>
+                              <span>
+                                {latestNews[0].created_at ? formatDate(latestNews[0].created_at) : '29/08/25'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
                 </Col>
-              ))
+
+                {/* Smaller News Cards - Right Side */}
+                <Col lg={4}>
+                  <div className="news-sidebar">
+                    {latestNews.slice(1, 3).map((news, index) => (
+                      <div key={news.id} className="news-card-small mb-4">
+                        <Link href={`/blog/${news.slug}`} className="text-decoration-none">
+                          <div className="news-card-small-inner position-relative">
+                            <OptimizedImage
+                              src={news.image_url || "/images/blog/01.jpg"}
+                              alt={news.title}
+                              context="Tin tức"
+                              className="news-card-small-bg"
+                            />
+                            <div className="news-card-small-overlay">
+                              <div className="news-tag">
+                                <span className="badge bg-warning text-dark">
+                                  {language === 'vi' ? 'Tin tức chung' : 'General News'}
+                                </span>
+                              </div>
+                              <div className="news-card-small-content">
+                                <h5 className="news-card-small-title text-white">
+                                  {truncateText(news.title, 80)}
+                                </h5>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </Col>
+              </>
             )}
+          </Row>
+
+          {/* Activity News Section */}
+          <Row className="mt-5">
+            <Col lg={12}>
+              <div className="activity-news-section">
+                <div className="section-header-tab mb-4">
+                  <h3 className="section-tab-title">
+                    {language === 'vi' ? 'TIN HOẠT ĐỘNG' : 'ACTIVITY NEWS'}
+                  </h3>
+                </div>
+                <Row>
+                  {latestNews.length > 0 && (
+                    <>
+                      {latestNews.slice(0, 4).map((news, index) => (
+                        <Col lg={3} md={6} className="mb-4" key={`activity-${news.id}`}>
+                          <div className="activity-news-card">
+                            <Link href={`/blog/${news.slug}`} className="text-decoration-none">
+                              <div className="activity-card-inner">
+                                <div className="activity-card-image">
+                                  <OptimizedImage
+                                    src={news.image_url || "/images/blog/01.jpg"}
+                                    alt={news.title}
+                                    context="Tin hoạt động"
+                                    className="activity-img"
+                                  />
+                                </div>
+                                <div className="activity-card-content">
+                                  <h5 className="activity-title">
+                                    {truncateText(news.title, 60)}
+                                  </h5>
+                                  <div className="activity-meta">
+                                    <span className="activity-author">
+                                      <i className="bi bi-person-fill me-1"></i>
+                                      viencongnghe
+                                    </span>
+                                    <span className="activity-date">
+                                      <i className="bi bi-calendar3 me-1"></i>
+                                      {news.created_at ? formatDate(news.created_at) : '11/04/25'}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        </Col>
+                      ))}
+                    </>
+                  )}
+                </Row>
+              </div>
+            </Col>
+          </Row>
+
+          {/* Three Categories Section */}
+          <Row className="mt-5">
+            {/* Science & Technology News */}
+            <Col lg={4} className="mb-4">
+              <div className="news-category-section">
+                <div className="category-header-blue mb-4">
+                  <h4 className="category-title">
+                    {language === 'vi' ? 'TIN KHOA HỌC CÔNG NGHỆ' : 'SCIENCE & TECHNOLOGY NEWS'}
+                  </h4>
+                </div>
+                <div className="category-list">
+                  <ul className="category-news-list">
+                    <li>
+                      <Link href="/blog/khoa-hoc-cong-nghe" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Giới thiệu kỹ hiệu mác thép theo tiêu chuẩn Nhật Bản'
+                          : 'Introduction to Japanese Steel Grade Standards'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/khoa-hoc-cong-nghe" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Tiêu chuẩn thử kéo Việt Nam'
+                          : 'Vietnam Tensile Testing Standards'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/khoa-hoc-cong-nghe" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Sản phẩm tiêu biểu Viện Công Nghệ'
+                          : 'Typical Products of Technology Institute'
+                        }
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Col>
+
+            {/* Training Activities */}
+            <Col lg={4} className="mb-4">
+              <div className="news-category-section">
+                <div className="category-header-orange mb-4">
+                  <h4 className="category-title">
+                    {language === 'vi' ? 'HOẠT ĐỘNG ĐÀO TẠO' : 'TRAINING ACTIVITIES'}
+                  </h4>
+                </div>
+                <div className="category-list">
+                  <ul className="category-news-list">
+                    <li>
+                      <Link href="/blog/dao-tao" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Chương trình huấn luyện nghiệp vụ thực tập phương án PCCC & CNCH tại Cơ sở II – Lô 27B, Khu CN Quang Minh, Mê Linh, Hà Nội.'
+                          : 'Fire Safety & Emergency Training Program at Facility II – Lot 27B, Quang Minh Industrial Zone, Me Linh, Hanoi'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/dao-tao" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Huấn luyện Nghiệp vụ thực tập phương án PCCC&CHCN cho đội PCCC của viện năm 2022 tại toà nhà 25 Vũ Ngọc Phan'
+                          : 'Fire Safety Training for Institute Fire Team 2022 at 25 Vu Ngoc Phan Building'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/dao-tao" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Chương trình huấn luyện an toàn vệ sinh lao động năm 2022'
+                          : 'Occupational Health and Safety Training Program 2022'
+                        }
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Col>
+
+            {/* Professional Articles */}
+            <Col lg={4} className="mb-4">
+              <div className="news-category-section">
+                <div className="category-header-green mb-4">
+                  <h4 className="category-title">
+                    {language === 'vi' ? 'BÀI VIẾT CHUYÊN MÔN' : 'PROFESSIONAL ARTICLES'}
+                  </h4>
+                </div>
+                <div className="category-list">
+                  <ul className="category-news-list">
+                    <li>
+                      <Link href="/blog/chuyen-mon" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Chuyện kể về Kim Loại Quyển 1'
+                          : 'Stories about Metals Volume 1'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/chuyen-mon" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Chuyện kể về Kim Loại Quyển 2'
+                          : 'Stories about Metals Volume 2'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/chuyen-mon" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Giới thiệu kỹ hiệu mác thép theo tiêu chuẩn Nhật Bản'
+                          : 'Introduction to Japanese Steel Grade Standards'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/chuyen-mon" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Tiêu chuẩn thử kéo Việt Nam'
+                          : 'Vietnam Tensile Testing Standards'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/chuyen-mon" className="category-link">
+                        <i className="bi bi-dot"></i>
+                        {language === 'vi'
+                          ? 'Thiết kế, lắp đặt và chuyển giao trong lĩnh vực nhiệt luyện'
+                          : 'Design, Installation and Transfer in Heat Treatment Field'
+                        }
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Col>
           </Row>
         </Container>
       </section>
 
-      {/* CTA Section */}
-      <section className="primary-bg text-white">
+      {/* Activity Images Section */}
+      <section className="activity-images-section py-5">
         <Container>
-          <Row className="text-center">
-            <Col lg={8} className="mx-auto">
-              <h2 className="mb-4 text-white">{t('home.cta.title')}</h2>
-              <p className="mb-4">
-                {t('home.cta.description')}
+          <Row className="text-center mb-5">
+            <Col lg={12}>
+              <p className="section-subtitle text-uppercase mb-2">
+                {language === 'vi' ? 'MEDIA' : 'MEDIA'}
               </p>
-              <Link href="/contact" className="themeht-btn secondary-btn me-3">
-                {t('home.cta.contactNow')}
-              </Link>
-              <Link href="/services" className="themeht-btn primary-btn">
-                {t('home.cta.viewServices')}
+              <h2 className="section-main-title mb-4">
+                {language === 'vi' ? 'HÌNH ẢNH HOẠT ĐỘNG' : 'ACTIVITY IMAGES'}
+              </h2>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col lg={12}>
+              <div className="activity-slider-wrapper position-relative">
+                <div className="activity-slider" id="activityImageSlider">
+                  <div className="activity-slides-container">
+                    <div className="activity-slide active">
+                      <Row className="activity-images-row">
+                        <Col lg={4} md={4} className="mb-3">
+                          <div className="activity-image-item">
+                            <OptimizedImage
+                              src="/images/activities/activity-1.jpg"
+                              alt={language === 'vi' ? 'Hoạt động đào tạo' : 'Training Activity'}
+                              context="Hình ảnh hoạt động"
+                              className="activity-img"
+                            />
+                          </div>
+                        </Col>
+                        <Col lg={4} md={4} className="mb-3">
+                          <div className="activity-image-item">
+                            <OptimizedImage
+                              src="/images/activities/activity-2.jpg"
+                              alt={language === 'vi' ? 'Lễ trao bằng khen' : 'Award Ceremony'}
+                              context="Hình ảnh hoạt động"
+                              className="activity-img"
+                            />
+                          </div>
+                        </Col>
+                        <Col lg={4} md={4} className="mb-3">
+                          <div className="activity-image-item">
+                            <OptimizedImage
+                              src="/images/activities/activity-3.jpg"
+                              alt={language === 'vi' ? 'Hội thảo an toàn' : 'Safety Workshop'}
+                              context="Hình ảnh hoạt động"
+                              className="activity-img"
+                            />
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+
+                    <div className="activity-slide">
+                      <Row className="activity-images-row">
+                        <Col lg={4} md={4} className="mb-3">
+                          <div className="activity-image-item">
+                            <OptimizedImage
+                              src="/images/activities/activity-4.jpg"
+                              alt={language === 'vi' ? 'Nghiên cứu khoa học' : 'Scientific Research'}
+                              context="Hình ảnh hoạt động"
+                              className="activity-img"
+                            />
+                          </div>
+                        </Col>
+                        <Col lg={4} md={4} className="mb-3">
+                          <div className="activity-image-item">
+                            <OptimizedImage
+                              src="/images/activities/activity-5.jpg"
+                              alt={language === 'vi' ? 'Thăm quan doanh nghiệp' : 'Enterprise Visit'}
+                              context="Hình ảnh hoạt động"
+                              className="activity-img"
+                            />
+                          </div>
+                        </Col>
+                        <Col lg={4} md={4} className="mb-3">
+                          <div className="activity-image-item">
+                            <OptimizedImage
+                              src="/images/activities/activity-6.jpg"
+                              alt={language === 'vi' ? 'Hợp tác quốc tế' : 'International Cooperation'}
+                              context="Hình ảnh hoạt động"
+                              className="activity-img"
+                            />
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slider Navigation */}
+                <div className="activity-slider-nav">
+                  <button className="activity-nav-btn activity-prev-btn" onClick={() => {
+                    const slider = document.getElementById('activityImageSlider');
+                    const slides = slider?.querySelectorAll('.activity-slide');
+                    const activeSlide = slider?.querySelector('.activity-slide.active');
+                    const activeIndex = Array.from(slides || []).indexOf(activeSlide as Element);
+                    const prevIndex = activeIndex === 0 ? (slides?.length || 1) - 1 : activeIndex - 1;
+
+                    activeSlide?.classList.remove('active');
+                    slides?.[prevIndex]?.classList.add('active');
+                  }}>
+                    <i className="bi bi-chevron-left"></i>
+                  </button>
+                  <button className="activity-nav-btn activity-next-btn" onClick={() => {
+                    const slider = document.getElementById('activityImageSlider');
+                    const slides = slider?.querySelectorAll('.activity-slide');
+                    const activeSlide = slider?.querySelector('.activity-slide.active');
+                    const activeIndex = Array.from(slides || []).indexOf(activeSlide as Element);
+                    const nextIndex = activeIndex === (slides?.length || 1) - 1 ? 0 : activeIndex + 1;
+
+                    activeSlide?.classList.remove('active');
+                    slides?.[nextIndex]?.classList.add('active');
+                  }}>
+                    <i className="bi bi-chevron-right"></i>
+                  </button>
+                </div>
+
+                {/* Slider Indicators */}
+                <div className="activity-slider-indicators">
+                  <button className="activity-indicator active" onClick={() => {
+                    const slider = document.getElementById('activityImageSlider');
+                    const slides = slider?.querySelectorAll('.activity-slide');
+                    const indicators = document.querySelectorAll('.activity-indicator');
+
+                    slides?.forEach(slide => slide.classList.remove('active'));
+                    indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                    slides?.[0]?.classList.add('active');
+                    indicators[0]?.classList.add('active');
+                  }}></button>
+                  <button className="activity-indicator" onClick={() => {
+                    const slider = document.getElementById('activityImageSlider');
+                    const slides = slider?.querySelectorAll('.activity-slide');
+                    const indicators = document.querySelectorAll('.activity-indicator');
+
+                    slides?.forEach(slide => slide.classList.remove('active'));
+                    indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                    slides?.[1]?.classList.add('active');
+                    indicators[1]?.classList.add('active');
+                  }}></button>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* Products & Services Section */}
+      <section className="products-services-section py-5">
+        <Container>
+          <Row className="text-center mb-5">
+            <Col lg={12}>
+              <p className="section-subtitle text-uppercase mb-2">
+                {language === 'vi' ? 'PRODUCTS & SERVICES' : 'PRODUCTS & SERVICES'}
+              </p>
+              <h2 className="section-main-title mb-4">
+                {language === 'vi' ? 'SẢN PHẨM & DỊCH VỤ' : 'PRODUCTS & SERVICES'}
+              </h2>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col lg={12}>
+              <div className="products-slider-wrapper position-relative">
+                <div className="products-slider" id="productsSlider">
+                  <div className="products-track" id="productsTrack">
+                    {productsLoading ? (
+                      // Loading slide
+                      <div className="product-slide active">
+                        <div className="row">
+                          {Array.from({ length: 4 }).map((_, index) => (
+                            <div className="col-lg-3 col-md-6 mb-4" key={`loading-${index}`}>
+                              <div className="product-card">
+                                <div className="product-image">
+                                  <div className="placeholder-img bg-light d-flex align-items-center justify-content-center" style={{ height: '200px' }}>
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="product-content">
+                                  <div className="product-category">
+                                    <span className="category-tag placeholder-glow">
+                                      <span className="placeholder col-8"></span>
+                                    </span>
+                                  </div>
+                                  <h4 className="product-title placeholder-glow">
+                                    <span className="placeholder col-12"></span>
+                                    <span className="placeholder col-8"></span>
+                                  </h4>
+                                  <p className="product-description placeholder-glow">
+                                    <span className="placeholder col-12"></span>
+                                    <span className="placeholder col-12"></span>
+                                    <span className="placeholder col-6"></span>
+                                  </p>
+                                  <div className="placeholder-glow">
+                                    <span className="placeholder btn btn-primary col-6"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : products.length > 0 ? (
+                      // Render product slides from API
+                      (() => {
+                        const slides = [];
+                        for (let i = 0; i < products.length; i += 4) {
+                          const slideProducts = products.slice(i, i + 4);
+                          slides.push(
+                            <div className={`product-slide ${i === 0 ? 'active' : ''}`} key={`slide-${i}`}>
+                              <div className="row">
+                                {slideProducts.map((product) => (
+                                  <div className="col-lg-3 col-md-6 mb-4" key={product.id}>
+                                    <div className="product-card">
+                                      <div className="product-image">
+                                        <OptimizedImage
+                                          src={product.primary_image || '/images/products/default-product.jpg'}
+                                          alt={product.name}
+                                          context={`Sản phẩm - ${product.name}`}
+                                          className="product-img"
+                                        />
+                                      </div>
+                                      <div className="product-content">
+                                        <div className="product-category">
+                                          <span className="category-tag">
+                                            {product.brand || (language === 'vi' ? 'Khoa học công nghệ' : 'Science & Technology')}
+                                          </span>
+                                        </div>
+                                        <h4 className="product-title">
+                                          {product.name}
+                                        </h4>
+                                        <p className="product-description">
+                                          {product.description || product.specifications || (language === 'vi' ? 'Mô tả sản phẩm đang được cập nhật...' : 'Product description coming soon...')}
+                                        </p>
+                                        <Link href={`/products/${product.slug}`} className="product-btn">
+                                          {language === 'vi' ? 'Xem chi tiết' : 'View Details'}
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return slides;
+                      })()
+                    ) : (
+                      // No products fallback slide
+                      <div className="product-slide active">
+                        <div className="row">
+                          <div className="col-lg-12 text-center py-5">
+                            <div className="no-products-message">
+                              <h5 className="text-muted mb-3">
+                                {language === 'vi' ? 'Hiện tại chưa có sản phẩm nào' : 'No products available'}
+                              </h5>
+                              <p className="text-muted">
+                                {language === 'vi' ? 'Vui lòng quay lại sau để xem các sản phẩm mới nhất' : 'Please check back later for the latest products'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Slider Navigation - only show if we have products and more than 4 products */}
+                {!productsLoading && products.length > 4 && (
+                  <div className="products-slider-nav">
+                    <button className="products-nav-btn products-prev-btn" onClick={() => {
+                      const track = document.getElementById('productsTrack');
+                      const slides = track?.querySelectorAll('.product-slide');
+                      const activeSlide = track?.querySelector('.product-slide.active');
+                      if (slides && activeSlide) {
+                        const activeIndex = Array.from(slides).indexOf(activeSlide as Element);
+                        const prevIndex = activeIndex === 0 ? slides.length - 1 : activeIndex - 1;
+
+                        activeSlide.classList.remove('active');
+                        slides[prevIndex]?.classList.add('active');
+
+                        // Update indicators
+                        const indicators = document.querySelectorAll('.products-indicator');
+                        indicators.forEach(indicator => indicator.classList.remove('active'));
+                        indicators[prevIndex]?.classList.add('active');
+                      }
+                    }}>
+                      <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <button className="products-nav-btn products-next-btn" onClick={() => {
+                      const track = document.getElementById('productsTrack');
+                      const slides = track?.querySelectorAll('.product-slide');
+                      const activeSlide = track?.querySelector('.product-slide.active');
+                      if (slides && activeSlide) {
+                        const activeIndex = Array.from(slides).indexOf(activeSlide as Element);
+                        const nextIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
+
+                        activeSlide.classList.remove('active');
+                        slides[nextIndex]?.classList.add('active');
+
+                        // Update indicators
+                        const indicators = document.querySelectorAll('.products-indicator');
+                        indicators.forEach(indicator => indicator.classList.remove('active'));
+                        indicators[nextIndex]?.classList.add('active');
+                      }
+                    }}>
+                      <i className="bi bi-chevron-right"></i>
+                    </button>
+                  </div>
+                )}
+
+                {/* Slider Indicators - only show if we have products and more than 4 products */}
+                {!productsLoading && products.length > 4 && (
+                  <div className="products-slider-indicators">
+                    {Array.from({ length: Math.ceil(products.length / 4) }).map((_, index) => (
+                      <button
+                        key={index}
+                        className={`products-indicator ${index === 0 ? 'active' : ''}`}
+                        onClick={() => {
+                          const track = document.getElementById('productsTrack');
+                          const slides = track?.querySelectorAll('.product-slide');
+                          const indicators = document.querySelectorAll('.products-indicator');
+
+                          slides?.forEach(slide => slide.classList.remove('active'));
+                          indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                          slides?.[index]?.classList.add('active');
+                          indicators[index]?.classList.add('active');
+                        }}
+                      ></button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Col>
+          </Row>
+
+          {/* View All Products Button */}
+          <Row className="text-center mt-4">
+            <Col lg={12}>
+              <Link href="/products" className="view-all-products-btn">
+                {language === 'vi' ? 'Xem tất cả sản phẩm, dịch vụ' : 'View All Products & Services'}
+                <i className="bi bi-arrow-right ms-2"></i>
               </Link>
             </Col>
           </Row>
+        </Container>
+      </section>
+
+      {/* Customers & Partners Section */}
+      <section className="partners-section py-5">
+        <Container>
+          <Row className="text-center mb-5">
+            <Col lg={12}>
+              <p className="section-subtitle text-uppercase mb-2">
+                {language === 'vi' ? 'CUSTOMERS & PARTNERS' : 'CUSTOMERS & PARTNERS'}
+              </p>
+              <h2 className="section-main-title mb-4">
+                {language === 'vi' ? 'KHÁCH HÀNG & ĐỐI TÁC' : 'CUSTOMERS & PARTNERS'}
+              </h2>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col lg={12}>
+              <div className="partners-slider-wrapper position-relative">
+                <div className="partners-slider" id="partnersSlider">
+                  <div className="partners-track" id="partnersTrack">
+                    {/* Partners will be arranged in slides */}
+
+                    {/* Slide 1 - Desktop: 6 logos, Mobile: 2 logos */}
+                    <div className="partner-slide active">
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/disoco-logo.png"
+                          alt="DISOCO"
+                          context="Đối tác - DISOCO"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/futur-logo.png"
+                          alt="FUTUR"
+                          context="Đối tác - FUTUR"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/fteme-logo.png"
+                          alt="FTEME"
+                          context="Đối tác - FTEME"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/t4-logo.png"
+                          alt="T4 NHÂN TM CỤA BAN"
+                          context="Đối tác - T4"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/daido-steel-logo.png"
+                          alt="DAIDO STEEL"
+                          context="Đối tác - DAIDO STEEL"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/fomeco-logo.png"
+                          alt="FOMECO"
+                          context="Đối tác - FOMECO"
+                          className="partner-logo"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Slide 2 */}
+                    <div className="partner-slide">
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/yamaha-logo.png"
+                          alt="Yamaha"
+                          context="Đối tác - Yamaha"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/vdi-logo.png"
+                          alt="VDI"
+                          context="Đối tác - VDI"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/seiki-logo.png"
+                          alt="Seiki"
+                          context="Đối tác - Seiki"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/astemo-logo.png"
+                          alt="Astemo"
+                          context="Đối tác - Astemo"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/hal-vietnam-logo.png"
+                          alt="HAL Vietnam"
+                          context="Đối tác - HAL Vietnam"
+                          className="partner-logo"
+                        />
+                      </div>
+                      <div className="partner-item">
+                        <OptimizedImage
+                          src="/images/partners/moldtech-logo.png"
+                          alt="Moldtech"
+                          context="Đối tác - Moldtech"
+                          className="partner-logo"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slider Navigation */}
+                <div className="partners-slider-nav">
+                  <button className="partners-nav-btn partners-prev-btn" onClick={() => {
+                    const slider = document.getElementById('partnersSlider');
+                    const track = document.getElementById('partnersTrack');
+                    const slides = track?.querySelectorAll('.partner-slide');
+                    const activeSlide = track?.querySelector('.partner-slide.active');
+                    const activeIndex = Array.from(slides || []).indexOf(activeSlide as Element);
+                    const prevIndex = activeIndex === 0 ? (slides?.length || 1) - 1 : activeIndex - 1;
+
+                    activeSlide?.classList.remove('active');
+                    slides?.[prevIndex]?.classList.add('active');
+
+                    // Update indicators
+                    const indicators = document.querySelectorAll('.partners-indicator');
+                    indicators.forEach(indicator => indicator.classList.remove('active'));
+                    indicators[prevIndex]?.classList.add('active');
+                  }}>
+                    <i className="bi bi-chevron-left"></i>
+                  </button>
+
+                  <button className="partners-nav-btn partners-next-btn" onClick={() => {
+                    const slider = document.getElementById('partnersSlider');
+                    const track = document.getElementById('partnersTrack');
+                    const slides = track?.querySelectorAll('.partner-slide');
+                    const activeSlide = track?.querySelector('.partner-slide.active');
+                    const activeIndex = Array.from(slides || []).indexOf(activeSlide as Element);
+                    const nextIndex = activeIndex === (slides?.length || 1) - 1 ? 0 : activeIndex + 1;
+
+                    activeSlide?.classList.remove('active');
+                    slides?.[nextIndex]?.classList.add('active');
+
+                    // Update indicators
+                    const indicators = document.querySelectorAll('.partners-indicator');
+                    indicators.forEach(indicator => indicator.classList.remove('active'));
+                    indicators[nextIndex]?.classList.add('active');
+                  }}>
+                    <i className="bi bi-chevron-right"></i>
+                  </button>
+                </div>
+
+                {/* Slider Indicators */}
+                <div className="partners-slider-indicators">
+                  <button className="partners-indicator active" onClick={() => {
+                    const track = document.getElementById('partnersTrack');
+                    const slides = track?.querySelectorAll('.partner-slide');
+                    const indicators = document.querySelectorAll('.partners-indicator');
+
+                    slides?.forEach(slide => slide.classList.remove('active'));
+                    indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                    slides?.[0]?.classList.add('active');
+                    indicators[0]?.classList.add('active');
+                  }}></button>
+                  <button className="partners-indicator" onClick={() => {
+                    const track = document.getElementById('partnersTrack');
+                    const slides = track?.querySelectorAll('.partner-slide');
+                    const indicators = document.querySelectorAll('.partners-indicator');
+
+                    slides?.forEach(slide => slide.classList.remove('active'));
+                    indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                    slides?.[1]?.classList.add('active');
+                    indicators[1]?.classList.add('active');
+                  }}></button>
+                </div>
+              </div>
+            </Col>
+          </Row>
+
         </Container>
       </section>
     </>
