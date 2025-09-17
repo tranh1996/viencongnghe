@@ -5,6 +5,7 @@
 
 /* Import CSS files from src/assets/css */
 @import '../src/assets/css/variables.css';
+@import '../src/assets/css/bootstrap-override.css';
 @import '../src/assets/css/rift-font.css';
 @import '../src/assets/css/base.css';
 @import '../src/assets/css/colors.css';
