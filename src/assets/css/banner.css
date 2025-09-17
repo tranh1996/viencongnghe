@@ -8,8 +8,8 @@
 /* ------------------------
     Banner Slider
 ------------------------*/
-.banner-slider { 
-    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 25%, #2C5F95 50%, #1E4A73 75%, #0F2C4C 100%);
+.banner-slider {
+    background: url('/images/backgroudBanner.png') center/cover no-repeat;
     position: relative;
     height: 600px;
     min-height: 500px;
@@ -41,18 +41,25 @@
 }
 
 .banner-slider .slider-img {
-    display: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: var(--bg-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.banner-content { 
+.banner-content {
     padding: 80px 0;
-    position: relative; 
+    position: relative;
     z-index: 9;
     width: 100%;
+    max-width: 1170px;
+    margin: 0 auto;
 }
 
 .banner-slider::before {
@@ -273,12 +280,13 @@
 /*    max-width: 700px;*/
 /*}*/
 
-.banner-slider h1 { 
-    font-weight: 700; 
-    font-size: 48px; 
-    line-height: 58px; 
-    color: #E74C3C;
+.banner-slider h1 {
+    font-weight: 900;
+    font-size: 48px;
+    line-height: 58px;
+    color: #DF2A1E;
     margin-bottom: 20px;
+    font-family: "Rift Bold";
 }
 
 .banner-slider h1 span { 
@@ -287,11 +295,20 @@
     display: block; 
 }
 
-.banner-content p { 
-    max-width: 90%; 
+.banner-text {
+    color: #000;
+    font-size: 18px;
+}
+
+.banner-text h1 {
+    text-transform: uppercase;
+}
+
+.banner-content p {
+    max-width: 90%;
     margin: 0 0 30px 0;
-    color: #ffffff;
-    font-size: 16px;
+    color: #000;
+    font-size: 18px;
     line-height: 1.6;
     opacity: 0.95;
 }
@@ -356,6 +373,10 @@
     z-index: 1000 !important;
     padding: 0 60px;
     background: transparent;
+}
+
+.banner-featured-cards .container {
+    max-width: 1170px;
 }
 
 .cards-slider-wrapper {
@@ -664,7 +685,7 @@
 @media (max-width: 767px) {
     .banner-slider {
         height: 500px;
-        background: linear-gradient(135deg, #4A90E2 0%, #357ABD 25%, #2C5F95 50%, #1E4A73 75%, #0F2C4C 100%);
+        background: url('/images/backgroudBanner.png') center/cover no-repeat;
     }
 
     .banner-content { 

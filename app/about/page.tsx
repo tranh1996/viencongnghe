@@ -7,6 +7,7 @@ import { fetchAboutOverview, fetchOrganization, fetchAboutHistory } from '@/util
 import OptimizedImage from '@/components/OptimizedImage';
 import Breadcrumb from '@/components/Breadcrumb';
 import '@/assets/css/about-timeline.css';
+import '@/assets/css/about-page.css';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -158,33 +159,62 @@ export default function AboutPage() {
       />
 
       {/* About Us Introduction Section */}
-      <section className="py-5">
+      <section className="py-5" style={{
+        backgroundImage: 'url(/images/image-64.webp)',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        position: 'relative'
+      }}>
         <Container>
           <Row className="align-items-center">
             <Col lg={6} className="mb-4 mb-lg-0">
-              <OptimizedImage
-                src="https://viencongnghe.com/wp-content/uploads/2023/05/image-20.webp"
-                alt={language === 'vi' ? 'Viện Công nghệ' : 'Technology Institute'}
-                context="About page - Institute image"
-                className="img-fluid rounded"
-                style={{ width: '100%', height: '400px', objectFit: 'cover' }}
-              />
+              <div className="about-image-wrapper position-relative has-rectangle d-flex justify-content-center align-items-center">
+                <OptimizedImage
+                  src="https://viencongnghe.com/wp-content/uploads/2023/05/image-20.webp"
+                  alt={language === 'vi' ? 'Viện Công nghệ' : 'Technology Institute'}
+                  context="About page - Institute image"
+                  className="img-fluid"
+                  style={{
+                    maxWidth: '100%',
+                    width: 'auto',
+                    borderRadius: '10px',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                />
+              </div>
             </Col>
             <Col lg={6}>
-              <div className="ps-lg-4">
-                <h6 className="text-theme mb-3 text-uppercase">
-                  {language === 'vi' ? 'Giới thiệu' : 'About Us'}
-                </h6>
-                <h2 className="mb-4">
+              <div className="about-text-card">
+                <div className="mb-3">
+                  <span className="about-label">
+                    {language === 'vi' ? 'About us' : 'About us'}
+                  </span>
+                </div>
+                <h1 className="about-title">
+                  {language === 'vi' ? 'VỀ CHÚNG TÔI' : 'ABOUT US'}
+                </h1>
+                <div className="about-divider"></div>
+
+                <p className="about-text">
                   {language === 'vi'
-                    ? 'Viện Nghiên cứu Công nghệ Cơ khí'
-                    : 'Research Institute of Technology for Machinery'
+                    ? 'Viện Công nghệ (Tên tiếng Anh: Research Institute of Technology for Machinery, viết tắt là RITM) tiền thân là Viện nghiên cứu các phương pháp công nghệ mới được thành lập ngày 21/09/1970 theo Quyết định số 700/QĐ/QĐ của Bộ trưởng Bộ Cơ khí và Luyện kim (nay là Bộ Công Thương).'
+                    : 'Research Institute of Technology for Machinery (RITM), formerly known as the Research Institute of New Technology Methods, was established on September 21, 1970 according to Decision No. 700/QĐ/QĐ of the Minister of Machinery and Metallurgy (now the Ministry of Industry and Trade).'
                   }
-                </h2>
-                <p className="mb-4 text-muted">
+                </p>
+
+                <p className="about-text">
                   {language === 'vi'
-                    ? 'Viện Nghiên cứu Công nghệ Cơ khí (RITM) được thành lập từ năm 1970, là một trong những đơn vị nghiên cứu và phát triển công nghệ hàng đầu tại Việt Nam trong lĩnh vực cơ khí. Với hơn 50 năm kinh nghiệm, chúng tôi đã không ngừng đổi mới và phát triển để đáp ứng nhu cầu của thị trường và xã hội.'
-                    : 'The Research Institute of Technology for Machinery (RITM) was established in 1970, is one of the leading research and technology development units in Vietnam in the field of machinery. With over 50 years of experience, we have continuously innovated and developed to meet market and social needs.'
+                    ? 'Viện Công nghệ là Tổ chức khoa học và công nghệ hoạt động theo Luật Khoa học và công nghệ trong lĩnh vực nghiên cứu, hoạt động theo Luật doanh nghiệp trong lĩnh vực sản xuất kinh doanh.'
+                    : 'The Technology Institute is a scientific and technological organization operating under the Law on Science and Technology in the field of research, and operating under the Enterprise Law in the field of production and business.'
+                  }
+                </p>
+
+                <p className="about-text mb-0">
+                  {language === 'vi'
+                    ? 'Trong suốt hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim, Viện Công nghệ không ngừng đầu tư và phát triển các lĩnh vực thế mạnh của Viện nhằm đáp ứng được những yêu cầu khắt khe nhất của khách hàng trong nước và quốc tế. Bên cạnh đó, Viện cũng triển khai nhiều nghiên cứu về lĩnh vực vật liệu mới, nhiệt luyện, cơ khí chế tạo khuôn mẫu với mục tiêu ứng dụng vào thực tế cũng như thúc đẩy quá trình đồng bộ các sản phẩm nhập khẩu.'
+                    : 'Throughout more than 50 years of operation in the field of machinery and metallurgy, the Technology Institute has continuously invested and developed the Institute\'s strengths to meet the most stringent requirements of domestic and international customers. In addition, the Institute also conducts many research projects in the field of new materials, heat treatment, mechanical mold manufacturing with the goal of practical application as well as promoting the process of synchronizing imported products.'
                   }
                 </p>
               </div>
@@ -194,12 +224,28 @@ export default function AboutPage() {
       </section>
 
       {/* Vision, Mission, Core Values Section */}
-      <section className="py-5 bg-light">
+      <section className="py-5" style={{
+        backgroundImage: 'url(/images/xbg-04.webp)',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        position: 'relative'
+      }}>
         <Container>
           <Row className="text-center mb-5">
             <Col>
-              <h2 className="mb-4">
-                {language === 'vi' ? 'Tầm nhìn - Sứ mệnh - Giá trị cốt lõi' : 'Vision - Mission - Core Values'}
+              <h2 className="mb-4" style={{ textTransform: 'uppercase', lineHeight: '1.3' }}>
+                {language === 'vi' ? (
+                  <>
+                    VIỆN CÔNG NGHỆ <br />
+                    GIÁ TRỊ TRONG TỪNG HÀNH ĐỘNG
+                  </>
+                ) : (
+                  <>
+                    TECHNOLOGY INSTITUTE<br />
+                    VALUE IN EVERY ACTION
+                  </>
+                )}
               </h2>
             </Col>
           </Row>

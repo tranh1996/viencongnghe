@@ -229,7 +229,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                     borderColor: '#1253be'
                   }}
                 >
-                  Liên hệ
+                  Liên h
                 </Button>
               </div>
 

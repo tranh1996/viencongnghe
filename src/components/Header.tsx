@@ -210,10 +210,10 @@ const Header: React.FC = () => {
             <div className="col-lg-6">
               {/* Logo */}
               <Link href="/" className="logo">
-                <img 
-                  className="img-fluid" 
-                  src="/images/logo.png"
-                  alt="Viện Công nghệ" 
+                <img
+                  className="img-fluid"
+                  src="/images/logo.svg"
+                  alt="Viện Công nghệ"
                   style={{ maxHeight: '60px' }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -261,7 +261,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* HR Divider */}
-      <Container>
+      <Container fluid>
         <hr className="m-0" style={{ borderColor: '#6c757d' }} />
       </Container>
 

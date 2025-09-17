@@ -1,0 +1,126 @@
+/* About Page Styles */
+
+.has-rectangle {
+    position: relative;
+}
+
+.has-rectangle::after {
+    content: "";
+    display: inline-block;
+    width: 651px;
+    height: 450px;
+    background: url(/images/xrectangle.png.pagespeed.ic.jpPHD4Q7LN.webp) no-repeat center;
+    background-size: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+/* About Text Card Styles */
+.about-text-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    position: relative;
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+
+.about-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.about-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.about-divider {
+    width: 60px;
+    height: 3px;
+    background: #21759b;
+    margin-bottom: 2rem;
+}
+
+.about-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .has-rectangle::after {
+        width: 500px;
+        height: 350px;
+    }
+
+    .about-text-card {
+        margin-left: 1rem;
+        padding: 2rem;
+    }
+
+    .about-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .has-rectangle::after {
+        width: 400px;
+        height: 280px;
+    }
+
+    .about-text-card {
+        margin-left: 0;
+        margin-top: 2rem;
+        padding: 1.5rem;
+    }
+
+    .about-title {
+        font-size: 1.8rem;
+    }
+
+    .about-text {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .has-rectangle::after {
+        width: 320px;
+        height: 220px;
+    }
+
+    .about-text-card {
+        padding: 1.25rem;
+    }
+
+    .about-title {
+        font-size: 1.6rem;
+    }
+
+    .about-text {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+
+    .about-divider {
+        width: 50px;
+        height: 2px;
+    }
+}
