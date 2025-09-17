@@ -1,0 +1,39 @@
+/* Bootstrap Button Override */
+
+/* Override Bootstrap's primary button colors */
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #21759b;
+    --bs-btn-border-color: #21759b;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #1e6a87;
+    --bs-btn-hover-border-color: #1e6a87;
+    --bs-btn-focus-shadow-rgb: 33, 117, 155;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #1a5f7a;
+    --bs-btn-active-border-color: #1a5f7a;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #21759b;
+    --bs-btn-disabled-border-color: #21759b;
+}
+
+/* Override Bootstrap's primary color variable */
+:root {
+    --bs-primary: #21759b;
+    --bs-primary-rgb: 33, 117, 155;
+}
+
+/* Badge primary override */
+.badge.bg-primary {
+    background-color: #21759b !important;
+}
+
+/* Text primary override */
+.text-primary {
+    color: #21759b !important;
+}
+
+/* Border primary override */
+.border-primary {
+    border-color: #21759b !important;
+}

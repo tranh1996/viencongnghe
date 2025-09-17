@@ -188,14 +188,14 @@ export default function AboutPage() {
             <Col lg={6}>
               <div className="about-text-card">
                 <div className="mb-3">
-                  <span className="about-label">
+                  <span className="about-label" style={{ color: '#21759b' }}>
                     {language === 'vi' ? 'About us' : 'About us'}
                   </span>
                 </div>
                 <h1 className="about-title">
                   {language === 'vi' ? 'VỀ CHÚNG TÔI' : 'ABOUT US'}
                 </h1>
-                <div className="about-divider"></div>
+                <div className="about-divider" style={{ background: '#21759b' }}></div>
 
                 <p className="about-text">
                   {language === 'vi'
@@ -255,7 +255,7 @@ export default function AboutPage() {
                 <Card className="h-100 text-center border-0 shadow-sm">
                   <Card.Body className="p-4">
                     <div className="mb-3">
-                      <i className={`bi ${item.icon} text-theme`} style={{ fontSize: '3rem' }}></i>
+                      <i className={`bi ${item.icon}`} style={{ fontSize: '3rem', color: '#21759b' }}></i>
                     </div>
                     <Card.Title className="h5 mb-3">{item.title}</Card.Title>
                     <Card.Text className="text-muted">{item.content}</Card.Text>
@@ -340,7 +340,7 @@ export default function AboutPage() {
                 <div className="text-center">
                   <div className="placeholder-video bg-white rounded p-5" style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div>
-                      <i className="bi bi-play-circle text-theme mb-3" style={{ fontSize: '4rem' }}></i>
+                      <i className="bi bi-play-circle mb-3" style={{ fontSize: '4rem', color: '#21759b' }}></i>
                       <h5 className="text-muted">
                         {language === 'vi' ? 'Video sẽ được cập nhật sớm' : 'Video will be updated soon'}
                       </h5>
@@ -357,7 +357,7 @@ export default function AboutPage() {
                   history.map((item, index) => (
                     <div key={index} className="timeline-item-simple mb-4">
                       <div className="d-flex align-items-start">
-                        <div className="timeline-year-badge bg-primary text-white rounded px-3 py-2 me-3" style={{ minWidth: '80px', textAlign: 'center', fontWeight: 'bold' }}>
+                        <div className="timeline-year-badge text-white rounded px-3 py-2 me-3" style={{ minWidth: '80px', textAlign: 'center', fontWeight: 'bold', backgroundColor: '#21759b' }}>
                           {item.year}
                         </div>
                         <div className="flex-grow-1">
@@ -374,7 +374,7 @@ export default function AboutPage() {
                 ) : (
                   <div className="text-center">
                     <div className="placeholder-timeline bg-white rounded p-4">
-                      <i className="bi bi-clock-history text-theme mb-3" style={{ fontSize: '3rem' }}></i>
+                      <i className="bi bi-clock-history mb-3" style={{ fontSize: '3rem', color: '#21759b' }}></i>
                       <h6 className="text-muted">
                         {language === 'vi' ? 'Dữ liệu lịch sử đang được cập nhật' : 'Historical data is being updated'}
                       </h6>
@@ -403,7 +403,7 @@ export default function AboutPage() {
                 <Card className="h-100 text-center border-0 shadow-sm">
                   <Card.Body className="p-4">
                     <div className="mb-3">
-                      <i className={`bi ${field.icon} text-theme`} style={{ fontSize: '3rem' }}></i>
+                      <i className={`bi ${field.icon}`} style={{ fontSize: '3rem', color: '#21759b' }}></i>
                     </div>
                     <Card.Title className="h5 mb-3">{field.title}</Card.Title>
                     <Card.Text className="text-muted small">{field.description}</Card.Text>
