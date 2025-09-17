@@ -151,9 +151,6 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
         />
       )}
       <div className="card-overlay">
-        <div className="card-icon">
-          <i className="bi bi-building"></i>
-        </div>
         <div className="card-category">{language === 'vi' ? 'Phòng ban' : 'Department'}</div>
         <h3 className="card-title">{department.name}</h3>
       </div>
@@ -171,7 +168,7 @@ const BannerSlider: React.FC<BannerSliderProps> = ({
         <div className="swiper-slide swiper-slide-active">
           <div
             className="slider-img"
-            style={{ '--bg-image': `url(${firstSlide.image})` } as React.CSSProperties}
+            style={{ '--bg-image': 'url(/images/backgroudBanner.png)' } as React.CSSProperties}
           ></div>
           <div className="banner-content">
             <div className="container">

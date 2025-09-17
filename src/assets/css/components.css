@@ -34,18 +34,46 @@
 ------------------------*/
 .about-img-shape {
     width: 100%;
-    height: 400px;
+    height: 100%;
     background-size: cover;
     background-position: center;
-    border-radius: 20px;
     position: relative;
     overflow: hidden;
 }
 
 .about-img-shape .carousel {
     height: 100%;
-    border-radius: 20px;
     overflow: hidden;
+}
+
+/* About Image Carousel Decoration */
+#aboutImageCarousel::before {
+    content: "";
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    background-color:#21759b;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+}
+
+#aboutImageCarousel::after {
+    content: "";
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    background-color:#21759b;
+    position: absolute;
+    z-index: -1;
+    right: 0;
+    bottom: 0;
+}
+
+#aboutImageCarousel {
+    padding: 10px;
+    position: relative;
 }
 
 .about-img-shape .carousel-inner {
@@ -54,6 +82,12 @@
 
 .about-img-shape .carousel-item {
     height: 100%;
+}
+
+/* About Description Text */
+.about-description {
+    font-size: 15px;
+    line-height: 20px;
 }
 
 .about-img-shape .carousel-item img {

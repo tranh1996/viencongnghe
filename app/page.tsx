@@ -159,7 +159,7 @@ export default function HomePage() {
   const bannerSlides = [
     {
       id: 1,
-      image: '/images/banner/01.jpg',
+      image: '/images/backgroudBanner.png',
       title: {
         vi: 'Giá trị trong từng hành động',
         en: 'VALUE IN EVERY ACTION'
@@ -276,8 +276,8 @@ export default function HomePage() {
     <>
       {/* Hero Section */}
       {bannerLoading ? (
-        <div className="banner-loading" style={{ 
-          height: '600px', 
+        <div className="banner-loading" style={{
+          height: '600px',
           background: '#f8f9fa',
           display: 'flex',
           alignItems: 'center',
@@ -291,14 +291,16 @@ export default function HomePage() {
         <BannerSlider slides={banners.length > 0 ? transformBanners(banners) : bannerSlides} />
       )}
 
+      <div style={{ maxWidth: '1170px', margin: '0 auto' }}>
+
       {/* About Section */}
-      <section className="light-bg" style={{ paddingTop: '140px' }}>
+      <section style={{ paddingTop: '140px' }}>
         <Container>
-          <Row className="align-items-center">
+          <Row>
             <Col lg={6} className="mb-4 mb-lg-0">
               {aboutLoading ? (
                 <div className="about-img-shape" style={{ 
-                  height: '400px', 
+                  height: '100%', 
                   background: '#f8f9fa',
                   display: 'flex',
                   alignItems: 'center',
@@ -319,9 +321,9 @@ export default function HomePage() {
                             alt={`${aboutOverview.title} - Image ${index + 1}`}
                             context="Trang chủ - Giới thiệu"
                             className="w-100 h-100"
-                            style={{ 
+                            style={{
                               objectFit: 'cover',
-                              height: '400px',
+                              height: '100%',
                               width: '100%'
                             }}
                           />
@@ -366,43 +368,56 @@ export default function HomePage() {
               )}
             </Col>
             <Col lg={6}>
-              <div className="ps-lg-5">
-                <h6 className="text-theme mb-3">{t('home.about.title')}</h6>
-                <h2 className="mb-4">
+              <div className="ps-lg-6">
+                <p className="text-theme">{t('home.about.title')}</p>
+                <span style={{ textTransform: 'uppercase', fontSize: '2.25rem', fontWeight: 700 }}>
                   {aboutOverview?.title || t('home.about.heading')}
-                </h2>
-                <p className="mb-4">
+                </span>
+                <div className="is-divider divider clearfix" style={{ maxWidth: '66px', backgroundColor: 'rgb(33, 117, 155)' }}></div>
+                <span className="mb-3 about-description">
                   {aboutOverview?.description || t('home.about.description')}
-                </p>
-                <div className="mt-4">
-                  <Link href="/about" className="themeht-btn primary-btn">
-                    {t('home.about.readMore')}
+                </span>
+                <div className="mt-1">
+                  <Link
+                    href="/about"
+                    className="themeht-btn primary-btn"
+                    style={{
+                      backgroundColor: 'white !important',
+                      color: '#FF9500 !important',
+                      borderColor: '#FF9500',
+                      textTransform: 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.setProperty('background-color', '#FF9500', 'important');
+                      e.currentTarget.style.setProperty('color', 'white', 'important');
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.setProperty('background-color', 'white', 'important');
+                      e.currentTarget.style.setProperty('color', '#FF9500', 'important');
+                    }}
+                  >
+                    <span>{t('home.about.readMore')}</span>
+                    <i className="bi bi-caret-right"></i>
                   </Link>
                 </div>
                 
                 {/* Video Section - Only show if videos are available */}
                 {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
                   <div className="mt-4">
-                    <h6 className="text-theme mb-3">{t('home.about.videos')}</h6>
-                    <h4 className="mb-4">{t('home.about.watchOurStory')}</h4>
                     <Row>
                       {aboutOverview.videos.map((video, index) => (
-                        <Col lg={12} className="mb-3" key={index}>
-                          <div className="video-container position-relative">
-                            <div className="ratio ratio-16x9">
-                              <iframe
-                                src={video.url}
-                                title={video.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded"
-                              ></iframe>
-                            </div>
-                            <div className="video-title mt-3">
-                              <h6 className="text-center">{video.title}</h6>
-                            </div>
-                          </div>
+                        <Col lg={12} key={index}>                    
+                          <div className="ratio ratio-16x9">
+                            <iframe
+                              src={video.url}
+                              title={video.title}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="rounded"
+                            ></iframe>
+                          </div>                                       
                         </Col>
                       ))}
                     </Row>
@@ -415,7 +430,7 @@ export default function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section className="services-section py-5">
+      <section className="services-section py-5" style={{ backgroundImage: 'url(/images/bg-left-bottom.webp)', backgroundPosition: 'left bottom', backgroundRepeat: 'no-repeat', width: '100vw', marginLeft: 'calc(-50vw + 50%)', paddingLeft: 'calc(50vw - 50%)', paddingRight: 'calc(50vw - 50%)' }}>
         <Container>
           <Row className="text-center mb-5">
             <Col lg={12}>
@@ -600,14 +615,14 @@ export default function HomePage() {
       </section>
 
       {/* News Section */}
-      <section className="light-bg py-5">
+      <section style={{ paddingTop: '30px', paddingBottom: '30px', backgroundPosition: 'left bottom', backgroundRepeat: 'no-repeat', width: '100vw', marginLeft: 'calc(-50vw + 50%)', paddingLeft: 'calc(50vw - 50%)', paddingRight: 'calc(50vw - 50%)' }}>
         <Container>
           {/* News Section Title */}
           <Row className="mb-5">
             <Col lg={12}>
               <div className="news-section-header">
                 <h2 className="news-section-title">
-                  {language === 'vi' ? 'TIN TỨC' : 'NEWS'}
+                  {language === 'vi' ? 'Tin tức' : 'News'}
                 </h2>
               </div>
             </Col>
@@ -697,50 +712,354 @@ export default function HomePage() {
           <Row className="mt-5">
             <Col lg={12}>
               <div className="activity-news-section">
-                <div className="section-header-tab mb-4">
-                  <h3 className="section-tab-title">
+                <div className="activity-header-container">
+                <div className="activity-header">
+                  <h3 className="activity-header-title">
                     {language === 'vi' ? 'TIN HOẠT ĐỘNG' : 'ACTIVITY NEWS'}
                   </h3>
                 </div>
-                <Row>
-                  {latestNews.length > 0 && (
-                    <>
-                      {latestNews.slice(0, 4).map((news, index) => (
-                        <Col lg={3} md={6} className="mb-4" key={`activity-${news.id}`}>
-                          <div className="activity-news-card">
-                            <Link href={`/blog/${news.slug}`} className="text-decoration-none">
-                              <div className="activity-card-inner">
-                                <div className="activity-card-image">
-                                  <OptimizedImage
-                                    src={news.image_url || "/images/blog/01.jpg"}
-                                    alt={news.title}
-                                    context="Tin hoạt động"
-                                    className="activity-img"
-                                  />
-                                </div>
-                                <div className="activity-card-content">
-                                  <h5 className="activity-title">
-                                    {truncateText(news.title, 60)}
-                                  </h5>
-                                  <div className="activity-meta">
-                                    <span className="activity-author">
-                                      <i className="bi bi-person-fill me-1"></i>
-                                      viencongnghe
-                                    </span>
-                                    <span className="activity-date">
-                                      <i className="bi bi-calendar3 me-1"></i>
-                                      {news.created_at ? formatDate(news.created_at) : '11/04/25'}
-                                    </span>
+                </div>              
+                <div className="activity-slider-container position-relative">
+                  <div className="activity-slider" id="activitySlider">
+                    <div className="activity-track" id="activityTrack">
+                      {/* Slide 1 */}
+                      <div className="activity-slide active">
+                        <div className="activity-cards-wrapper">
+                          {latestNews.length > 0 ? (
+                            latestNews.slice(0, 4).map((news, index) => (
+                              <div key={`activity-${news.id}`} className="activity-card">
+                                <Link href={`/blog/${news.slug}`} className="activity-card-link">
+                                  <div className="activity-card-image">
+                                    <OptimizedImage
+                                      src={news.image_url || "/images/blog/01.jpg"}
+                                      alt={news.title}
+                                      context="Tin hoạt động"
+                                      className="activity-img"
+                                    />
                                   </div>
+                                  <div className="activity-card-content">
+                                    <h4 className="activity-card-title">
+                                      {truncateText(news.title, 60)}
+                                    </h4>
+                                    <div className="activity-card-meta">
+                                      <span className="activity-card-author">
+                                        <i className="bi bi-person me-1"></i>
+                                        viencongnghe
+                                      </span>
+                                      <span className="activity-card-date">
+                                        <i className="bi bi-calendar3 me-1"></i>
+                                        {news.created_at ?
+                                          new Date(news.created_at).toLocaleDateString('vi-VN', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: '2-digit'
+                                          }) : '11/04/25'
+                                        }
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </div>
+                            ))
+                          ) : (
+                            <>
+                              <div className="activity-card">
+                                <Link href="/blog/bao-gia-may-trang-phuc-nhan-vien-2025" className="activity-card-link">
+                                  <div className="activity-card-image">
+                                    <OptimizedImage
+                                      src="/images/blog/01.jpg"
+                                      alt="Báo giá may trang phục nhân viên năm 2025"
+                                      context="Tin hoạt động"
+                                      className="activity-img"
+                                    />
+                                  </div>
+                                  <div className="activity-card-content">
+                                    <h4 className="activity-card-title">
+                                      Báo giá may trang phục nhân viên năm 2025
+                                    </h4>
+                                    <div className="activity-card-meta">
+                                      <span className="activity-card-author">
+                                        <i className="bi bi-person me-1"></i>
+                                        viencongnghe
+                                      </span>
+                                      <span className="activity-card-date">
+                                        <i className="bi bi-calendar3 me-1"></i>
+                                        11/04/25
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </div>
+                              <div className="activity-card">
+                                <Link href="/blog/hoat-dong-huong-toi-ky-niem-80-nam" className="activity-card-link">
+                                  <div className="activity-card-image">
+                                    <OptimizedImage
+                                      src="/images/blog/02.jpg"
+                                      alt="Hoạt động hướng tới kỷ niệm 80 năm"
+                                      context="Tin hoạt động"
+                                      className="activity-img"
+                                    />
+                                  </div>
+                                  <div className="activity-card-content">
+                                    <h4 className="activity-card-title">
+                                      Hoạt động hướng tới kỷ niệm 80 năm ngày thành lập Quân đội nhân dân Việt Nam
+                                    </h4>
+                                    <div className="activity-card-meta">
+                                      <span className="activity-card-author">
+                                        <i className="bi bi-person me-1"></i>
+                                        viencongnghe
+                                      </span>
+                                      <span className="activity-card-date">
+                                        <i className="bi bi-calendar3 me-1"></i>
+                                        20/12/24
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </div>
+                              <div className="activity-card">
+                                <Link href="/blog/vien-cong-nghe-trao-kinh-phi" className="activity-card-link">
+                                  <div className="activity-card-image">
+                                    <OptimizedImage
+                                      src="/images/blog/03.jpg"
+                                      alt="Viện công nghệ trao kinh phí hỗ trợ bão Yagi"
+                                      context="Tin hoạt động"
+                                      className="activity-img"
+                                    />
+                                  </div>
+                                  <div className="activity-card-content">
+                                    <h4 className="activity-card-title">
+                                      Viện công nghệ trao kinh phí hỗ trợ bão Yagi
+                                    </h4>
+                                    <div className="activity-card-meta">
+                                      <span className="activity-card-author">
+                                        <i className="bi bi-person me-1"></i>
+                                        viencongnghe
+                                      </span>
+                                      <span className="activity-card-date">
+                                        <i className="bi bi-calendar3 me-1"></i>
+                                        23/09/24
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </div>
+                              <div className="activity-card">
+                                <Link href="/blog/trien-lam-quoc-te-vimexpo-2022" className="activity-card-link">
+                                  <div className="activity-card-image">
+                                    <OptimizedImage
+                                      src="/images/blog/04.jpg"
+                                      alt="Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022"
+                                      context="Tin hoạt động"
+                                      className="activity-img"
+                                    />
+                                  </div>
+                                  <div className="activity-card-content">
+                                    <h4 className="activity-card-title">
+                                      Triển lãm Quốc tế về công nghiệp hỗ trợ VIMEXPO 2022
+                                    </h4>
+                                    <div className="activity-card-meta">
+                                      <span className="activity-card-author">
+                                        <i className="bi bi-person me-1"></i>
+                                        viencongnghe
+                                      </span>
+                                      <span className="activity-card-date">
+                                        <i className="bi bi-calendar3 me-1"></i>
+                                        21/11/22
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Slide 2 - Example second slide */}
+                      <div className="activity-slide">
+                        <div className="activity-cards-wrapper">
+                          <div className="activity-card">
+                            <Link href="/blog/sample-news-5" className="activity-card-link">
+                              <div className="activity-card-image">
+                                <OptimizedImage
+                                  src="/images/blog/05.jpg"
+                                  alt="Sample news 5"
+                                  context="Tin hoạt động"
+                                  className="activity-img"
+                                />
+                              </div>
+                              <div className="activity-card-content">
+                                <h4 className="activity-card-title">
+                                  Hội thảo khoa học công nghệ năm 2024
+                                </h4>
+                                <div className="activity-card-meta">
+                                  <span className="activity-card-author">
+                                    <i className="bi bi-person me-1"></i>
+                                    viencongnghe
+                                  </span>
+                                  <span className="activity-card-date">
+                                    <i className="bi bi-calendar3 me-1"></i>
+                                    15/08/24
+                                  </span>
                                 </div>
                               </div>
                             </Link>
                           </div>
-                        </Col>
-                      ))}
-                    </>
-                  )}
-                </Row>
+                          <div className="activity-card">
+                            <Link href="/blog/sample-news-6" className="activity-card-link">
+                              <div className="activity-card-image">
+                                <OptimizedImage
+                                  src="/images/blog/06.jpg"
+                                  alt="Sample news 6"
+                                  context="Tin hoạt động"
+                                  className="activity-img"
+                                />
+                              </div>
+                              <div className="activity-card-content">
+                                <h4 className="activity-card-title">
+                                  Chương trình đào tạo chuyên sâu
+                                </h4>
+                                <div className="activity-card-meta">
+                                  <span className="activity-card-author">
+                                    <i className="bi bi-person me-1"></i>
+                                    viencongnghe
+                                  </span>
+                                  <span className="activity-card-date">
+                                    <i className="bi bi-calendar3 me-1"></i>
+                                    10/07/24
+                                  </span>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                          <div className="activity-card">
+                            <Link href="/blog/sample-news-7" className="activity-card-link">
+                              <div className="activity-card-image">
+                                <OptimizedImage
+                                  src="/images/blog/07.jpg"
+                                  alt="Sample news 7"
+                                  context="Tin hoạt động"
+                                  className="activity-img"
+                                />
+                              </div>
+                              <div className="activity-card-content">
+                                <h4 className="activity-card-title">
+                                  Hợp tác quốc tế trong nghiên cứu
+                                </h4>
+                                <div className="activity-card-meta">
+                                  <span className="activity-card-author">
+                                    <i className="bi bi-person me-1"></i>
+                                    viencongnghe
+                                  </span>
+                                  <span className="activity-card-date">
+                                    <i className="bi bi-calendar3 me-1"></i>
+                                    05/06/24
+                                  </span>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                          <div className="activity-card">
+                            <Link href="/blog/sample-news-8" className="activity-card-link">
+                              <div className="activity-card-image">
+                                <OptimizedImage
+                                  src="/images/blog/08.jpg"
+                                  alt="Sample news 8"
+                                  context="Tin hoạt động"
+                                  className="activity-img"
+                                />
+                              </div>
+                              <div className="activity-card-content">
+                                <h4 className="activity-card-title">
+                                  Giải thưởng sáng tạo khoa học 2024
+                                </h4>
+                                <div className="activity-card-meta">
+                                  <span className="activity-card-author">
+                                    <i className="bi bi-person me-1"></i>
+                                    viencongnghe
+                                  </span>
+                                  <span className="activity-card-date">
+                                    <i className="bi bi-calendar3 me-1"></i>
+                                    20/05/24
+                                  </span>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Slider Navigation */}
+                  <div className="activity-slider-nav">
+                    <button className="news-nav-btn news-prev-btn" onClick={() => {
+                      const track = document.getElementById('activityTrack');
+                      const slides = track?.querySelectorAll('.activity-slide');
+                      const activeSlide = track?.querySelector('.activity-slide.active');
+                      if (slides && activeSlide) {
+                        const activeIndex = Array.from(slides).indexOf(activeSlide as Element);
+                        const prevIndex = activeIndex === 0 ? slides.length - 1 : activeIndex - 1;
+
+                        activeSlide.classList.remove('active');
+                        slides[prevIndex]?.classList.add('active');
+
+                        // Update indicators
+                        const indicators = document.querySelectorAll('.activity-indicator');
+                        indicators.forEach(indicator => indicator.classList.remove('active'));
+                        indicators[prevIndex]?.classList.add('active');
+                      }
+                    }}>
+                      <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <button className="news-nav-btn news-next-btn" onClick={() => {
+                      const track = document.getElementById('activityTrack');
+                      const slides = track?.querySelectorAll('.activity-slide');
+                      const activeSlide = track?.querySelector('.activity-slide.active');
+                      if (slides && activeSlide) {
+                        const activeIndex = Array.from(slides).indexOf(activeSlide as Element);
+                        const nextIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
+
+                        activeSlide.classList.remove('active');
+                        slides[nextIndex]?.classList.add('active');
+
+                        // Update indicators
+                        const indicators = document.querySelectorAll('.activity-indicator');
+                        indicators.forEach(indicator => indicator.classList.remove('active'));
+                        indicators[nextIndex]?.classList.add('active');
+                      }
+                    }}>
+                      <i className="bi bi-chevron-right"></i>
+                    </button>
+                  </div>
+
+                  {/* Slider Indicators */}
+                  <div className="activity-slider-indicators">
+                    <button className="activity-indicator active" onClick={() => {
+                      const track = document.getElementById('activityTrack');
+                      const slides = track?.querySelectorAll('.activity-slide');
+                      const indicators = document.querySelectorAll('.activity-indicator');
+
+                      slides?.forEach(slide => slide.classList.remove('active'));
+                      indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                      slides?.[0]?.classList.add('active');
+                      indicators[0]?.classList.add('active');
+                    }}></button>
+                    <button className="activity-indicator" onClick={() => {
+                      const track = document.getElementById('activityTrack');
+                      const slides = track?.querySelectorAll('.activity-slide');
+                      const indicators = document.querySelectorAll('.activity-indicator');
+
+                      slides?.forEach(slide => slide.classList.remove('active'));
+                      indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                      slides?.[1]?.classList.add('active');
+                      indicators[1]?.classList.add('active');
+                    }}></button>
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>
@@ -750,25 +1069,23 @@ export default function HomePage() {
             {/* Science & Technology News */}
             <Col lg={4} className="mb-4">
               <div className="news-category-section">
-                <div className="category-header-blue mb-4">
-                  <h4 className="category-title">
+                <div className="category-header-simple category-blue-container mb-3">
+                  <h4 className="category-title-simple category-blue">
                     {language === 'vi' ? 'TIN KHOA HỌC CÔNG NGHỆ' : 'SCIENCE & TECHNOLOGY NEWS'}
                   </h4>
                 </div>
                 <div className="category-list">
-                  <ul className="category-news-list">
+                  <ul className="simple-bullet-list">
                     <li>
-                      <Link href="/blog/khoa-hoc-cong-nghe" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/ky-hieu-mac-thep-theo-tieu-chuan-nhat-ban" className="simple-link">
                         {language === 'vi'
-                          ? 'Giới thiệu kỹ hiệu mác thép theo tiêu chuẩn Nhật Bản'
+                          ? 'Giới thiệu kí hiệu mác thép theo tiêu chuẩn Nhật Bản'
                           : 'Introduction to Japanese Steel Grade Standards'
                         }
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/khoa-hoc-cong-nghe" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/tieu-chuan-thu-keo-viet-nam" className="simple-link">
                         {language === 'vi'
                           ? 'Tiêu chuẩn thử kéo Việt Nam'
                           : 'Vietnam Tensile Testing Standards'
@@ -776,8 +1093,7 @@ export default function HomePage() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/khoa-hoc-cong-nghe" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/san-pham-tieu-bieu-vien-cong-nghe" className="simple-link">
                         {language === 'vi'
                           ? 'Sản phẩm tiêu biểu Viện Công Nghệ'
                           : 'Typical Products of Technology Institute'
@@ -792,16 +1108,15 @@ export default function HomePage() {
             {/* Training Activities */}
             <Col lg={4} className="mb-4">
               <div className="news-category-section">
-                <div className="category-header-orange mb-4">
-                  <h4 className="category-title">
+                <div className="category-header-simple category-orange-container mb-3">
+                  <h4 className="category-title-simple category-orange">
                     {language === 'vi' ? 'HOẠT ĐỘNG ĐÀO TẠO' : 'TRAINING ACTIVITIES'}
                   </h4>
                 </div>
                 <div className="category-list">
-                  <ul className="category-news-list">
+                  <ul className="simple-bullet-list">
                     <li>
-                      <Link href="/blog/dao-tao" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/chuong-trinh-huan-luyen-pccc-cnch-co-so-ii" className="simple-link">
                         {language === 'vi'
                           ? 'Chương trình huấn luyện nghiệp vụ thực tập phương án PCCC & CNCH tại Cơ sở II – Lô 27B, Khu CN Quang Minh, Mê Linh, Hà Nội.'
                           : 'Fire Safety & Emergency Training Program at Facility II – Lot 27B, Quang Minh Industrial Zone, Me Linh, Hanoi'
@@ -809,8 +1124,7 @@ export default function HomePage() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/dao-tao" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/huan-luyen-pccc-chcn-doi-pccc-vien-2022" className="simple-link">
                         {language === 'vi'
                           ? 'Huấn luyện Nghiệp vụ thực tập phương án PCCC&CHCN cho đội PCCC của viện năm 2022 tại toà nhà 25 Vũ Ngọc Phan'
                           : 'Fire Safety Training for Institute Fire Team 2022 at 25 Vu Ngoc Phan Building'
@@ -818,8 +1132,7 @@ export default function HomePage() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/dao-tao" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/chuong-trinh-huan-luyen-an-toan-ve-sinh-lao-dong-2022" className="simple-link">
                         {language === 'vi'
                           ? 'Chương trình huấn luyện an toàn vệ sinh lao động năm 2022'
                           : 'Occupational Health and Safety Training Program 2022'
@@ -834,16 +1147,15 @@ export default function HomePage() {
             {/* Professional Articles */}
             <Col lg={4} className="mb-4">
               <div className="news-category-section">
-                <div className="category-header-green mb-4">
-                  <h4 className="category-title">
+                <div className="category-header-simple category-green-container mb-3">
+                  <h4 className="category-title-simple category-green">
                     {language === 'vi' ? 'BÀI VIẾT CHUYÊN MÔN' : 'PROFESSIONAL ARTICLES'}
                   </h4>
                 </div>
                 <div className="category-list">
-                  <ul className="category-news-list">
+                  <ul className="simple-bullet-list">
                     <li>
-                      <Link href="/blog/chuyen-mon" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/chuyen-ke-ve-kim-loai-quyen-1" className="simple-link">
                         {language === 'vi'
                           ? 'Chuyện kể về Kim Loại Quyển 1'
                           : 'Stories about Metals Volume 1'
@@ -851,8 +1163,7 @@ export default function HomePage() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/chuyen-mon" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/chuyen-ke-ve-kim-loai-quyen-2" className="simple-link">
                         {language === 'vi'
                           ? 'Chuyện kể về Kim Loại Quyển 2'
                           : 'Stories about Metals Volume 2'
@@ -860,17 +1171,15 @@ export default function HomePage() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/chuyen-mon" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/ky-hieu-mac-thep-theo-tieu-chuan-nhat-ban" className="simple-link">
                         {language === 'vi'
-                          ? 'Giới thiệu kỹ hiệu mác thép theo tiêu chuẩn Nhật Bản'
+                          ? 'Giới thiệu kí hiệu mác thép theo tiêu chuẩn Nhật Bản'
                           : 'Introduction to Japanese Steel Grade Standards'
                         }
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/chuyen-mon" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/tieu-chuan-thu-keo-viet-nam" className="simple-link">
                         {language === 'vi'
                           ? 'Tiêu chuẩn thử kéo Việt Nam'
                           : 'Vietnam Tensile Testing Standards'
@@ -878,11 +1187,34 @@ export default function HomePage() {
                       </Link>
                     </li>
                     <li>
-                      <Link href="/blog/chuyen-mon" className="category-link">
-                        <i className="bi bi-dot"></i>
+                      <Link href="/blog/thiet-ke-lap-dat-chuyen-giao-nhiet-luyen" className="simple-link">
                         {language === 'vi'
                           ? 'Thiết kế, lắp đặt và chuyển giao trong lĩnh vực nhiệt luyện'
                           : 'Design, Installation and Transfer in Heat Treatment Field'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/anh-san-pham-duc-noi-bat-co-khi-me-linh" className="simple-link">
+                        {language === 'vi'
+                          ? 'Ảnh sản phẩm đúc nổi bật của cơ khí Mê Linh'
+                          : 'Outstanding Casting Products from Me Linh Mechanics'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/nguyen-ly-toi-phan-cap-lo-chan-khong" className="simple-link">
+                        {language === 'vi'
+                          ? 'Nguyên lý tôi phân cấp, tôi phân cấp trong lò chân không đơn buồng'
+                          : 'Principle of Vacuum Furnace Gradient Hardening'
+                        }
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/khao-sat-phan-tich-anh-huong-thong-so" className="simple-link">
+                        {language === 'vi'
+                          ? 'Khảo sát/phân tích ảnh hưởng của một số thông số công nghệ đến đặc tính lớp thấm N plasma thép SKD61 trên thiết bị NITRION'
+                          : 'Survey/Analysis of Technology Parameter Effects on N Plasma Penetration Layer Characteristics of SKD61 Steel on NITRION Equipment'
                         }
                       </Link>
                     </li>
@@ -908,144 +1240,147 @@ export default function HomePage() {
             </Col>
           </Row>
 
-          <Row>
-            <Col lg={12}>
-              <div className="activity-slider-wrapper position-relative">
-                <div className="activity-slider" id="activityImageSlider">
-                  <div className="activity-slides-container">
-                    <div className="activity-slide active">
-                      <Row className="activity-images-row">
-                        <Col lg={4} md={4} className="mb-3">
-                          <div className="activity-image-item">
-                            <OptimizedImage
-                              src="/images/activities/activity-1.jpg"
-                              alt={language === 'vi' ? 'Hoạt động đào tạo' : 'Training Activity'}
-                              context="Hình ảnh hoạt động"
-                              className="activity-img"
-                            />
-                          </div>
-                        </Col>
-                        <Col lg={4} md={4} className="mb-3">
-                          <div className="activity-image-item">
-                            <OptimizedImage
-                              src="/images/activities/activity-2.jpg"
-                              alt={language === 'vi' ? 'Lễ trao bằng khen' : 'Award Ceremony'}
-                              context="Hình ảnh hoạt động"
-                              className="activity-img"
-                            />
-                          </div>
-                        </Col>
-                        <Col lg={4} md={4} className="mb-3">
-                          <div className="activity-image-item">
-                            <OptimizedImage
-                              src="/images/activities/activity-3.jpg"
-                              alt={language === 'vi' ? 'Hội thảo an toàn' : 'Safety Workshop'}
-                              context="Hình ảnh hoạt động"
-                              className="activity-img"
-                            />
-                          </div>
-                        </Col>
-                      </Row>
+          {/* Activity Images Slider */}
+          <div className="activity-slider-wrapper position-relative">
+            <div className="activity-slider" id="activityImagesSlider">
+              <div className="activity-slide active">
+                <Row className="activity-images-row h-100">
+                  <Col lg={4} md={4} className="activity-image-item">
+                    <div className="activity-gallery-item h-100">
+                      <OptimizedImage
+                        src="/images/activities/event-outdoor.jpg"
+                        alt={language === 'vi' ? 'Sự kiện ngoài trời của viện' : 'Institute Outdoor Event'}
+                        context="Hình ảnh hoạt động"
+                        className="activity-gallery-img"
+                      />
                     </div>
-
-                    <div className="activity-slide">
-                      <Row className="activity-images-row">
-                        <Col lg={4} md={4} className="mb-3">
-                          <div className="activity-image-item">
-                            <OptimizedImage
-                              src="/images/activities/activity-4.jpg"
-                              alt={language === 'vi' ? 'Nghiên cứu khoa học' : 'Scientific Research'}
-                              context="Hình ảnh hoạt động"
-                              className="activity-img"
-                            />
-                          </div>
-                        </Col>
-                        <Col lg={4} md={4} className="mb-3">
-                          <div className="activity-image-item">
-                            <OptimizedImage
-                              src="/images/activities/activity-5.jpg"
-                              alt={language === 'vi' ? 'Thăm quan doanh nghiệp' : 'Enterprise Visit'}
-                              context="Hình ảnh hoạt động"
-                              className="activity-img"
-                            />
-                          </div>
-                        </Col>
-                        <Col lg={4} md={4} className="mb-3">
-                          <div className="activity-image-item">
-                            <OptimizedImage
-                              src="/images/activities/activity-6.jpg"
-                              alt={language === 'vi' ? 'Hợp tác quốc tế' : 'International Cooperation'}
-                              context="Hình ảnh hoạt động"
-                              className="activity-img"
-                            />
-                          </div>
-                        </Col>
-                      </Row>
+                  </Col>
+                  <Col lg={4} md={4} className="activity-image-item">
+                    <div className="activity-gallery-item h-100">
+                      <OptimizedImage
+                        src="/images/activities/official-ceremony.jpg"
+                        alt={language === 'vi' ? 'Lễ công bố quyết định của viện' : 'Official Announcement Ceremony'}
+                        context="Hình ảnh hoạt động"
+                        className="activity-gallery-img"
+                      />
                     </div>
-                  </div>
-                </div>
-
-                {/* Slider Navigation */}
-                <div className="activity-slider-nav">
-                  <button className="activity-nav-btn activity-prev-btn" onClick={() => {
-                    const slider = document.getElementById('activityImageSlider');
-                    const slides = slider?.querySelectorAll('.activity-slide');
-                    const activeSlide = slider?.querySelector('.activity-slide.active');
-                    const activeIndex = Array.from(slides || []).indexOf(activeSlide as Element);
-                    const prevIndex = activeIndex === 0 ? (slides?.length || 1) - 1 : activeIndex - 1;
-
-                    activeSlide?.classList.remove('active');
-                    slides?.[prevIndex]?.classList.add('active');
-                  }}>
-                    <i className="bi bi-chevron-left"></i>
-                  </button>
-                  <button className="activity-nav-btn activity-next-btn" onClick={() => {
-                    const slider = document.getElementById('activityImageSlider');
-                    const slides = slider?.querySelectorAll('.activity-slide');
-                    const activeSlide = slider?.querySelector('.activity-slide.active');
-                    const activeIndex = Array.from(slides || []).indexOf(activeSlide as Element);
-                    const nextIndex = activeIndex === (slides?.length || 1) - 1 ? 0 : activeIndex + 1;
-
-                    activeSlide?.classList.remove('active');
-                    slides?.[nextIndex]?.classList.add('active');
-                  }}>
-                    <i className="bi bi-chevron-right"></i>
-                  </button>
-                </div>
-
-                {/* Slider Indicators */}
-                <div className="activity-slider-indicators">
-                  <button className="activity-indicator active" onClick={() => {
-                    const slider = document.getElementById('activityImageSlider');
-                    const slides = slider?.querySelectorAll('.activity-slide');
-                    const indicators = document.querySelectorAll('.activity-indicator');
-
-                    slides?.forEach(slide => slide.classList.remove('active'));
-                    indicators.forEach(indicator => indicator.classList.remove('active'));
-
-                    slides?.[0]?.classList.add('active');
-                    indicators[0]?.classList.add('active');
-                  }}></button>
-                  <button className="activity-indicator" onClick={() => {
-                    const slider = document.getElementById('activityImageSlider');
-                    const slides = slider?.querySelectorAll('.activity-slide');
-                    const indicators = document.querySelectorAll('.activity-indicator');
-
-                    slides?.forEach(slide => slide.classList.remove('active'));
-                    indicators.forEach(indicator => indicator.classList.remove('active'));
-
-                    slides?.[1]?.classList.add('active');
-                    indicators[1]?.classList.add('active');
-                  }}></button>
-                </div>
+                  </Col>
+                  <Col lg={4} md={4} className="activity-image-item">
+                    <div className="activity-gallery-item h-100">
+                      <OptimizedImage
+                        src="/images/activities/training-session.jpg"
+                        alt={language === 'vi' ? 'Buổi đào tạo và hội thảo' : 'Training and Workshop Session'}
+                        context="Hình ảnh hoạt động"
+                        className="activity-gallery-img"
+                      />
+                    </div>
+                  </Col>
+                </Row>
               </div>
-            </Col>
-          </Row>
+
+              <div className="activity-slide">
+                <Row className="activity-images-row h-100">
+                  <Col lg={4} md={4} className="activity-image-item">
+                    <div className="activity-gallery-item h-100">
+                      <OptimizedImage
+                        src="/images/activities/conference.jpg"
+                        alt={language === 'vi' ? 'Hội nghị khoa học' : 'Scientific Conference'}
+                        context="Hình ảnh hoạt động"
+                        className="activity-gallery-img"
+                      />
+                    </div>
+                  </Col>
+                  <Col lg={4} md={4} className="activity-image-item">
+                    <div className="activity-gallery-item h-100">
+                      <OptimizedImage
+                        src="/images/activities/laboratory.jpg"
+                        alt={language === 'vi' ? 'Hoạt động phòng thí nghiệm' : 'Laboratory Activities'}
+                        context="Hình ảnh hoạt động"
+                        className="activity-gallery-img"
+                      />
+                    </div>
+                  </Col>
+                  <Col lg={4} md={4} className="activity-image-item">
+                    <div className="activity-gallery-item h-100">
+                      <OptimizedImage
+                        src="/images/activities/workshop.jpg"
+                        alt={language === 'vi' ? 'Hội thảo chuyên môn' : 'Professional Workshop'}
+                        context="Hình ảnh hoạt động"
+                        className="activity-gallery-img"
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <button
+              className="activity-nav-btn activity-prev"
+              onClick={() => {
+                const slider = document.getElementById('activityImagesSlider');
+                const slides = slider?.querySelectorAll('.activity-slide');
+                const activeSlide = slider?.querySelector('.activity-slide.active');
+                if (slides && activeSlide) {
+                  const currentIndex = Array.from(slides).indexOf(activeSlide);
+                  const prevIndex = currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
+                  activeSlide.classList.remove('active');
+                  slides[prevIndex].classList.add('active');
+                }
+              }}
+            >
+              <i className="bi bi-chevron-left"></i>
+            </button>
+            <button
+              className="activity-nav-btn activity-next"
+              onClick={() => {
+                const slider = document.getElementById('activityImagesSlider');
+                const slides = slider?.querySelectorAll('.activity-slide');
+                const activeSlide = slider?.querySelector('.activity-slide.active');
+                if (slides && activeSlide) {
+                  const currentIndex = Array.from(slides).indexOf(activeSlide);
+                  const nextIndex = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+                  activeSlide.classList.remove('active');
+                  slides[nextIndex].classList.add('active');
+                }
+              }}
+            >
+              <i className="bi bi-chevron-right"></i>
+            </button>
+
+            {/* Indicators */}
+            <div className="activity-slider-indicators">
+              <button
+                className="activity-indicator active"
+                onClick={() => {
+                  const slider = document.getElementById('activityImagesSlider');
+                  const slides = slider?.querySelectorAll('.activity-slide');
+                  const indicators = document.querySelectorAll('.activity-indicator');
+                  slides?.forEach(slide => slide.classList.remove('active'));
+                  indicators.forEach(indicator => indicator.classList.remove('active'));
+                  slides?.[0]?.classList.add('active');
+                  indicators[0]?.classList.add('active');
+                }}
+              ></button>
+              <button
+                className="activity-indicator"
+                onClick={() => {
+                  const slider = document.getElementById('activityImagesSlider');
+                  const slides = slider?.querySelectorAll('.activity-slide');
+                  const indicators = document.querySelectorAll('.activity-indicator');
+                  slides?.forEach(slide => slide.classList.remove('active'));
+                  indicators.forEach(indicator => indicator.classList.remove('active'));
+                  slides?.[1]?.classList.add('active');
+                  indicators[1]?.classList.add('active');
+                }}
+              ></button>
+            </div>
+          </div>
         </Container>
       </section>
 
       {/* Products & Services Section */}
-      <section className="products-services-section py-5">
+      <section className="products-services-section" style={{ backgroundImage: 'url(/images/bg-left-bottom.webp)', backgroundPosition: 'left bottom', backgroundRepeat: 'no-repeat', width: '100vw', marginLeft: 'calc(-50vw + 50%)', paddingLeft: 'calc(50vw - 50%)', paddingRight: 'calc(50vw - 50%)', paddingTop: '30px', paddingBottom: '30px' }}>
         <Container>
           <Row className="text-center mb-5">
             <Col lg={12}>
@@ -1249,7 +1584,7 @@ export default function HomePage() {
       </section>
 
       {/* Customers & Partners Section */}
-      <section className="partners-section py-5">
+      <section className="partners-section" style={{ paddingTop: '30px', paddingBottom: '30px', backgroundImage: 'url(/images/Group-1660.webp)', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', width: '100vw', marginLeft: 'calc(-50vw + 50%)', paddingLeft: 'calc(50vw - 50%)', paddingRight: 'calc(50vw - 50%)' }}>
         <Container>
           <Row className="text-center mb-5">
             <Col lg={12}>
@@ -1261,6 +1596,9 @@ export default function HomePage() {
               </h2>
             </Col>
           </Row>
+
+          {/* Gap spacing like original website */}
+          <div style={{ paddingTop: '30px' }}></div>
 
           <Row>
             <Col lg={12}>
@@ -1415,38 +1753,13 @@ export default function HomePage() {
                     <i className="bi bi-chevron-right"></i>
                   </button>
                 </div>
-
-                {/* Slider Indicators */}
-                <div className="partners-slider-indicators">
-                  <button className="partners-indicator active" onClick={() => {
-                    const track = document.getElementById('partnersTrack');
-                    const slides = track?.querySelectorAll('.partner-slide');
-                    const indicators = document.querySelectorAll('.partners-indicator');
-
-                    slides?.forEach(slide => slide.classList.remove('active'));
-                    indicators.forEach(indicator => indicator.classList.remove('active'));
-
-                    slides?.[0]?.classList.add('active');
-                    indicators[0]?.classList.add('active');
-                  }}></button>
-                  <button className="partners-indicator" onClick={() => {
-                    const track = document.getElementById('partnersTrack');
-                    const slides = track?.querySelectorAll('.partner-slide');
-                    const indicators = document.querySelectorAll('.partners-indicator');
-
-                    slides?.forEach(slide => slide.classList.remove('active'));
-                    indicators.forEach(indicator => indicator.classList.remove('active'));
-
-                    slides?.[1]?.classList.add('active');
-                    indicators[1]?.classList.add('active');
-                  }}></button>
-                </div>
               </div>
             </Col>
           </Row>
 
         </Container>
       </section>
+      </div>
     </>
   );
 }

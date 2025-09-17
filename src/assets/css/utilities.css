@@ -24,7 +24,7 @@
 }
 
 .font-medium {
-    font-weight: 500 !important;
+    font-weight: 400 !important;
 }
 
 .font-semibold {
@@ -573,4 +573,12 @@
 
 .animation-duration-slow {
     animation-duration: 1s;
+}
+
+/* Divider */
+.is-divider {
+    display: block;
+    height: 3px;
+    margin: 1em 0;
+    width: 100%;
 }

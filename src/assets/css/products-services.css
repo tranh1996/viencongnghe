@@ -10,6 +10,7 @@
 .products-slider-wrapper {
     margin: 0 auto;
     padding: 0 60px;
+    position: relative;
 }
 
 .products-slider {
@@ -44,7 +45,7 @@
 .products-services-section .section-subtitle {
     font-size: 0.9rem;
     color: #666;
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
 }
@@ -119,9 +120,9 @@
 
 .category-tag {
     background: #e3f2fd;
-    color: #1976d2;
+    color: #21759b;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 0.25rem 0.75rem;
@@ -158,13 +159,13 @@
 
 /* Product Button */
 .product-btn {
-    background: #1976d2;
+    background: #21759b;
     color: white;
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
     transition: all 0.3s ease;
     align-self: flex-start;
@@ -172,7 +173,7 @@
 }
 
 .product-btn:hover {
-    background: #1565c0;
+    background: #1e6a87;
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
@@ -182,12 +183,12 @@
 /* View All Products Button */
 .view-all-products-btn {
     background: transparent;
-    color: #1976d2;
-    border: 2px solid #1976d2;
+    color: #21759b;
+    border: 2px solid #21759b;
     padding: 0.75rem 2rem;
     border-radius: 25px;
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 400;
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -197,11 +198,11 @@
 }
 
 .view-all-products-btn:hover {
-    background: #1976d2;
+    background: #21759b;
     color: white;
     text-decoration: none;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+    box-shadow: 0 6px 20px rgba(33, 117, 155, 0.3);
 }
 
 .view-all-products-btn i {
@@ -221,6 +222,7 @@
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 10;
+    height: 0;
 }
 
 .products-nav-btn {

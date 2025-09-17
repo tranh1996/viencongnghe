@@ -9,13 +9,13 @@ const supportedLanguages = [
   {
     code: 'vi' as const,
     name: 'Tiếng Việt',
-    flag: '🇻🇳',
+    icon: 'bi-globe',
     direction: 'ltr'
   },
   {
     code: 'en' as const,
     name: 'English',
-    flag: '🇺🇸',
+    icon: 'bi-globe2',
     direction: 'ltr'
   }
 ];
@@ -45,7 +45,7 @@ export default function LanguageSwitcher({ onLanguageChange }: LanguageSwitcherP
       id="language-switcher"
       title={
         <span>
-          {currentLanguage?.flag} {currentLanguage?.name}
+          <i className={currentLanguage?.icon}></i> {currentLanguage?.name}
         </span>
       }
       variant="outline-light"
@@ -58,7 +58,7 @@ export default function LanguageSwitcher({ onLanguageChange }: LanguageSwitcherP
           onClick={() => handleLanguageChange(lang.code)}
           active={lang.code === language}
         >
-          <span className="me-2">{lang.flag}</span>
+          <i className={`${lang.icon} me-2`}></i>
           {lang.name}
         </Dropdown.Item>
       ))}
