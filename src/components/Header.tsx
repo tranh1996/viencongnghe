@@ -209,17 +209,24 @@ const Header: React.FC = () => {
           <div className="row align-items-center">
             <div className="col-lg-6">
               {/* Logo */}
-              <Link href="/" className="logo">
+              <Link href="/" className="logo d-flex align-items-center">
                 <img
                   className="img-fluid"
-                  src="/images/logo.svg"
+                  src="/images/logo.png"
                   alt="Viện Công nghệ"
                   style={{ maxHeight: '60px' }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/logo.png';
-                  }}
                 />
+                <div className="logo-text ms-3">
+                  <div className="logo-title fw-bold" style={{ fontSize: '1.25rem', color: '#333' }}>
+                    VIỆN CÔNG NGHỆ
+                  </div>
+                  <div className="logo-subtitle d-none d-sm-block" style={{ fontSize: '0.5rem', color: '#6c757d' }}>
+                   INSTITUTE OF TECHNOLOGY
+                  </div>
+                  <div className="logo-subtitle d-block d-sm-none" style={{ fontSize: '0.75rem', color: '#6c757d' }}>
+                   INSTITUTE OF TECHNOLOGY
+                  </div>
+                </div>
               </Link>
             </div>
             <div className="col-lg-6 d-flex align-items-center justify-content-end gap-3">
