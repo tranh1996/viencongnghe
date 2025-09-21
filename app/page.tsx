@@ -402,12 +402,30 @@ export default function HomePage() {
                   </Link>
                 </div>
                 
-                {/* Video Section - Only show if videos are available */}
-                {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
+                {/* Video Section - Company Introduction */}
+                <div className="mt-4">
+                  <Row>
+                    <Col lg={12}>
+                      <div className="ratio ratio-16x9">
+                        <iframe
+                          src="https://www.youtube.com/embed/Nibr16c3AOI"
+                          title="Giới thiệu Viện Công nghệ RITM"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="rounded"
+                        ></iframe>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+
+                {/* Additional Videos from API - Only show if videos are available */}
+                {/* {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
                   <div className="mt-4">
                     <Row>
                       {aboutOverview.videos.map((video, index) => (
-                        <Col lg={12} key={index}>                    
+                        <Col lg={12} key={index}>
                           <div className="ratio ratio-16x9">
                             <iframe
                               src={video.url}
@@ -417,12 +435,12 @@ export default function HomePage() {
                               allowFullScreen
                               className="rounded"
                             ></iframe>
-                          </div>                                       
+                          </div>
                         </Col>
                       ))}
                     </Row>
                   </div>
-                )}
+                )} */}
               </div>
             </Col>
           </Row>
