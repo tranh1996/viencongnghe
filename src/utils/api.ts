@@ -330,6 +330,27 @@ export interface PartnersApiResponse {
   data: Partner[];
 }
 
+export interface AlbumImage {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+  thumbnail_url: string;
+}
+
+export interface AlbumData {
+  album_title: string;
+  album_description: string;
+  images: AlbumImage[];
+}
+
+export interface AlbumImagesApiResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: AlbumData;
+}
+
 const API_BASE_URL = api.baseUrl;
 
 export const fetchDepartments = async (language: string, signal?: AbortSignal): Promise<Department[]> => {
@@ -900,6 +921,7 @@ export const searchProducts = async (
 };
 
 export const fetchBanners = async (
+  language: string = 'vi',
   type: string = 'header',
   active: number = 1,
   signal?: AbortSignal
@@ -909,6 +931,7 @@ export const fetchBanners = async (
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
         'Content-Type': 'application/json',
       },
       signal,
@@ -986,12 +1009,113 @@ export const searchPosts = async (
   }
 };
 
-export const fetchCompanyInfo = async (signal?: AbortSignal): Promise<CompanyInfo> => {
+export interface ContactSettings {
+  company_info: {
+    company_name: string;
+    company_subtitle: string;
+    address_main: string;
+    address_branch: string;
+    email: string;
+    phone: string;
+    fax: string;
+    website: string;
+    tax_code: string;
+    business_license: string;
+  };
+  social_media: {
+    facebook_link: string;
+    instagram_link: string;
+    linkedin_link: string;
+  };
+  map_settings: {
+    google_map_embed: string;
+  };
+}
+
+export interface ContactSettingsApiResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: ContactSettings;
+}
+
+// Cache utility for contact settings
+const CONTACT_SETTINGS_CACHE_KEY = 'contactSettings';
+const CACHE_EXPIRY_TIME = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+interface CachedContactSettings {
+  data: ContactSettings;
+  timestamp: number;
+  language: string;
+}
+
+// Cached version of fetchContactSettings
+export const fetchContactSettingsCached = async (language: string = 'vi', signal?: AbortSignal): Promise<ContactSettings> => {
+  // Check if running in browser environment
+  if (typeof window === 'undefined') {
+    // Server-side: always fetch from API
+    return fetchContactSettings(language, signal);
+  }
+
+  const cacheKey = `${CONTACT_SETTINGS_CACHE_KEY}_${language}`;
+
   try {
-    const response = await fetch(`${API_BASE_URL}/contact-settings/company-info`, {
+    // Try to get from cache first
+    const cachedData = localStorage.getItem(cacheKey);
+    if (cachedData) {
+      const parsed: CachedContactSettings = JSON.parse(cachedData);
+      const now = Date.now();
+
+      // Check if cache is still valid (not expired)
+      if (now - parsed.timestamp < CACHE_EXPIRY_TIME && parsed.language === language) {
+        return parsed.data;
+      }
+    }
+  } catch (error) {
+    console.warn('Error reading from localStorage cache:', error);
+  }
+
+  // Cache miss or expired - fetch from API
+  try {
+    const data = await fetchContactSettings(language, signal);
+
+    // Store in cache
+    try {
+      const cacheData: CachedContactSettings = {
+        data,
+        timestamp: Date.now(),
+        language
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      console.warn('Error storing to localStorage cache:', error);
+    }
+
+    return data;
+  } catch (error) {
+    // If API fails, try to return stale cache data as fallback
+    try {
+      const cachedData = localStorage.getItem(cacheKey);
+      if (cachedData) {
+        const parsed: CachedContactSettings = JSON.parse(cachedData);
+        console.warn('API failed, using stale cache data');
+        return parsed.data;
+      }
+    } catch (cacheError) {
+      console.warn('Error reading fallback cache:', cacheError);
+    }
+
+    throw error;
+  }
+};
+
+export const fetchContactSettings = async (language: string = 'vi', signal?: AbortSignal): Promise<ContactSettings> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/contact-settings`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
         'Content-Type': 'application/json',
       },
       signal,
@@ -1001,28 +1125,29 @@ export const fetchCompanyInfo = async (signal?: AbortSignal): Promise<CompanyInf
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: CompanyInfoApiResponse = await response.json();
+    const data: ContactSettingsApiResponse = await response.json();
 
     if (data.success) {
       return data.data;
     } else {
-      throw new Error(data.message || 'Failed to fetch company info');
+      throw new Error(data.message || 'Failed to fetch contact settings');
     }
   } catch (error) {
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {
-      console.error('Error fetching company info:', error);
+      console.error('Error fetching contact settings:', error);
     }
     throw error;
   }
 };
 
-export const fetchPartners = async (signal?: AbortSignal): Promise<Partner[]> => {
+export const fetchPartners = async (language: string = 'vi', signal?: AbortSignal): Promise<Partner[]> => {
   try {
     const response = await fetch(`${API_BASE_URL}/partners`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
         'Content-Type': 'application/json',
       },
       signal,
@@ -1044,6 +1169,38 @@ export const fetchPartners = async (signal?: AbortSignal): Promise<Partner[]> =>
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {
       console.error('Error fetching partners:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchAlbumImages = async (language: string = 'vi', signal?: AbortSignal): Promise<AlbumData> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/albums/images`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': language === 'vi' ? 'vi' : 'en',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: AlbumImagesApiResponse = await response.json();
+
+    if (data.success) {
+      return data.data;
+    } else {
+      throw new Error(data.message || 'Failed to fetch album images');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching album images:', error);
     }
     throw error;
   }

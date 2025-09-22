@@ -55,7 +55,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
       }}></div>
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
         <div className="row">
-          <div className="col-lg-6">
+          <div>
             <h1 style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
               {title[language]}
             </h1>

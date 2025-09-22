@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Badge, Button, Spinner, Alert } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import { Department, fetchDepartmentBySlug, fetchDepartments } from '../utils/api';
+import { Department, fetchDepartmentBySlug, fetchDepartments, fetchContactSettingsCached, ContactSettings } from '../utils/api';
 import OptimizedImage from './OptimizedImage';
 import { useLanguage } from '../contexts/LanguageContext';
 import Breadcrumb from './Breadcrumb';
@@ -17,6 +17,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
   const router = useRouter();
   const [department, setDepartment] = useState<Department | null>(null);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [contactSettings, setContactSettings] = useState<ContactSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [departmentsLoading, setDepartmentsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,6 +64,43 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
     fetchAllDepartments();
   }, [language]);
 
+  // Fetch contact settings
+  useEffect(() => {
+    const loadContactSettings = async () => {
+      try {
+        const contactData = await fetchContactSettingsCached(language);
+        setContactSettings(contactData);
+      } catch (error) {
+        console.error('Error fetching contact settings:', error);
+        // Set fallback data if API fails
+        setContactSettings({
+          company_info: {
+            company_name: "VIỆN CÔNG NGHỆ",
+            company_subtitle: "Institute of Technology",
+            address_main: "Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội",
+            address_branch: "Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội",
+            email: "viencongnghe@ritm.vn",
+            phone: "+84 243 776 3322",
+            fax: "+84 243 835 9235",
+            website: "www.viencongnghe.vn",
+            tax_code: "",
+            business_license: ""
+          },
+          social_media: {
+            facebook_link: "",
+            instagram_link: "",
+            linkedin_link: ""
+          },
+          map_settings: {
+            google_map_embed: ""
+          }
+        });
+      }
+    };
+
+    loadContactSettings();
+  }, [language]);
+
   // Loading state
   if (loading) {
     return (
@@ -89,11 +127,11 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
 
   const breadcrumbItems = [
     {
-      label: { vi: 'Trang chủ', en: 'Home' },
+      label: { vi: t('nav.home'), en: t('nav.home') },
       href: '/'
     },
     {
-      label: { vi: 'Cơ cấu tổ chức', en: 'Organization' },
+      label: { vi: t('nav.organization'), en: t('nav.organization') },
       href: '/organization'
     },
     {
@@ -119,13 +157,13 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                 className="widget widget-categories"
                 style={{
                   boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                  padding: '30px',
+                  padding: '10px',
                   borderRadius: '24px',
                   marginBottom: '50px',
                   background: 'var(--themeht-white-color)'
                 }}
               >
-                <h4 className="widget-title mb-3 fw-bold">CƠ CẤU TỔ CHỨC</h4>
+                <h4 className="widget-title mb-3 fw-bold">{t('organization.title')}</h4>
                 {departmentsLoading ? (
                   <div className="text-center py-3">
                     <Spinner animation="border" size="sm" />
@@ -183,31 +221,31 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
               <div className="mt-4">
                 <a href="/library" className="text-decoration-none">
                   <div className="page-title dark-bg text-white p-3 mb-3">
-                    <h6 className="mb-0 text-white">Thư viện</h6>
+                    <h6 className="mb-0 text-white">{t('nav.library')}</h6>
                   </div>
                 </a>
-                
+
                 <div className="row g-2">
                   <div className="col-6">
                     <div className="text-center">
-                      <img 
-                        src="/images/product/01.jpg" 
-                        alt="Hình ảnh hoạt động"
+                      <img
+                        src="/images/product/01.jpg"
+                        alt={t('library.activityImages')}
                         className="img-fluid rounded mb-2"
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                       />
-                      <div className="small">Hình ảnh hoạt động</div>
+                      <div className="small">{t('library.activityImages')}</div>
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="text-center">
-                      <img 
-                        src="/images/product/02.jpg" 
-                        alt="Sản phẩm & Dịch vụ"
+                      <img
+                        src="/images/product/02.jpg"
+                        alt={t('library.productsServices')}
                         className="img-fluid rounded mb-2"
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                       />
-                      <div className="small">Sản phẩm & Dịch vụ</div>
+                      <div className="small">{t('library.productsServices')}</div>
                     </div>
                   </div>
                 </div>
@@ -216,21 +254,10 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
 
             {/* Right Main Content */}
             <Col lg={9} md={8}>
+              <div className="bg-white border rounded p-4 shadow-sm h-100">
               {/* Department Header with Contact Button */}
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="mb-0">{department.name}</h2>
-                <Button 
-                  variant="primary" 
-                  href="/contact" 
-                  className="px-4 py-2" 
-                  style={{ 
-                    minWidth: '120px',
-                    backgroundColor: '#1253be',
-                    borderColor: '#1253be'
-                  }}
-                >
-                  Liên h
-                </Button>
+                <h4 className="mb-0 fw-bold text-uppercase">{department.name}</h4>
               </div>
 
               {/* Department Image */}
@@ -302,57 +329,52 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                   </Col>
                 </Row>
               </div>
+              </div>
             </Col>
           </Row>
         </Container>
       </section>
-
-            {/* Footer Contact Information */}
+      {/* Footer Contact Information */}
       <section className="py-4">
         <Container>
           <Row>
             <Col lg={3} md={4}></Col>
             <Col lg={9} md={8}>
               <div className="bg-white border rounded p-4 shadow-sm">
-                <h5 className="mb-3 fw-bold">Thông tin liên hệ</h5>
-                <Row>
-                  <Col md={6} lg={3}>
-                    <div className="d-flex align-items-start mb-3">
-                      <i className="bi bi-geo-alt text-primary me-3 mt-1"></i>
-                      <div>
-                        <strong>Địa chỉ:</strong><br />
-                        <span className="text-muted">Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội</span>
-                      </div>
+                <h5 className="mb-3 fw-bold">{t('contact.info.title')}</h5>
+                <div>
+                  <div className="d-flex align-items-start mb-3">
+                    <i className="bi bi-geo-alt text-primary me-3 mt-1"></i>
+                    <div>
+                      <strong>{t('contact.info.address')}:</strong>
+                      <span className="text-muted ms-2">{contactSettings?.company_info.address_main || 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}</span>
                     </div>
-                  </Col>
-                  <Col md={6} lg={3}>
-                    <div className="d-flex align-items-start mb-3">
-                      <i className="bi bi-envelope text-primary me-3 mt-1"></i>
-                      <div>
-                        <strong>Email:</strong><br />
-                        <span className="text-muted">viencongnghe@ritm.vn</span>
-                      </div>
+                  </div>
+
+                  <div className="d-flex align-items-start mb-3">
+                    <i className="bi bi-envelope text-primary me-3 mt-1"></i>
+                    <div>
+                      <strong>{t('contact.info.email')}:</strong>
+                      <span className="text-muted ms-2">{contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}</span>
                     </div>
-                  </Col>
-                  <Col md={6} lg={3}>
-                    <div className="d-flex align-items-start mb-3">
-                      <i className="bi bi-telephone text-primary me-3 mt-1"></i>
-                      <div>
-                        <strong>Điện thoại:</strong><br />
-                        <span className="text-muted">+84 243 776 3322</span>
-                      </div>
+                  </div>
+
+                  <div className="d-flex align-items-start mb-3">
+                    <i className="bi bi-telephone text-primary me-3 mt-1"></i>
+                    <div>
+                      <strong>{t('contact.info.phone')}:</strong>
+                      <span className="text-muted ms-2">{contactSettings?.company_info.phone || '+84 243 776 3322'}</span>
                     </div>
-                  </Col>
-                  <Col md={6} lg={3}>
-                    <div className="d-flex align-items-start mb-3">
-                      <i className="bi bi-printer text-primary me-3 mt-1"></i>
-                      <div>
-                        <strong>Fax:</strong><br />
-                        <span className="text-muted">+84 243 835 9235</span>
-                      </div>
+                  </div>
+
+                  <div className="d-flex align-items-start mb-0">
+                    <i className="bi bi-printer text-primary me-3 mt-1"></i>
+                    <div>
+                      <strong>{t('contact.info.fax')}:</strong>
+                      <span className="text-muted ms-2">{contactSettings?.company_info.fax || '+84 243 835 9235'}</span>
                     </div>
-                  </Col>
-                </Row>
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { fetchCompanyInfo, CompanyInfo } from '@/utils/api';
+import { fetchContactSettingsCached, ContactSettings } from '@/utils/api';
 
 // Footer Widget Component
 interface FooterWidgetProps {
@@ -69,33 +69,45 @@ const SocialIcons: React.FC = () => (
 
 // Contact Info Component
 const ContactInfo: React.FC = () => {
-  const { t } = useLanguage();
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const { t, language } = useLanguage();
+  const [contactSettings, setContactSettings] = useState<ContactSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
 
-    const loadCompanyInfo = async () => {
+    const loadContactSettings = async () => {
       try {
-        const data = await fetchCompanyInfo(controller.signal);
-        console.log(111111111111111, fetchCompanyInfo)
+        const data = await fetchContactSettingsCached(language, controller.signal);
         if (isMounted) {
-          setCompanyInfo(data);
+          setContactSettings(data);
         }
       } catch (error) {
         if (isMounted && !(error instanceof Error && error.name === 'AbortError')) {
-          console.error('Error loading company info:', error);
+          console.error('Error loading contact settings:', error);
           // Fallback to default data if API fails
-          setCompanyInfo({
-            company_name: "INSTITUTE OF TECHNOLOGY",
-            company_subtitle: "Institute of Technology",
-            address_main: "Head Office: 8-story building, 25 Vu Ngoc Phan, Hanoi",
-            address_branch: "Branch 2: Lot 27B, Quang Minh Industrial Park, Me Linh, Hanoi",
-            email: "viencongnghe@ritm.vn",
-            phone: "+84 243 776 3322",
-            fax: "+84 243 835 9235"
+          setContactSettings({
+            company_info: {
+              company_name: "INSTITUTE OF TECHNOLOGY",
+              company_subtitle: "Institute of Technology",
+              address_main: "Head Office: 8-story building, 25 Vu Ngoc Phan, Hanoi",
+              address_branch: "Lot 27B, Quang Minh Industrial Park, Me Linh, Hanoi",
+              email: "viencongnghe@ritm.vn",
+              phone: "+84 243 776 3322",
+              fax: "+84 243 835 9235",
+              website: "www.viencongnghe.vn",
+              tax_code: "",
+              business_license: ""
+            },
+            social_media: {
+              facebook_link: "",
+              instagram_link: "",
+              linkedin_link: ""
+            },
+            map_settings: {
+              google_map_embed: ""
+            }
           });
         }
       } finally {
@@ -105,13 +117,13 @@ const ContactInfo: React.FC = () => {
       }
     };
 
-    loadCompanyInfo();
+    loadContactSettings();
 
     return () => {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [language]);
 
   if (loading) {
     return (
@@ -128,19 +140,14 @@ const ContactInfo: React.FC = () => {
       <li>
         <i className="bi bi-geo-alt-fill"></i>
         <span>{t('contact.info.mainOffice')}</span>
-        <p>{companyInfo?.address_main || 'Head Office: 8-story building, 25 Vu Ngoc Phan, Hanoi'}</p>
-      </li>
-      <li>
-        <i className="bi bi-geo-alt-fill"></i>
-        <span>{t('contact.info.branchOffice')}</span>
-        <p>{companyInfo?.address_branch || 'Branch 2: Lot 27B, Quang Minh Industrial Park, Me Linh, Hanoi'}</p>
+        <p>{contactSettings?.company_info.address_main || 'Head Office: 8-story building, 25 Vu Ngoc Phan, Hanoi'}</p>
       </li>
       <li>
         <i className="bi bi-telephone-fill"></i>
         <span>{t('contact.info.phone')}</span>
         <p>
-          <a href={`tel:${companyInfo?.phone?.replace(/\s/g, '') || '+842437763322'}`}>
-            {companyInfo?.phone || '+84 243 776 3322'}
+          <a href={`tel:${contactSettings?.company_info.phone?.replace(/\s/g, '') || '+842437763322'}`}>
+            {contactSettings?.company_info.phone || '+84 243 776 3322'}
           </a>
         </p>
       </li>
@@ -148,8 +155,8 @@ const ContactInfo: React.FC = () => {
         <i className="bi bi-envelope-fill"></i>
         <span>{t('contact.info.email')}</span>
         <p>
-          <a href={`mailto:${companyInfo?.email || 'viencongnghe@ritm.vn'}`}>
-            {companyInfo?.email || 'viencongnghe@ritm.vn'}
+          <a href={`mailto:${contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}`}>
+            {contactSettings?.company_info.email || 'viencongnghe@ritm.vn'}
           </a>
         </p>
       </li>
@@ -207,7 +214,7 @@ const Footer: React.FC = () => {
     <footer className="footer">
       {/* Primary Footer Section */}
       <div className="primary-footer">
-        <Container fluid>
+        <Container>
           <Row>
             {/* Company Information */}
             <Col lg={4} md={6}>
@@ -248,7 +255,7 @@ const Footer: React.FC = () => {
 
       {/* Secondary Footer Section */}
       <div className="secondary-footer">
-        <Container fluid>
+        <Container>
           <Row className="align-items-center">
             <Col md={12} className="text-center">
               <div className="copyright">

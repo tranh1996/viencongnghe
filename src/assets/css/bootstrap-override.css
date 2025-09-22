@@ -37,3 +37,32 @@
 .border-primary {
     border-color: #21759b !important;
 }
+
+/* Container max-width override - Set global max-width to 1170px */
+.container,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl,
+.container-xxl {
+    max-width: 1170px !important;
+    margin: 0 auto;
+}
+
+/* Ensure full-width sections still respect the max-width */
+section {
+    max-width: 100%;
+}
+
+/* Override for specific full-width sections that need to break out */
+.full-width-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding-left: calc(50vw - 50%);
+    padding-right: calc(50vw - 50%);
+}
+
+.full-width-section .container {
+    max-width: 1170px !important;
+    margin: 0 auto;
+}
