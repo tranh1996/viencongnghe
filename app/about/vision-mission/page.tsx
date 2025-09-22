@@ -305,9 +305,22 @@ export default function VisionMissionPage() {
             <Col>
               <div className="p-5">
                 <h3 className="mb-4">{t('visionMission.summary.title')}</h3>
-                <p className="lead">
-                  {t('visionMission.summary.description')}
-                </p>
+                <div
+                  className="lead text-start"
+                  dangerouslySetInnerHTML={{
+                    __html: t('visionMission.summary.description')
+                  }}
+                />
+                <style jsx>{`
+                  div :global(ul) {
+                    list-style: disc !important;
+                    margin-left: 1.5rem !important;
+                    padding-left: 1rem !important;
+                  }
+                  div :global(li) {
+                    margin-bottom: 0.5rem !important;
+                  }
+                `}</style>
                 <div className="mt-4">
                   <a href="/about" className="btn btn-primary me-3">
                     {t('visionMission.summary.aboutButton')}

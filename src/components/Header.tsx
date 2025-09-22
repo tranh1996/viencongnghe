@@ -429,14 +429,21 @@ const Header: React.FC = () => {
                       )}
                     </NavDropdown>
 
-                    <Nav.Link 
-                      as={Link} 
-                      href="/library"
+                    <NavDropdown
+                      title={t('nav.library')}
+                      id="library-dropdown"
                       className={isActiveRoute('/library') ? 'active' : ''}
-                      onClick={handleMenuItemClick}
+                      show={typeof window !== 'undefined' && window.innerWidth <= 991 ? undefined : hoveredDropdown === 'library'}
+                      onMouseEnter={() => handleDropdownEnter('library')}
+                      onMouseLeave={handleDropdownLeave}
                     >
-                      {t('nav.library')}
-                    </Nav.Link>
+                      <NavDropdown.Item as={Link} href="/library" onClick={handleMenuItemClick}>
+                        {t('nav.library.images')}
+                      </NavDropdown.Item>
+                      <NavDropdown.Item as={Link} href="/library/videos" onClick={handleMenuItemClick}>
+                        {t('nav.library.videos')}
+                      </NavDropdown.Item>
+                    </NavDropdown>
 
                     <Nav.Link 
                       as={Link} 
