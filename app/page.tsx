@@ -3,11 +3,11 @@
 import type { Metadata } from 'next';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import {Container, Row, Col, Button, Card} from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BannerSlider from '@/components/BannerSlider';
 import OptimizedImage from '@/components/OptimizedImage';
-import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner, fetchProducts, Product } from '@/utils/api';
+import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner, fetchProducts, Product, fetchPartners, Partner } from '@/utils/api';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -18,24 +18,28 @@ export default function HomePage() {
   const [aboutOverview, setAboutOverview] = useState<AboutOverview | null>(null);
   const [banners, setBanners] = useState<Banner[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [aboutLoading, setAboutLoading] = useState(true);
   const [bannerLoading, setBannerLoading] = useState(true);
   const [productsLoading, setProductsLoading] = useState(true);
+  const [partnersLoading, setPartnersLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [newsData, aboutData, bannerData, productsData] = await Promise.all([
+        const [newsData, aboutData, bannerData, productsData, partnersData] = await Promise.all([
           fetchLatestNews(language, 3),
           fetchAboutOverview(language),
           fetchBanners('header', 1),
-          fetchProducts(language, 1, 4) // Fetch 4 products for homepage
+          fetchProducts(language, 1, 4), // Fetch 4 products for homepage
+          fetchPartners() // Fetch partners data
         ]);
         setLatestNews(newsData);
         setAboutOverview(aboutData);
         setBanners(bannerData);
         setProducts(productsData.products);
+        setPartners(partnersData);
       } catch (error) {
         console.error('Error fetching data:', error);
         // Fallback to empty array if API fails
@@ -43,11 +47,13 @@ export default function HomePage() {
         setAboutOverview(null);
         setBanners([]);
         setProducts([]);
+        setPartners([]);
       } finally {
         setLoading(false);
         setAboutLoading(false);
         setBannerLoading(false);
         setProductsLoading(false);
+        setPartnersLoading(false);
       }
     };
 
@@ -142,8 +148,8 @@ export default function HomePage() {
           en: ''
         },
         description: {
-          vi: 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu',
-          en: 'The Research Institute of Technology for Machinery (RITM) is a research and development organization focused on manufacturing materials with special properties, mechanical processing for mold making, heat treatment and surface processing, aimed at practical applications as well as localizing imported products.'
+          vi: 'Viện Công nghệ (thuộc Tổng cục Công nghiệp Quốc phòng) thành lập từ 1973, có 233 cán bộ khoa học kỹ thuật (40 Tiến sĩ, 160 Thạc sĩ). Chuyên về nghiên cứu phát triển công nghệ cơ khí, điện tử, vật liệu, hóa chất và tư vấn đầu tư, được trang bị thiết bị hiện đại như máy CNC 5 trục, hệ thống đo lường chính xác. Đơn vị hàng đầu trong lĩnh vực KHCN quốc phòng với 50 năm kinh nghiệm, thực hiện chuyển giao công nghệ lưỡng dụng phục vụ cả mục đích quân sự và dân sự.',
+          en: 'The Technology Institute (under the General Department of Defense Industry) was established in 1973, with 233 scientific and technical staff (40 PhDs, 160 Masters). Specializing in research and development of mechanical, electronic, materials, chemical technology and investment consulting, equipped with modern equipment such as 5-axis CNC machines and precision measurement systems. A leading unit in the field of defense science and technology with 50 years of experience, implementing dual-use technology transfer serving both military and civilian purposes.'
         },
         primaryButton: {
           text: {
@@ -169,8 +175,8 @@ export default function HomePage() {
         en: ''
       },
       description: {
-        vi: 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu',
-        en: 'The Research Institute of Technology for Machinery (RITM) is a research and development organization focused on manufacturing materials with special properties, mechanical processing for mold making, heat treatment and surface processing, aimed at practical applications as well as localizing imported products.'
+        vi: 'Viện công nghệ  là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế cũng như nội địa hóa các sản phẩm nhập khẩu',
+        en: 'The Institute of Technology is a research and development organization focused on manufacturing materials with special properties, mechanical processing for mold making, heat treatment and surface processing, aimed at practical applications as well as localizing imported products.'
       },
       primaryButton: {
         text: {
@@ -403,25 +409,9 @@ export default function HomePage() {
                 </div>
                 
                 {/* Video Section - Company Introduction */}
-                <div className="mt-4">
-                  <Row>
-                    <Col lg={12}>
-                      <div className="ratio ratio-16x9">
-                        <iframe
-                          src="https://www.youtube.com/embed/Nibr16c3AOI"
-                          title="Giới thiệu Viện Công nghệ RITM"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          className="rounded"
-                        ></iframe>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
 
                 {/* Additional Videos from API - Only show if videos are available */}
-                {/* {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
+                {aboutOverview && aboutOverview.videos && aboutOverview.videos.length > 0 && (
                   <div className="mt-4">
                     <Row>
                       {aboutOverview.videos.map((video, index) => (
@@ -440,7 +430,7 @@ export default function HomePage() {
                       ))}
                     </Row>
                   </div>
-                )} */}
+                )}
               </div>
             </Col>
           </Row>
@@ -469,7 +459,7 @@ export default function HomePage() {
                 </div>
                 <div className="service-image">
                   <OptimizedImage
-                    src="/images/services/casting.jpg"
+                    src="/images/casting.webp"
                     alt={language === 'vi' ? 'Công nghệ đúc và vật liệu mới' : 'Casting Technology and New Materials'}
                     context="Dịch vụ - Công nghệ đúc"
                     className="service-img"
@@ -497,7 +487,7 @@ export default function HomePage() {
                 </div>
                 <div className="service-image">
                   <OptimizedImage
-                    src="/images/services/heat-treatment.jpg"
+                    src="/images/heat-treatment.webp"
                     alt={language === 'vi' ? 'Công nghệ xử lý nhiệt' : 'Heat Treatment Technology'}
                     context="Dịch vụ - Xử lý nhiệt"
                     className="service-img"
@@ -525,7 +515,7 @@ export default function HomePage() {
                 </div>
                 <div className="service-image">
                   <OptimizedImage
-                    src="/images/services/machining.jpg"
+                    src="/images/machining.webp"
                     alt={language === 'vi' ? 'Cơ khí chế tạo khuôn mẫu' : 'Mechanical Mold Manufacturing'}
                     context="Dịch vụ - Gia công cơ khí"
                     className="service-img"
@@ -553,7 +543,7 @@ export default function HomePage() {
                 </div>
                 <div className="service-image">
                   <OptimizedImage
-                    src="/images/services/testing.jpg"
+                    src="/images/testing.jpg"
                     alt={language === 'vi' ? 'Kiểm định vật liệu' : 'Material Testing'}
                     context="Dịch vụ - Kiểm định"
                     className="service-img"
@@ -581,7 +571,7 @@ export default function HomePage() {
                 </div>
                 <div className="service-image">
                   <OptimizedImage
-                    src="/images/services/transfer.jpg"
+                    src="/images/transfer.webp"
                     alt={language === 'vi' ? 'Chuyển giao thiết bị/công nghệ' : 'Equipment/Technology Transfer'}
                     context="Dịch vụ - Chuyển giao công nghệ"
                     className="service-img"
@@ -609,7 +599,7 @@ export default function HomePage() {
                 </div>
                 <div className="service-image">
                   <OptimizedImage
-                    src="/images/services/training.jpg"
+                    src="/images/training.webp"
                     alt={language === 'vi' ? 'Đào tạo, tư vấn công nghệ' : 'Technology Training and Consulting'}
                     context="Dịch vụ - Đào tạo"
                     className="service-img"
@@ -1601,7 +1591,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Customers & Partners Section */}
+      {/*   */}
       <section className="partners-section" style={{ paddingTop: '30px', paddingBottom: '30px', backgroundImage: 'url(/images/Group-1660.webp)', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', width: '100vw', marginLeft: 'calc(-50vw + 50%)', paddingLeft: 'calc(50vw - 50%)', paddingRight: 'calc(50vw - 50%)' }}>
         <Container>
           <Row className="text-center mb-5">
@@ -1623,111 +1613,151 @@ export default function HomePage() {
               <div className="partners-slider-wrapper position-relative">
                 <div className="partners-slider" id="partnersSlider">
                   <div className="partners-track" id="partnersTrack">
-                    {/* Partners will be arranged in slides */}
-
-                    {/* Slide 1 - Desktop: 6 logos, Mobile: 2 logos */}
-                    <div className="partner-slide active">
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/disoco-logo.png"
-                          alt="DISOCO"
-                          context="Đối tác - DISOCO"
-                          className="partner-logo"
-                        />
+                    {partnersLoading ? (
+                      // Loading slide
+                      <div className="partner-slide active">
+                        <div className="partner-item">
+                          <div className="placeholder-img bg-light d-flex align-items-center justify-content-center" style={{ height: '100px', width: '150px' }}>
+                            <div className="spinner-border text-primary" role="status">
+                              <span className="visually-hidden">Loading...</span>
+                            </div>
+                          </div>
+                        </div>
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <div className="partner-item" key={`loading-${index}`}>
+                            <div className="placeholder-img bg-light" style={{ height: '100px', width: '150px', borderRadius: '8px' }}></div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/futur-logo.png"
-                          alt="FUTUR"
-                          context="Đối tác - FUTUR"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/fteme-logo.png"
-                          alt="FTEME"
-                          context="Đối tác - FTEME"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/t4-logo.png"
-                          alt="T4 NHÂN TM CỤA BAN"
-                          context="Đối tác - T4"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/daido-steel-logo.png"
-                          alt="DAIDO STEEL"
-                          context="Đối tác - DAIDO STEEL"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/fomeco-logo.png"
-                          alt="FOMECO"
-                          context="Đối tác - FOMECO"
-                          className="partner-logo"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Slide 2 */}
-                    <div className="partner-slide">
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/yamaha-logo.png"
-                          alt="Yamaha"
-                          context="Đối tác - Yamaha"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/vdi-logo.png"
-                          alt="VDI"
-                          context="Đối tác - VDI"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/seiki-logo.png"
-                          alt="Seiki"
-                          context="Đối tác - Seiki"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/astemo-logo.png"
-                          alt="Astemo"
-                          context="Đối tác - Astemo"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/hal-vietnam-logo.png"
-                          alt="HAL Vietnam"
-                          context="Đối tác - HAL Vietnam"
-                          className="partner-logo"
-                        />
-                      </div>
-                      <div className="partner-item">
-                        <OptimizedImage
-                          src="/images/partners/moldtech-logo.png"
-                          alt="Moldtech"
-                          context="Đối tác - Moldtech"
-                          className="partner-logo"
-                        />
-                      </div>
-                    </div>
+                    ) : partners.length > 0 ? (
+                      // Render partner slides from API
+                      (() => {
+                        const slides = [];
+                        const partnersPerSlide = 6; // Desktop: 6 logos per slide
+                        for (let i = 0; i < partners.length; i += partnersPerSlide) {
+                          const slidePartners = partners.slice(i, i + partnersPerSlide);
+                          slides.push(
+                            <div className={`partner-slide ${i === 0 ? 'active' : ''}`} key={`slide-${i}`}>
+                              {slidePartners.map((partner) => (
+                                <div className="partner-item" key={partner.id}>
+                                  <OptimizedImage
+                                    src={partner.logo}
+                                    alt={partner.name}
+                                    context={`Đối tác - ${partner.name}`}
+                                    className="partner-logo"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        }
+                        return slides;
+                      })()
+                    ) : (
+                      // Fallback to default partners if API fails
+                      <>
+                        <div className="partner-slide active">
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/disoco-logo.png"
+                              alt="DISOCO"
+                              context="Đối tác - DISOCO"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/futur-logo.png"
+                              alt="FUTUR"
+                              context="Đối tác - FUTUR"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/fteme-logo.png"
+                              alt="FTEME"
+                              context="Đối tác - FTEME"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/t4-logo.png"
+                              alt="T4 NHÂN TM CỤA BAN"
+                              context="Đối tác - T4"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/daido-steel-logo.png"
+                              alt="DAIDO STEEL"
+                              context="Đối tác - DAIDO STEEL"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/fomeco-logo.png"
+                              alt="FOMECO"
+                              context="Đối tác - FOMECO"
+                              className="partner-logo"
+                            />
+                          </div>
+                        </div>
+                        <div className="partner-slide">
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/yamaha-logo.png"
+                              alt="Yamaha"
+                              context="Đối tác - Yamaha"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/vdi-logo.png"
+                              alt="VDI"
+                              context="Đối tác - VDI"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/seiki-logo.png"
+                              alt="Seiki"
+                              context="Đối tác - Seiki"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/astemo-logo.png"
+                              alt="Astemo"
+                              context="Đối tác - Astemo"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/hal-vietnam-logo.png"
+                              alt="HAL Vietnam"
+                              context="Đối tác - HAL Vietnam"
+                              className="partner-logo"
+                            />
+                          </div>
+                          <div className="partner-item">
+                            <OptimizedImage
+                              src="/images/partners/moldtech-logo.png"
+                              alt="Moldtech"
+                              context="Đối tác - Moldtech"
+                              className="partner-logo"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 

@@ -18,7 +18,7 @@ export const BASE_URL = process.env.REACT_APP_BASE_URL || 'https://viencongnghe.
 
 // Default SEO configuration
 export const DEFAULT_SEO: SEOConfig = {
-  title: 'Viện Công nghệ (RITM) - Research Institute of Technology for Machinery',
+  title: 'Viện Công nghệ - Institute of Technology',
   description: 'Viện Công nghệ (RITM) - Viện nghiên cứu công nghệ cơ khí hàng đầu Việt Nam. Chuyên nghiên cứu, phát triển và chuyển giao công nghệ trong lĩnh vực đúc, nhiệt luyện, gia công cơ khí và kiểm định vật liệu.',
   keywords: [
     'viện công nghệ',

@@ -4,7 +4,7 @@ export async function GET() {
   try {
     const companyInfo = {
       company_name: "VIỆN CÔNG NGHỆ",
-      company_subtitle: "Research Institute of Technology for Machinery",
+      company_subtitle: "Institute of Technology",
       address_main: "Trụ sở chính: Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội",
       address_branch: "Cơ sở 2: Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội",
       email: "viencongnghe@ritm.vn",

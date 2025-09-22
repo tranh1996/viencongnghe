@@ -218,7 +218,7 @@ export default function ProductDetailPage() {
                   <div className="text-center mb-3">
                     <img src="/images/logo.png" alt="VIỆN CÔNG NGHỆ" style={{ maxHeight: '60px' }} />
                     <h6 className="mt-2">VIỆN CÔNG NGHỆ</h6>
-                    <p className="text-muted small">RESEARCH INSTITUTE OF TECHNOLOGY FOR MACHINERY</p>
+                    <p className="text-muted small">INSTITUTE OF TECHNOLOGY</p>
                   </div>
                   
                   <div className="mb-3">

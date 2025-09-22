@@ -129,7 +129,7 @@ const viTranslations: Record<string, string> = {
   'home.hero.servicesButton': 'Dịch vụ',
   'home.about.title': 'Về chúng tôi',
   'home.about.heading': 'Hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim',
-  'home.about.description': 'Trong suốt hơn 50 năm hoạt động trong lĩnh vực cơ khí và luyện kim, Viện Công nghệ không ngừng đầu tư và phát triển các lĩnh vực thế mạnh của Viện nhằm đáp ứng được những yêu cầu khắt khe nhất của khách hàng trong nước và quốc tế.',
+  'home.about.description': 'Viện Công nghệ (thuộc Tổng cục Công nghiệp Quốc phòng) thành lập từ 1973, có 233 cán bộ khoa học kỹ thuật (40 Tiến sĩ, 160 Thạc sĩ). Chuyên về nghiên cứu phát triển công nghệ cơ khí, điện tử, vật liệu, hóa chất và tư vấn đầu tư, được trang bị thiết bị hiện đại như máy CNC 5 trục, hệ thống đo lường chính xác. Đơn vị hàng đầu trong lĩnh vực KHCN quốc phòng với 50 năm kinh nghiệm, thực hiện chuyển giao công nghệ lưỡng dụng phục vụ cả mục đích quân sự và dân sự.',
   'home.about.readMore': 'Xem thêm',
   'home.about.videos': 'Video giới thiệu',
   'home.about.watchOurStory': 'Xem câu chuyện của chúng tôi',
@@ -395,7 +395,7 @@ const viTranslations: Record<string, string> = {
 
   // Footer
   'footer.about.title': 'Về chúng tôi',
-  'footer.about.description': 'Viện Công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu.',
+  'footer.about.description': 'Viện Công nghệ là một đơn vị nghiên cứu Khoa học và Công nghệ Quân sự trực thuộc Tổng cục Công nghiệp Quốc phòng, thành lập vào ngày 21/8/1973. Viện Công nghệ có một đội ngũ cán bộ nghiên cứu toàn diện, có trình độ chuyên môn cao, trên 30% quân số là Tiến sĩ, Thạc sĩ, hoạt động trên nhiều ngành.',
   'footer.quickLinks': 'Liên kết nhanh',
   'footer.services': 'Dịch vụ',
   'footer.contact': 'Liên hệ',
@@ -406,8 +406,8 @@ const viTranslations: Record<string, string> = {
 
   // Footer company
   'footer.company.name': 'VIỆN CÔNG NGHỆ',
-  'footer.company.subtitle': 'Research Institute of Technology for Machinery',
-  'footer.company.description': 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế.',
+  'footer.company.subtitle': 'Institute of Technology',
+  'footer.company.description': 'Viện công nghệ là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt với mục tiêu ứng dụng vào thực tế.',
   'footer.introduction.title': 'GIỚI THIỆU',
   'footer.introduction.about': 'Về chúng tôi',
   'footer.introduction.organization': 'Cơ cấu tổ chức',
@@ -499,7 +499,7 @@ const enTranslations: Record<string, string> = {
   'home.hero.servicesButton': 'Services',
   'home.about.title': 'About Us',
   'home.about.heading': 'Over 50 years of experience in mechanical engineering and metallurgy',
-  'home.about.description': 'Throughout more than 50 years of operation in the field of mechanical engineering and metallurgy, the Technology Institute has continuously invested and developed the Institute\'s strengths to meet the most stringent requirements of domestic and international customers.',
+  'home.about.description': 'The Technology Institute (under the General Department of Defense Industry) was established in 1973, with 233 scientific and technical staff (40 PhDs, 160 Masters). Specializing in research and development of mechanical, electronic, materials, chemical technology and investment consulting, equipped with modern equipment such as 5-axis CNC machines and precision measurement systems. A leading unit in the field of defense science and technology with 50 years of experience, implementing dual-use technology transfer serving both military and civilian purposes.',
   'home.about.readMore': 'Read More',
   'home.about.videos': 'Introduction Videos',
   'home.about.watchOurStory': 'Watch Our Story',
@@ -765,19 +765,19 @@ const enTranslations: Record<string, string> = {
 
   // Footer
   'footer.about.title': 'About Us',
-  'footer.about.description': 'Research Institute of Technology for Machinery (RITM) is an organization for research and development of technology in the field of manufacturing special materials and mechanical processing.',
+  'footer.about.description': 'Institute of Technology is an organization for research and development of technology in the field of manufacturing special materials and mechanical processing.',
   'footer.quickLinks': 'Quick Links',
   'footer.services': 'Services',
   'footer.contact': 'Contact',
   'footer.followUs': 'Follow Us',
-  'footer.copyright': '© 2024 Research Institute of Technology for Machinery. All rights reserved.',
+  'footer.copyright': '© 2024 Institute of Technology. All rights reserved.',
   'footer.privacy': 'Privacy Policy',
   'footer.terms': 'Terms of Service',
 
   // Footer company
   'footer.company.name': 'TECHNOLOGY INSTITUTE',
-  'footer.company.subtitle': 'Research Institute of Technology for Machinery',
-  'footer.company.description': 'The Technology Institute (RITM) is a research and technology development organization in the field of manufacturing special materials, mechanical engineering for mold making, heat treatment and surface treatment with the goal of practical application.',
+  'footer.company.subtitle': 'Institute of Technology ',
+  'footer.company.description': 'The Technology Institute is a research and technology development organization in the field of manufacturing special materials, mechanical engineering for mold making, heat treatment and surface treatment with the goal of practical application.',
   'footer.introduction.title': 'INTRODUCTION',
   'footer.introduction.about': 'About Us',
   'footer.introduction.organization': 'Organization',
