@@ -298,6 +298,38 @@ export interface BannerApiResponse {
   data: Banner[];
 }
 
+export interface CompanyInfo {
+  company_name: string;
+  company_subtitle: string;
+  address_main: string;
+  address_branch: string;
+  email: string;
+  phone: string;
+  fax: string;
+}
+
+export interface CompanyInfoApiResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: CompanyInfo;
+}
+
+export interface Partner {
+  id: number;
+  name: string;
+  logo: string;
+  position: number;
+  isActive: boolean;
+}
+
+export interface PartnersApiResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: Partner[];
+}
+
 const API_BASE_URL = api.baseUrl;
 
 export const fetchDepartments = async (language: string, signal?: AbortSignal): Promise<Department[]> => {
@@ -949,6 +981,69 @@ export const searchPosts = async (
     // Don't log AbortError as it's expected when requests are cancelled
     if (!(error instanceof Error && error.name === 'AbortError')) {
       console.error('Error searching posts:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchCompanyInfo = async (signal?: AbortSignal): Promise<CompanyInfo> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/contact-settings/company-info`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: CompanyInfoApiResponse = await response.json();
+
+    if (data.success) {
+      return data.data;
+    } else {
+      throw new Error(data.message || 'Failed to fetch company info');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching company info:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchPartners = async (signal?: AbortSignal): Promise<Partner[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/partners`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: PartnersApiResponse = await response.json();
+
+    if (data.success) {
+      // Filter only active partners and sort by position
+      return data.data.filter(partner => partner.isActive).sort((a, b) => a.position - b.position);
+    } else {
+      throw new Error(data.message || 'Failed to fetch partners');
+    }
+  } catch (error) {
+    // Don't log AbortError as it's expected when requests are cancelled
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.error('Error fetching partners:', error);
     }
     throw error;
   }

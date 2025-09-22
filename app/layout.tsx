@@ -29,12 +29,12 @@ const familjenGrotesk = Familjen_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'Viện Công nghệ (RITM) - Research Institute of Technology for Machinery',
-  description: 'Viện công nghệ (RITM) là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt.',
-  keywords: 'viện công nghệ, RITM, nghiên cứu, cơ khí, luyện kim, vật liệu, khuôn mẫu, xử lý nhiệt',
+  title: 'Viện Công nghệ - Institute of Technology',
+  description: 'Viện công nghệ  là một tổ chức nghiên cứu và phát triển công nghệ về lĩnh vực chế tạo vật liệu có tính chất đặc biệt, gia công cơ khí chế tạo khuôn mẫu, xử lý nhiệt và bề mặt.',
+  keywords: 'viện công nghệ, nghiên cứu, cơ khí, luyện kim, vật liệu, khuôn mẫu, xử lý nhiệt',
   authors: [{ name: 'Viện Công nghệ Team' }],
   creator: 'Viện Công nghệ Team',
-  publisher: 'Viện Công nghệ (RITM)',
+  publisher: 'Viện Công nghệ',
   formatDetection: {
     email: false,
     address: false,

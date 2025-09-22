@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { fetchCompanyInfo, CompanyInfo } from '@/utils/api';
 
 // Footer Widget Component
 interface FooterWidgetProps {
@@ -69,31 +70,87 @@ const SocialIcons: React.FC = () => (
 // Contact Info Component
 const ContactInfo: React.FC = () => {
   const { t } = useLanguage();
-  
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const loadCompanyInfo = async () => {
+      try {
+        const data = await fetchCompanyInfo(controller.signal);
+        console.log(111111111111111, fetchCompanyInfo)
+        if (isMounted) {
+          setCompanyInfo(data);
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof Error && error.name === 'AbortError')) {
+          console.error('Error loading company info:', error);
+          // Fallback to default data if API fails
+          setCompanyInfo({
+            company_name: "INSTITUTE OF TECHNOLOGY",
+            company_subtitle: "Institute of Technology",
+            address_main: "Head Office: 8-story building, 25 Vu Ngoc Phan, Hanoi",
+            address_branch: "Branch 2: Lot 27B, Quang Minh Industrial Park, Me Linh, Hanoi",
+            email: "viencongnghe@ritm.vn",
+            phone: "+84 243 776 3322",
+            fax: "+84 243 835 9235"
+          });
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadCompanyInfo();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <ul className="media-icon">
+        <li>
+          <div className="loading-text">Loading contact information...</div>
+        </li>
+      </ul>
+    );
+  }
+
   return (
     <ul className="media-icon">
       <li>
         <i className="bi bi-geo-alt-fill"></i>
         <span>{t('contact.info.mainOffice')}</span>
-        <p>Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội</p>
+        <p>{companyInfo?.address_main || 'Head Office: 8-story building, 25 Vu Ngoc Phan, Hanoi'}</p>
       </li>
       <li>
         <i className="bi bi-geo-alt-fill"></i>
         <span>{t('contact.info.branchOffice')}</span>
-        <p>Lô 27B, khu Công nghiệp Quang Minh, Mê Linh, Hà Nội</p>
+        <p>{companyInfo?.address_branch || 'Branch 2: Lot 27B, Quang Minh Industrial Park, Me Linh, Hanoi'}</p>
       </li>
       <li>
         <i className="bi bi-telephone-fill"></i>
         <span>{t('contact.info.phone')}</span>
         <p>
-          <a href="tel:+842437763322">+84 243 776 3322</a>
+          <a href={`tel:${companyInfo?.phone?.replace(/\s/g, '') || '+842437763322'}`}>
+            {companyInfo?.phone || '+84 243 776 3322'}
+          </a>
         </p>
       </li>
       <li>
         <i className="bi bi-envelope-fill"></i>
         <span>{t('contact.info.email')}</span>
         <p>
-          <a href="mailto:viencongnghe@ritm.vn">viencongnghe@ritm.vn</a>
+          <a href={`mailto:${companyInfo?.email || 'viencongnghe@ritm.vn'}`}>
+            {companyInfo?.email || 'viencongnghe@ritm.vn'}
+          </a>
         </p>
       </li>
       <li>
@@ -156,7 +213,7 @@ const Footer: React.FC = () => {
             <Col lg={4} md={6}>
               <FooterWidget 
                 title={t('footer.company.name') || 'VIỆN CÔNG NGHỆ'}
-                subtitle={t('footer.company.subtitle') || 'Research Institute of Technology for Machinery'}
+                subtitle={t('footer.company.subtitle') || 'Institute of Technology'}
               >
                 <p>
                   {t('footer.about.description')}

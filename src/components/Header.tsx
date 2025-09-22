@@ -359,10 +359,6 @@ const Header: React.FC = () => {
                               {department.name}
                             </NavDropdown.Item>
                           ))}
-                          <NavDropdown.Divider />
-                          <NavDropdown.Item as={Link} href="/organization" onClick={handleMenuItemClick}>
-                            {t('organization.viewAllDepartments')}
-                          </NavDropdown.Item>
                         </>
                       ) : (
                         // Fallback to static menu items if API fails
