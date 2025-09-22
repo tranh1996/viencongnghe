@@ -17,6 +17,6 @@
     --themeht-bg-light-color: #f6f7ff;
     --themeht-border-light-color: #E5E5E5;
     --themeht-rgba-color: rgba(255,255,255,0.9);
-    --themeht-typography-body-font-family: var(--font-roboto), "Roboto", sans-serif;
-    --themeht-typography-secondary-font-family: var(--font-roboto), "Roboto", sans-serif;
+    --themeht-typography-body-font-family: "Roboto", sans-serif;
+    --themeht-typography-secondary-font-family: "Roboto", sans-serif;
 }
