@@ -72,50 +72,50 @@ export default function VisionMissionPage() {
   // Parse vision content to extract sections
   const parseVisionContent = (content: string, language: string) => {
     const sections: { [key: string]: string } = {};
-    
+
     console.log('Parsing vision content:', { content, language });
-    
+
     // Split by double newlines to get sections
     const parts = content.split('\n\n');
-    
+
     parts.forEach((part, index) => {
       const trimmedPart = part.trim();
       if (trimmedPart) {
         console.log(`Processing part ${index}:`, trimmedPart);
-        
+
         // Check if this part contains section headers for both languages
         if (language === 'vi') {
-          // Vietnamese parsing
-          if (trimmedPart.includes('TẦM NHÌN:')) {
-            const content = trimmedPart.replace(/^.*?TẦM NHÌN:\s*/, '').trim();
+          // Vietnamese parsing - Updated for new API format
+          if (trimmedPart.includes('SLOGAN:')) {
+            const content = trimmedPart.replace(/^.*?SLOGAN:\s*/, '').trim();
             sections.vision = content;
-            console.log('Found Vietnamese VISION:', content);
-          } else if (trimmedPart.includes('SỨ MỆNH:')) {
-            const content = trimmedPart.replace(/^.*?SỨ MỆNH:\s*/, '').trim();
+            console.log('Found Vietnamese SLOGAN:', content);
+          } else if (trimmedPart.includes('NĂNG LỰC CỐT LÕI:')) {
+            const content = trimmedPart.replace(/^.*?NĂNG LỰC CỐT LÕI:\s*/, '').trim();
             sections.mission = content;
-            console.log('Found Vietnamese MISSION:', content);
-          } else if (trimmedPart.includes('GIÁ TRỊ CỐT LÕI:')) {
-            const content = trimmedPart.replace(/^.*?GIÁ TRỊ CỐT LÕI:\s*/, '').trim();
+            console.log('Found Vietnamese CORE COMPETENCIES:', content);
+          } else if (trimmedPart.includes('HƯỚNG PHÁT TRIỂN:')) {
+            const content = trimmedPart.replace(/^.*?HƯỚNG PHÁT TRIỂN:\s*/, '').trim();
             sections.values = content;
-            console.log('Found Vietnamese VALUES:', content);
+            console.log('Found Vietnamese DEVELOPMENT DIRECTION:', content);
           } else if (index === 0 && !trimmedPart.includes(':')) {
             sections.mainTitle = trimmedPart;
             console.log('Found Vietnamese main title:', trimmedPart);
           }
         } else {
-          // English parsing - more robust
-          if (trimmedPart.includes('VISION:')) {
-            const content = trimmedPart.replace(/^.*?VISION:\s*/, '').trim();
+          // English parsing - Updated for new API format
+          if (trimmedPart.includes('SLOGAN:')) {
+            const content = trimmedPart.replace(/^.*?SLOGAN:\s*/, '').trim();
             sections.vision = content;
-            console.log('Found English VISION:', content);
-          } else if (trimmedPart.includes('MISSION:')) {
-            const content = trimmedPart.replace(/^.*?MISSION:\s*/, '').trim();
+            console.log('Found English SLOGAN:', content);
+          } else if (trimmedPart.includes('CORE COMPETENCIES:')) {
+            const content = trimmedPart.replace(/^.*?CORE COMPETENCIES:\s*/, '').trim();
             sections.mission = content;
-            console.log('Found English MISSION:', content);
-          } else if (trimmedPart.includes('CORE VALUES:')) {
-            const content = trimmedPart.replace(/^.*?CORE VALUES:\s*/, '').trim();
+            console.log('Found English CORE COMPETENCIES:', content);
+          } else if (trimmedPart.includes('DEVELOPMENT DIRECTION:')) {
+            const content = trimmedPart.replace(/^.*?DEVELOPMENT DIRECTION:\s*/, '').trim();
             sections.values = content;
-            console.log('Found English VALUES:', content);
+            console.log('Found English DEVELOPMENT DIRECTION:', content);
           } else if (index === 0 && !trimmedPart.includes(':')) {
             sections.mainTitle = trimmedPart;
             console.log('Found English main title:', trimmedPart);
@@ -123,40 +123,71 @@ export default function VisionMissionPage() {
         }
       }
     });
-    
-    // If parsing didn't work, try alternative approach for English
-    if (language === 'en' && (!sections.vision || !sections.mission || !sections.values)) {
-      console.log('Trying alternative parsing for English content');
-      
-      // Try to extract sections using regex
-      const visionMatch = content.match(/VISION:\s*([^]*?)(?=\n\nMISSION:|$)/);
-      const missionMatch = content.match(/MISSION:\s*([^]*?)(?=\n\nCORE VALUES:|$)/);
-      const valuesMatch = content.match(/CORE VALUES:\s*([^]*?)(?=\n\n|$)/);
-      const titleMatch = content.match(/^([^]*?)(?=\n\nVISION:|$)/);
-      
-      if (visionMatch) {
-        sections.vision = visionMatch[1].trim();
-        console.log('Found VISION via regex:', sections.vision);
-      }
-      if (missionMatch) {
-        sections.mission = missionMatch[1].trim();
-        console.log('Found MISSION via regex:', sections.mission);
-      }
-      if (valuesMatch) {
-        sections.values = valuesMatch[1].trim();
-        console.log('Found VALUES via regex:', sections.values);
-      }
-      if (titleMatch && !titleMatch[1].includes(':')) {
-        sections.mainTitle = titleMatch[1].trim();
-        console.log('Found main title via regex:', sections.mainTitle);
+
+    // If parsing didn't work, try alternative approach with regex
+    if (!sections.vision || !sections.mission || !sections.values) {
+      console.log('Trying alternative parsing with regex');
+
+      if (language === 'vi') {
+        // Vietnamese regex patterns
+        const sloganMatch = content.match(/SLOGAN:\s*([^]*?)(?=\n\n[A-Z]+:|$)/);
+        const competenciesMatch = content.match(/NĂNG LỰC CỐT LÕI:\s*([^]*?)(?=\n\n[A-Z]+:|$)/);
+        const directionMatch = content.match(/HƯỚNG PHÁT TRIỂN:\s*([^]*?)(?=\n\n|$)/);
+        const titleMatch = content.match(/^([^]*?)(?=\n\nSLOGAN:|$)/);
+
+        if (sloganMatch) {
+          sections.vision = sloganMatch[1].trim();
+          console.log('Found SLOGAN via regex:', sections.vision);
+        }
+        if (competenciesMatch) {
+          sections.mission = competenciesMatch[1].trim();
+          console.log('Found CORE COMPETENCIES via regex:', sections.mission);
+        }
+        if (directionMatch) {
+          sections.values = directionMatch[1].trim();
+          console.log('Found DEVELOPMENT DIRECTION via regex:', sections.values);
+        }
+        if (titleMatch && !titleMatch[1].includes(':')) {
+          sections.mainTitle = titleMatch[1].trim();
+          console.log('Found main title via regex:', sections.mainTitle);
+        }
+      } else {
+        // English regex patterns
+        const sloganMatch = content.match(/SLOGAN:\s*([^]*?)(?=\n\n[A-Z]+:|$)/);
+        const competenciesMatch = content.match(/CORE COMPETENCIES:\s*([^]*?)(?=\n\n[A-Z]+:|$)/);
+        const directionMatch = content.match(/DEVELOPMENT DIRECTION:\s*([^]*?)(?=\n\n|$)/);
+        const titleMatch = content.match(/^([^]*?)(?=\n\nSLOGAN:|$)/);
+
+        if (sloganMatch) {
+          sections.vision = sloganMatch[1].trim();
+          console.log('Found SLOGAN via regex:', sections.vision);
+        }
+        if (competenciesMatch) {
+          sections.mission = competenciesMatch[1].trim();
+          console.log('Found CORE COMPETENCIES via regex:', sections.mission);
+        }
+        if (directionMatch) {
+          sections.values = directionMatch[1].trim();
+          console.log('Found DEVELOPMENT DIRECTION via regex:', sections.values);
+        }
+        if (titleMatch && !titleMatch[1].includes(':')) {
+          sections.mainTitle = titleMatch[1].trim();
+          console.log('Found main title via regex:', sections.mainTitle);
+        }
       }
     }
-    
+
     console.log('Final parsed sections:', sections);
     return sections;
   };
 
   const visionSections = vision ? parseVisionContent(vision.content, language) : {};
+
+  // Utility function to convert newlines to <br> tags
+  const formatTextWithLineBreaks = (text: string) => {
+    if (!text) return '';
+    return text.replace(/\n/g, '<br />');
+  };
 
   // Debug logging
   console.log('Vision data from API:', vision);
@@ -203,8 +234,12 @@ export default function VisionMissionPage() {
                       <i className="bi bi-eye-fill"></i>
                     </div>
                     <h3 className="vision-title">{t('visionMission.vision.title')}</h3>
-                    <div className="vision-content">
-                      <p>{visionSections.vision || t('visionMission.vision.contentNotAvailable')}</p>
+                    <div className="vision-content text-start">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: formatTextWithLineBreaks(visionSections.vision || t('visionMission.vision.contentNotAvailable'))
+                        }}
+                      />
                       {!visionSections.vision && vision && (
                         <div className="mt-3">
                           <small className="text-muted">Raw content: {vision.content}</small>
@@ -221,8 +256,12 @@ export default function VisionMissionPage() {
                       <i className="bi bi-bullseye"></i>
                     </div>
                     <h3 className="mission-title">{t('visionMission.mission.title')}</h3>
-                    <div className="mission-content">
-                      <p>{visionSections.mission || t('visionMission.mission.contentNotAvailable')}</p>
+                    <div className="mission-content text-start">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: formatTextWithLineBreaks(visionSections.mission || t('visionMission.mission.contentNotAvailable'))
+                        }}
+                      />
                       {!visionSections.mission && vision && (
                         <div className="mt-3">
                           <small className="text-muted">Raw content: {vision.content}</small>
@@ -239,8 +278,12 @@ export default function VisionMissionPage() {
                       <i className="bi bi-heart-fill"></i>
                     </div>
                     <h3 className="values-title">{t('visionMission.values.title')}</h3>
-                    <div className="values-content">
-                      <p>{visionSections.values || t('visionMission.values.contentNotAvailable')}</p>
+                    <div className="values-content text-start">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: formatTextWithLineBreaks(visionSections.values || t('visionMission.values.contentNotAvailable'))
+                        }}
+                      />
                       {!visionSections.values && vision && (
                         <div className="mt-3">
                           <small className="text-muted">Raw content: {vision.content}</small>

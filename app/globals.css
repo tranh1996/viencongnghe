@@ -417,7 +417,7 @@ code {
 .vision-content,
 .mission-content,
 .values-content {
-  text-align: center;
+  /* Text alignment now controlled by individual components */
 }
 
 .vision-content p,

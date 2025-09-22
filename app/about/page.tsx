@@ -60,28 +60,34 @@ export default function AboutPage() {
     };
   }, [language]);
 
+  // Utility function to convert newlines to <br> tags
+  const formatTextWithLineBreaks = (text: string) => {
+    if (!text) return '';
+    return text.replace(/\n/g, '<br />');
+  };
+
   // Vision, Mission, Core Values data
   const visionMissionData = [
     {
-      icon: 'bi-eye',
-      title: language === 'vi' ? 'Tầm nhìn' : 'Vision',
+      icon: 'bi-eye-fill',
+      title: language === 'vi' ? 'Slogan' : 'Slogan',
       content: language === 'vi'
-        ? 'Trở thành trung tâm nghiên cứu và phát triển công nghệ hàng đầu trong lĩnh vực cơ khí tại Việt Nam và khu vực.'
-        : 'To become a leading research and technology development center in the field of machinery in Vietnam and the region.'
+        ? 'Tự lực – Tự cường – Chủ động – Sáng tạo\nĐoàn kết – Nghĩa Tình – Hội nhập – Phát triển'
+        : 'Self-reliance – Self-strength – Proactive – Creative\nUnity – Righteousness – Integration – Development'
     },
     {
       icon: 'bi-bullseye',
-      title: language === 'vi' ? 'Sứ mệnh' : 'Mission',
+      title: language === 'vi' ? 'Năng lực cốt lõi' : 'Core Competencies',
       content: language === 'vi'
-        ? 'Nghiên cứu, ứng dụng và chuyển giao công nghệ tiên tiến để phục vụ sự phát triển công nghiệp và nâng cao năng lực cạnh tranh của doanh nghiệp.'
-        : 'Research, apply and transfer advanced technology to serve industrial development and enhance business competitiveness.'
+        ? '• Công nghệ cơ khí chính xác và điều khiển tự động\n• Công nghệ vật liệu và luyện kim tiên tiến\n• Điện tử - điều khiển và công nghệ thông tin\n• Thiết kế và chế tạo thiết bị công nghiệp\n• Đo lường, kiểm định và tiêu chuẩn hóa\n• Công nghệ hóa chất và xử lý môi trường'
+        : '• Precision mechanical technology and automation\n• Advanced materials and metallurgy technology\n• Electronics - control and information technology\n• Design and manufacturing of industrial equipment\n• Measurement, testing and standardization\n• Chemical technology and environmental treatment'
     },
     {
-      icon: 'bi-heart',
-      title: language === 'vi' ? 'Giá trị cốt lõi' : 'Core Values',
+      icon: 'bi-heart-fill',
+      title: language === 'vi' ? 'Hướng phát triển' : 'Development Direction',
       content: language === 'vi'
-        ? 'Chất lượng - Đổi mới - Hợp tác - Phát triển bền vững. Chúng tôi cam kết mang lại giá trị tốt nhất cho khách hàng và đối tác.'
-        : 'Quality - Innovation - Cooperation - Sustainable development. We are committed to bringing the best value to customers and partners.'
+        ? 'Mở rộng các mối quan hệ và dịch vụ khoa học công nghệ, nghiên cứu áp dụng tính lưỡng dụng của nhiều công nghệ sản phẩm phục vụ cho mục đích quân sự cũng như sản xuất dân sinh.'
+        : 'Expanding relationships and science and technology services, researching the dual-use application of many product technologies for both military purposes and civilian production.'
     }
   ];
 
@@ -297,13 +303,7 @@ export default function AboutPage() {
       </section>
 
       {/* Vision, Mission, Core Values Section */}
-      <section className="py-5" style={{
-        backgroundImage: 'url(/images/xbg-04.webp)',
-        backgroundPosition: 'center center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        position: 'relative'
-      }}>
+      <section className="light-bg py-5">
         <Container>
           <Row className="text-center mb-5">
             <Col>
@@ -324,16 +324,22 @@ export default function AboutPage() {
           </Row>
           <Row>
             {visionMissionData.map((item, index) => (
-              <Col lg={4} md={6} className="mb-4" key={index}>
-                <Card className="h-100 text-center border-0 shadow-sm">
-                  <Card.Body className="p-4">
-                    <div className="mb-3">
-                      <i className={`bi ${item.icon}`} style={{ fontSize: '3rem', color: '#21759b' }}></i>
+              <Col lg={4} className="mb-4" key={index}>
+                <div className={index === 0 ? "vision-column" : index === 1 ? "mission-column" : "values-column"}>
+                  <div className={index === 0 ? "vision-card" : index === 1 ? "mission-card" : "values-card"}>
+                    <div className={index === 0 ? "vision-icon" : index === 1 ? "mission-icon" : "values-icon"}>
+                      <i className={`bi ${item.icon}`}></i>
                     </div>
-                    <Card.Title className="h5 mb-3">{item.title}</Card.Title>
-                    <Card.Text className="text-muted">{item.content}</Card.Text>
-                  </Card.Body>
-                </Card>
+                    <h3 className={index === 0 ? "vision-title" : index === 1 ? "mission-title" : "values-title"}>{item.title}</h3>
+                    <div className={`${index === 0 ? "vision-content" : index === 1 ? "mission-content" : "values-content"} text-start`}>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: formatTextWithLineBreaks(item.content)
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </Col>
             ))}
           </Row>

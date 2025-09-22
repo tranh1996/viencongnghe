@@ -7,7 +7,7 @@ import {Container, Row, Col, Button, Card} from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BannerSlider from '@/components/BannerSlider';
 import OptimizedImage from '@/components/OptimizedImage';
-import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner, fetchProducts, Product, fetchPartners, Partner } from '@/utils/api';
+import { fetchLatestNews, News, fetchAboutOverview, AboutOverview, fetchBanners, Banner, fetchProducts, Product, fetchPartners, Partner, fetchAlbumImages, AlbumData, AlbumImage } from '@/utils/api';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -19,27 +19,31 @@ export default function HomePage() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
+  const [albumData, setAlbumData] = useState<AlbumData | null>(null);
   const [loading, setLoading] = useState(true);
   const [aboutLoading, setAboutLoading] = useState(true);
   const [bannerLoading, setBannerLoading] = useState(true);
   const [productsLoading, setProductsLoading] = useState(true);
   const [partnersLoading, setPartnersLoading] = useState(true);
+  const [albumLoading, setAlbumLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [newsData, aboutData, bannerData, productsData, partnersData] = await Promise.all([
+        const [newsData, aboutData, bannerData, productsData, partnersData, albumData] = await Promise.all([
           fetchLatestNews(language, 3),
           fetchAboutOverview(language),
-          fetchBanners('header', 1),
+          fetchBanners(language, 'header', 1),
           fetchProducts(language, 1, 4), // Fetch 4 products for homepage
-          fetchPartners() // Fetch partners data
+          fetchPartners(language), // Fetch partners data
+          fetchAlbumImages(language) // Fetch album images data
         ]);
         setLatestNews(newsData);
         setAboutOverview(aboutData);
         setBanners(bannerData);
         setProducts(productsData.products);
         setPartners(partnersData);
+        setAlbumData(albumData);
       } catch (error) {
         console.error('Error fetching data:', error);
         // Fallback to empty array if API fails
@@ -48,12 +52,14 @@ export default function HomePage() {
         setBanners([]);
         setProducts([]);
         setPartners([]);
+        setAlbumData(null);
       } finally {
         setLoading(false);
         setAboutLoading(false);
         setBannerLoading(false);
         setProductsLoading(false);
         setPartnersLoading(false);
+        setAlbumLoading(false);
       }
     };
 
@@ -297,7 +303,7 @@ export default function HomePage() {
         <BannerSlider slides={banners.length > 0 ? transformBanners(banners) : bannerSlides} />
       )}
 
-      <div style={{ maxWidth: '1170px', margin: '0 auto' }}>
+      <div>
 
       {/* About Section */}
       <section style={{ paddingTop: '140px' }}>
@@ -1243,83 +1249,161 @@ export default function HomePage() {
                 {language === 'vi' ? 'MEDIA' : 'MEDIA'}
               </p>
               <h2 className="section-main-title mb-4">
-                {language === 'vi' ? 'HÌNH ẢNH HOẠT ĐỘNG' : 'ACTIVITY IMAGES'}
+                {albumData?.album_title || (language === 'vi' ? 'HÌNH ẢNH HOẠT ĐỘNG' : 'ACTIVITY IMAGES')}
               </h2>
+              {albumData?.album_description && (
+                <p className="section-description text-muted">
+                  {albumData.album_description}
+                </p>
+              )}
             </Col>
           </Row>
 
           {/* Activity Images Slider */}
           <div className="activity-slider-wrapper position-relative">
             <div className="activity-slider" id="activityImagesSlider">
-              <div className="activity-slide active">
-                <Row className="activity-images-row h-100">
-                  <Col lg={4} md={4} className="activity-image-item">
-                    <div className="activity-gallery-item h-100">
-                      <OptimizedImage
-                        src="/images/activities/event-outdoor.jpg"
-                        alt={language === 'vi' ? 'Sự kiện ngoài trời của viện' : 'Institute Outdoor Event'}
-                        context="Hình ảnh hoạt động"
-                        className="activity-gallery-img"
-                      />
-                    </div>
-                  </Col>
-                  <Col lg={4} md={4} className="activity-image-item">
-                    <div className="activity-gallery-item h-100">
-                      <OptimizedImage
-                        src="/images/activities/official-ceremony.jpg"
-                        alt={language === 'vi' ? 'Lễ công bố quyết định của viện' : 'Official Announcement Ceremony'}
-                        context="Hình ảnh hoạt động"
-                        className="activity-gallery-img"
-                      />
-                    </div>
-                  </Col>
-                  <Col lg={4} md={4} className="activity-image-item">
-                    <div className="activity-gallery-item h-100">
-                      <OptimizedImage
-                        src="/images/activities/training-session.jpg"
-                        alt={language === 'vi' ? 'Buổi đào tạo và hội thảo' : 'Training and Workshop Session'}
-                        context="Hình ảnh hoạt động"
-                        className="activity-gallery-img"
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-
-              <div className="activity-slide">
-                <Row className="activity-images-row h-100">
-                  <Col lg={4} md={4} className="activity-image-item">
-                    <div className="activity-gallery-item h-100">
-                      <OptimizedImage
-                        src="/images/activities/conference.jpg"
-                        alt={language === 'vi' ? 'Hội nghị khoa học' : 'Scientific Conference'}
-                        context="Hình ảnh hoạt động"
-                        className="activity-gallery-img"
-                      />
-                    </div>
-                  </Col>
-                  <Col lg={4} md={4} className="activity-image-item">
-                    <div className="activity-gallery-item h-100">
-                      <OptimizedImage
-                        src="/images/activities/laboratory.jpg"
-                        alt={language === 'vi' ? 'Hoạt động phòng thí nghiệm' : 'Laboratory Activities'}
-                        context="Hình ảnh hoạt động"
-                        className="activity-gallery-img"
-                      />
-                    </div>
-                  </Col>
-                  <Col lg={4} md={4} className="activity-image-item">
-                    <div className="activity-gallery-item h-100">
-                      <OptimizedImage
-                        src="/images/activities/workshop.jpg"
-                        alt={language === 'vi' ? 'Hội thảo chuyên môn' : 'Professional Workshop'}
-                        context="Hình ảnh hoạt động"
-                        className="activity-gallery-img"
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+              {albumLoading ? (
+                // Loading slide
+                <div className="activity-slide active">
+                  <Row className="activity-images-row h-100">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <Col lg={4} md={4} className="activity-image-item" key={`loading-${index}`}>
+                        <div className="activity-gallery-item h-100 d-flex align-items-center justify-content-center bg-light">
+                          <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                      </Col>
+                    ))}
+                  </Row>
+                </div>
+              ) : albumData && albumData.images.length > 0 ? (
+                // Render dynamic slides from API
+                (() => {
+                  const slides = [];
+                  const imagesPerSlide = 3; // 3 images per slide
+                  for (let i = 0; i < albumData.images.length; i += imagesPerSlide) {
+                    const slideImages = albumData.images.slice(i, i + imagesPerSlide);
+                    slides.push(
+                      <div className={`activity-slide ${i === 0 ? 'active' : ''}`} key={`slide-${i}`}>
+                        <Row className="activity-images-row h-100">
+                          {slideImages.map((image) => (
+                            <Col lg={4} md={4} className="activity-image-item" key={image.id}>
+                              <div className="activity-gallery-item h-100">
+                                <OptimizedImage
+                                  src={image.thumbnail_url || image.url}
+                                  alt={image.title}
+                                  context="Hình ảnh hoạt động"
+                                  className="activity-gallery-img"
+                                  loading="lazy"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover'
+                                  }}
+                                />
+                                <div className="image-overlay">
+                                  <div className="image-overlay-content">
+                                    <h6 className="image-title text-white mb-1">{image.title}</h6>
+                                    {image.description && (
+                                      <p className="image-description text-white-50 small mb-0">
+                                        {truncateText(image.description, 100)}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </Col>
+                          ))}
+                          {/* Fill remaining columns if less than 3 images */}
+                          {slideImages.length < imagesPerSlide && Array.from({ length: imagesPerSlide - slideImages.length }).map((_, index) => (
+                            <Col lg={4} md={4} className="activity-image-item" key={`placeholder-${index}`}>
+                              <div className="activity-gallery-item h-100 bg-light d-flex align-items-center justify-content-center">
+                                <div className="text-muted">
+                                  <i className="bi bi-image" style={{ fontSize: '3rem' }}></i>
+                                </div>
+                              </div>
+                            </Col>
+                          ))}
+                        </Row>
+                      </div>
+                    );
+                  }
+                  return slides;
+                })()
+              ) : (
+                // Fallback to default images if API fails
+                <>
+                  <div className="activity-slide active">
+                    <Row className="activity-images-row h-100">
+                      <Col lg={4} md={4} className="activity-image-item">
+                        <div className="activity-gallery-item h-100">
+                          <OptimizedImage
+                            src="/images/activities/event-outdoor.jpg"
+                            alt={language === 'vi' ? 'Sự kiện ngoài trời của viện' : 'Institute Outdoor Event'}
+                            context="Hình ảnh hoạt động"
+                            className="activity-gallery-img"
+                          />
+                        </div>
+                      </Col>
+                      <Col lg={4} md={4} className="activity-image-item">
+                        <div className="activity-gallery-item h-100">
+                          <OptimizedImage
+                            src="/images/activities/official-ceremony.jpg"
+                            alt={language === 'vi' ? 'Lễ công bố quyết định của viện' : 'Official Announcement Ceremony'}
+                            context="Hình ảnh hoạt động"
+                            className="activity-gallery-img"
+                          />
+                        </div>
+                      </Col>
+                      <Col lg={4} md={4} className="activity-image-item">
+                        <div className="activity-gallery-item h-100">
+                          <OptimizedImage
+                            src="/images/activities/training-session.jpg"
+                            alt={language === 'vi' ? 'Buổi đào tạo và hội thảo' : 'Training and Workshop Session'}
+                            context="Hình ảnh hoạt động"
+                            className="activity-gallery-img"
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div className="activity-slide">
+                    <Row className="activity-images-row h-100">
+                      <Col lg={4} md={4} className="activity-image-item">
+                        <div className="activity-gallery-item h-100">
+                          <OptimizedImage
+                            src="/images/activities/conference.jpg"
+                            alt={language === 'vi' ? 'Hội nghị khoa học' : 'Scientific Conference'}
+                            context="Hình ảnh hoạt động"
+                            className="activity-gallery-img"
+                          />
+                        </div>
+                      </Col>
+                      <Col lg={4} md={4} className="activity-image-item">
+                        <div className="activity-gallery-item h-100">
+                          <OptimizedImage
+                            src="/images/activities/laboratory.jpg"
+                            alt={language === 'vi' ? 'Hoạt động phòng thí nghiệm' : 'Laboratory Activities'}
+                            context="Hình ảnh hoạt động"
+                            className="activity-gallery-img"
+                          />
+                        </div>
+                      </Col>
+                      <Col lg={4} md={4} className="activity-image-item">
+                        <div className="activity-gallery-item h-100">
+                          <OptimizedImage
+                            src="/images/activities/workshop.jpg"
+                            alt={language === 'vi' ? 'Hội thảo chuyên môn' : 'Professional Workshop'}
+                            context="Hình ảnh hoạt động"
+                            className="activity-gallery-img"
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Navigation Buttons */}
