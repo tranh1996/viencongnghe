@@ -3,6 +3,7 @@
 import type { Metadata } from 'next';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {Container, Row, Col, Button, Card} from 'react-bootstrap';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BannerSlider from '@/components/BannerSlider';
@@ -14,6 +15,7 @@ export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   const { t, language } = useLanguage();
+  const router = useRouter();
   const [latestNews, setLatestNews] = useState<News[]>([]);
   const [aboutOverview, setAboutOverview] = useState<AboutOverview | null>(null);
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -1289,7 +1291,11 @@ export default function HomePage() {
                         <Row className="activity-images-row h-100">
                           {slideImages.map((image) => (
                             <Col lg={4} md={4} className="activity-image-item" key={image.id}>
-                              <div className="activity-gallery-item h-100">
+                              <div
+                                className="activity-gallery-item h-100"
+                                onClick={() => router.push('/library')}
+                                style={{ cursor: 'pointer' }}
+                              >
                                 <OptimizedImage
                                   src={image.thumbnail_url || image.url}
                                   alt={image.title}
@@ -1337,7 +1343,11 @@ export default function HomePage() {
                   <div className="activity-slide active">
                     <Row className="activity-images-row h-100">
                       <Col lg={4} md={4} className="activity-image-item">
-                        <div className="activity-gallery-item h-100">
+                        <div
+                          className="activity-gallery-item h-100"
+                          onClick={() => router.push('/library')}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <OptimizedImage
                             src="/images/activities/event-outdoor.jpg"
                             alt={language === 'vi' ? 'Sự kiện ngoài trời của viện' : 'Institute Outdoor Event'}
@@ -1347,7 +1357,11 @@ export default function HomePage() {
                         </div>
                       </Col>
                       <Col lg={4} md={4} className="activity-image-item">
-                        <div className="activity-gallery-item h-100">
+                        <div
+                          className="activity-gallery-item h-100"
+                          onClick={() => router.push('/library')}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <OptimizedImage
                             src="/images/activities/official-ceremony.jpg"
                             alt={language === 'vi' ? 'Lễ công bố quyết định của viện' : 'Official Announcement Ceremony'}
@@ -1357,7 +1371,11 @@ export default function HomePage() {
                         </div>
                       </Col>
                       <Col lg={4} md={4} className="activity-image-item">
-                        <div className="activity-gallery-item h-100">
+                        <div
+                          className="activity-gallery-item h-100"
+                          onClick={() => router.push('/library')}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <OptimizedImage
                             src="/images/activities/training-session.jpg"
                             alt={language === 'vi' ? 'Buổi đào tạo và hội thảo' : 'Training and Workshop Session'}
@@ -1371,7 +1389,11 @@ export default function HomePage() {
                   <div className="activity-slide">
                     <Row className="activity-images-row h-100">
                       <Col lg={4} md={4} className="activity-image-item">
-                        <div className="activity-gallery-item h-100">
+                        <div
+                          className="activity-gallery-item h-100"
+                          onClick={() => router.push('/library')}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <OptimizedImage
                             src="/images/activities/conference.jpg"
                             alt={language === 'vi' ? 'Hội nghị khoa học' : 'Scientific Conference'}
@@ -1381,7 +1403,11 @@ export default function HomePage() {
                         </div>
                       </Col>
                       <Col lg={4} md={4} className="activity-image-item">
-                        <div className="activity-gallery-item h-100">
+                        <div
+                          className="activity-gallery-item h-100"
+                          onClick={() => router.push('/library')}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <OptimizedImage
                             src="/images/activities/laboratory.jpg"
                             alt={language === 'vi' ? 'Hoạt động phòng thí nghiệm' : 'Laboratory Activities'}
@@ -1391,7 +1417,11 @@ export default function HomePage() {
                         </div>
                       </Col>
                       <Col lg={4} md={4} className="activity-image-item">
-                        <div className="activity-gallery-item h-100">
+                        <div
+                          className="activity-gallery-item h-100"
+                          onClick={() => router.push('/library')}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <OptimizedImage
                             src="/images/activities/workshop.jpg"
                             alt={language === 'vi' ? 'Hội thảo chuyên môn' : 'Professional Workshop'}

@@ -98,6 +98,8 @@ const viTranslations: Record<string, string> = {
   'nav.products': 'Sản phẩm',
   'nav.news': 'Tin tức',
   'nav.library': 'Thư viện',
+  'nav.library.images': 'Hình ảnh hoạt động',
+  'nav.library.videos': 'Video hoạt động',
   'nav.contact': 'Liên hệ',
   'nav.about.visionMission': 'Tầm nhìn sứ mệnh',
   'nav.about.history': 'Lịch sử hình thành & phát triển',
@@ -197,7 +199,7 @@ const viTranslations: Record<string, string> = {
   'visionMission.mission.contentNotAvailable': 'Nội dung năng lực cốt lõi chưa có sẵn.',
   'visionMission.values.contentNotAvailable': 'Nội dung hướng phát triển chưa có sẵn.',
   'visionMission.summary.title': 'Tầm nhìn và Sứ mệnh',
-  'visionMission.summary.description': 'Viện Công nghệ cam kết thực hiện tầm nhìn trở thành một tổ chức nghiên cứu hàng đầu trong lĩnh vực công nghệ, đóng góp tích cực vào sự phát triển bền vững của đất nước. Chúng tôi nỗ lực không ngừng để thực hiện sứ mệnh nghiên cứu, phát triển và chuyển giao công nghệ tiên tiến.',
+  'visionMission.summary.description': 'Là đơn vị làm công tác nghiên cứu, phát triển khoa học công nghệ trong thời gian tới Viện tập trung một số nội dung công việc sau:<ul><li>Đẩy mạnh công tác nghiên cứu trong các lĩnh vực mũi nhọn về công nghệ mới, vật liệu mới, phối hợp với các đơn vị thực hiện chuyển giao đồng bộ công nghệ, sản phẩm và dây chuyền sản xuất. Thực hiện nghiên cứu đổi mới công nghệ, nâng cao năng suất, chất lượng sản phẩm và khai thác triệt để, hiệu quả các trang thiết bị hiện có;</li><li>Mở rộng các mối quan hệ và dịch vụ KHCN và kinh tế, nghiên cứu áp dụng tính lưỡng dụng của nhiều công nghệ sản phẩm phục vụ cho mục đích quân sự cũng như sản xuất dân sinh.</li></ul>Là một đơn vị nghiên cứu và phát triển khoa học công nghệ, với truyền thống 50 năm xây dựng và phát triển Viện Công nghệ sẽ ngày càng lớn mạnh, hoàn thành tốt nhiệm vụ về nghiêu cứu chế thử; chế tạo, sản xuất các thiết bị đặc thù; đẩy mạnh hơn nữa công tác tư vấn, đào tạo và chuyển giao công nghệ đồng bộ dây chuyền sản xuất, đặc biệt là chuyển giao công nghệ từ các nước SNG vào Việt Nam.',
   'visionMission.summary.aboutButton': 'Về chúng tôi',
   'visionMission.summary.historyButton': 'Lịch sử phát triển',
 
@@ -458,6 +460,13 @@ const viTranslations: Record<string, string> = {
   'organization.haveQuestionsDesc': 'Nếu bạn cần thêm thông tin về phòng ban này hoặc muốn hợp tác, vui lòng liên hệ với chúng tôi.',
   'organization.viewAllDepartments': 'Xem tất cả phòng ban',
   'organization.departmentList': 'Danh sách phòng ban',
+  'organization.achievements.title': 'Ghi nhận những nỗ lực và cố gắng đó, trong những năm gần đây, Phòng đã được tặng các danh hiệu thi đua khen thưởng',
+  'organization.achievements.award1': 'Danh hiệu "Tập thể lao động tiên tiến" các năm 2016, 2017, 2019.',
+  'organization.achievements.award2': 'Bằng khen của TGĐ Tổng Công ty VEAM: "Đơn vị hoàn thành xuất sắc nhiệm vụ" năm 2018.',
+  'organization.activityImages.title': 'Một số hình ảnh hoạt động của chúng tôi',
+  'organization.activityImages.activity1': 'Hoạt động 1',
+  'organization.activityImages.activity2': 'Hoạt động 2',
+  'organization.activityImages.activity3': 'Hoạt động 3',
 
   // Language switcher
   'language.vi': 'Tiếng Việt',
@@ -474,6 +483,8 @@ const enTranslations: Record<string, string> = {
   'nav.products': 'Products',
   'nav.news': 'News',
   'nav.library': 'Library',
+  'nav.library.images': 'Activity Images',
+  'nav.library.videos': 'Activity Videos',
   'nav.contact': 'Contact',
   'nav.about.visionMission': 'Vision & Mission',
   'nav.about.history': 'History of Formation & Development',
@@ -573,7 +584,7 @@ const enTranslations: Record<string, string> = {
   'visionMission.mission.contentNotAvailable': 'Core competencies content not available.',
   'visionMission.values.contentNotAvailable': 'Development direction content not available.',
   'visionMission.summary.title': 'Vision and Mission',
-  'visionMission.summary.description': 'The Technology Institute is committed to realizing its vision of becoming a leading research organization in the field of technology, actively contributing to the sustainable development of the country. We strive continuously to fulfill our mission of researching, developing and transferring advanced technologies.',
+  'visionMission.summary.description': 'As a unit engaged in scientific and technological research and development, the Institute will focus on the following areas of work in the coming period:<ul><li>Promoting research in key areas of new technology and new materials, coordinating with units to implement synchronized transfer of technology, products and production lines. Conducting research on technological innovation, improving productivity and product quality, and thoroughly and effectively exploiting existing equipment;</li><li>Expanding scientific, technological and economic relationships and services, researching the application of dual-use nature of many product technologies serving both military purposes and civilian production.</li></ul>As a scientific and technological research and development unit, with a 50-year tradition of construction and development, the Technology Institute will continue to grow stronger, successfully completing tasks in research and testing; manufacturing and producing specialized equipment; further promoting consulting, training and synchronized production line technology transfer, especially technology transfer from CIS countries to Vietnam.',
   'visionMission.summary.aboutButton': 'About Us',
   'visionMission.summary.historyButton': 'Development History',
 
@@ -834,6 +845,13 @@ const enTranslations: Record<string, string> = {
   'organization.haveQuestionsDesc': 'If you need more information about this department or want to collaborate, please contact us.',
   'organization.viewAllDepartments': 'View All Departments',
   'organization.departmentList': 'Department List',
+  'organization.achievements.title': 'Recognizing these efforts and efforts, in recent years, the Department has been awarded the following emulation and commendation titles',
+  'organization.achievements.award1': 'Title "Advanced Labor Collective" in 2016, 2017, 2019.',
+  'organization.achievements.award2': 'Certificate of Merit from the General Director of VEAM Corporation: "Unit excellently completing tasks" in 2018.',
+  'organization.activityImages.title': 'Some images of our activities',
+  'organization.activityImages.activity1': 'Activity 1',
+  'organization.activityImages.activity2': 'Activity 2',
+  'organization.activityImages.activity3': 'Activity 3',
 
   // Language switcher
   'language.vi': 'Tiếng Việt',

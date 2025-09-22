@@ -5,11 +5,7 @@
 
 /* CSS Variables and Imports */
 
-/* Font imports to match HTML template */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+/* Font imports removed - using Next.js fonts from layout.tsx instead */
 
 :root {
     --themeht-primary-color: #21759b;
@@ -21,6 +17,6 @@
     --themeht-bg-light-color: #f6f7ff;
     --themeht-border-light-color: #E5E5E5;
     --themeht-rgba-color: rgba(255,255,255,0.9);
-    --themeht-typography-body-font-family: "Plus Jakarta Sans", sans-serif;
-    --themeht-typography-secondary-font-family: "Familjen Grotesk", sans-serif;
+    --themeht-typography-body-font-family: var(--font-roboto), "Roboto", sans-serif;
+    --themeht-typography-secondary-font-family: var(--font-roboto), "Roboto", sans-serif;
 }

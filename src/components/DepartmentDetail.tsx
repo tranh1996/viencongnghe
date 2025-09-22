@@ -230,22 +230,22 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                     <div className="text-center">
                       <img
                         src="/images/product/01.jpg"
-                        alt={t('library.activityImages')}
+                        alt={t('library.activities.research')}
                         className="img-fluid rounded mb-2"
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                       />
-                      <div className="small">{t('library.activityImages')}</div>
+                      <div className="small">{t('library.activities.research')}</div>
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="text-center">
                       <img
                         src="/images/product/02.jpg"
-                        alt={t('library.productsServices')}
+                        alt={t('library.activities.production')}
                         className="img-fluid rounded mb-2"
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                       />
-                      <div className="small">{t('library.productsServices')}</div>
+                      <div className="small">{t('library.activities.production')}</div>
                     </div>
                   </div>
                 </div>
@@ -285,44 +285,44 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
               {/* Achievements Section */}
               <div className="mb-4">
                 <h5 className="mb-3">
-                  Ghi nhận những nỗ lực và cố gắng đó, trong những năm gần đây, Phòng đã được tặng các danh hiệu thi đua khen thưởng
+                  {t('organization.achievements.title')}
                 </h5>
                 <ul className="list-unstyled">
                   <li className="mb-2">
                     <i className="bi bi-check-circle text-success me-2"></i>
-                    Danh hiệu &ldquo;Tập thể lao động tiên tiến&rdquo; các năm 2016, 2017, 2019.
+                    {t('organization.achievements.award1')}
                   </li>
                   <li className="mb-2">
                     <i className="bi bi-check-circle text-success me-2"></i>
-                    Bằng khen của TGĐ Tổng Công ty VEAM: &ldquo;Đơn vị hoàn thành xuất sắc nhiệm vụ&rdquo; năm 2018.
+                    {t('organization.achievements.award2')}
                   </li>
                 </ul>
               </div>
 
               {/* Activity Images Section */}
               <div className="mb-4">
-                <h5 className="mb-3">Một số hình ảnh hoạt động của chúng tôi</h5>
+                <h5 className="mb-3">{t('organization.activityImages.title')}</h5>
                 <Row className="g-3">
                   <Col md={4}>
-                    <img 
-                      src="/images/service/01.jpg" 
-                      alt="Hoạt động 1"
+                    <img
+                      src="/images/service/01.jpg"
+                      alt={t('organization.activityImages.activity1')}
                       className="img-fluid rounded"
                       style={{ width: '100%', height: '150px', objectFit: 'cover' }}
                     />
                   </Col>
                   <Col md={4}>
-                    <img 
-                      src="/images/service/02.jpg" 
-                      alt="Hoạt động 2"
+                    <img
+                      src="/images/service/02.jpg"
+                      alt={t('organization.activityImages.activity2')}
                       className="img-fluid rounded"
                       style={{ width: '100%', height: '150px', objectFit: 'cover' }}
                     />
                   </Col>
                   <Col md={4}>
-                    <img 
-                      src="/images/service/03.jpg" 
-                      alt="Hoạt động 3"
+                    <img
+                      src="/images/service/03.jpg"
+                      alt={t('organization.activityImages.activity3')}
                       className="img-fluid rounded"
                       style={{ width: '100%', height: '150px', objectFit: 'cover' }}
                     />

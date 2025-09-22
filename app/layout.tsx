@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Familjen_Grotesk } from 'next/font/google';
+import { Roboto, Roboto_Condensed } from 'next/font/google';
 import { Suspense } from 'react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
@@ -14,17 +14,17 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 // Then import custom styles
 import './globals.css';
 
-const plusJakartaSans = Plus_Jakarta_Sans({ 
+const roboto = Roboto({
   subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
-  variable: '--font-plus-jakarta-sans',
+  weight: ['300', '400', '500', '700', '900'],
+  variable: '--font-roboto',
   display: 'swap',
 });
 
-const familjenGrotesk = Familjen_Grotesk({ 
+const robotoCondensed = Roboto_Condensed({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-familjen-grotesk',
+  weight: ['300', '400', '700'],
+  variable: '--font-roboto-condensed',
   display: 'swap',
 });
 
@@ -101,7 +101,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#1253BE" />
         <meta name="msapplication-TileImage" content="/logo192.png" />
       </head>
-      <body className={`${plusJakartaSans.variable} ${familjenGrotesk.variable}`}>
+      <body className={`${roboto.variable} ${robotoCondensed.variable}`}>
         <LanguageProvider>
           <div className="page-wrapper">
             <Suspense fallback={null}>
