@@ -177,64 +177,74 @@ export default function BlogDetailPage() {
               {/* Main Content */}
               <Col lg={8} md={12}>
                 <div className="post-card">
-                  {/* Post Image */}
-                  {post.image_url && (
-                    <div className="post-image">
-                      <OptimizedImage 
-                        src={post.image_url} 
-                        className="img-fluid" 
-                        alt={post.title}
-                        width={800}
-                        height={400}
-                        context="blog-detail"
-                      />
-                    </div>
-                  )}
-                  
                   <div className="post-desc">
+                    {/* Post Title */}
+                    <div className="post-title mb-4">
+                      <h1 className="mb-3">{post.title}</h1>
+                    </div>
+
                     {/* Post Meta */}
-                    <div className="post-bottom">
-                      <ul className="list-inline">
+                    <div className="post-meta mb-4">
+                      <ul className="list-inline mb-0">
                         <li className="list-inline-item">
-                          <i className="bi bi-person"></i> {t('blog.admin')}
+                          <i className="bi bi-person-circle me-1"></i>
+                          <span>{t('blog.admin')}</span>
                         </li>
                         <li className="list-inline-item">
-                          <i className="bi bi-calendar3"></i> {formatDate(post.created_at)}
+                          <i className="bi bi-calendar3 me-1"></i>
+                          <span>{formatDate(post.created_at)}</span>
                         </li>
                         <li className="list-inline-item">
-                          <i className="bi bi-tag"></i> 
-                          {post.categories && post.categories.length > 0 ? (
-                            post.categories.map((category, index) => (
-                              <span key={category.id}>
-                                {language === 'vi' ? category.name : (category.name_en || category.name)}
-                                {index < post.categories.length - 1 ? ', ' : ''}
-                              </span>
-                            ))
-                          ) : (
-                            t('blog.noCategory')
-                          )}
+                          <i className="bi bi-eye me-1"></i>
+                          <span>0 {language === 'vi' ? 'bình luận' : 'comments'}</span>
                         </li>
+                        {post.categories && post.categories.length > 0 && (
+                          <li className="list-inline-item">
+                            <span className="badge bg-primary">
+                              {language === 'vi' ? post.categories[0].name : (post.categories[0].name_en || post.categories[0].name)}
+                            </span>
+                          </li>
+                        )}
                       </ul>
                     </div>
 
                     {/* Post Content */}
                     {post.description && (
-                      <p className="ht-first-letter">
-                        {post.description}
-                      </p>
+                      <div className="post-content mb-4">
+                        <p className="lead">
+                          {post.description}
+                        </p>
+                      </div>
                     )}
-                    
+
                     {post.content && (
-                      <div 
-                        className="content-body"
+                      <div
+                        className="content-body mb-4"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                       />
+                    )}
+
+                    {/* Post Image - moved to bottom */}
+                    {post.image_url && (
+                      <div className="post-image mb-4">
+                        <OptimizedImage
+                          src={post.image_url}
+                          className="img-fluid w-100"
+                          alt={post.title}
+                          width={800}
+                          height={400}
+                          context="blog-detail"
+                          style={{
+                            borderRadius: '8px'
+                          }}
+                        />
+                      </div>
                     )}
 
                     {/* Tags */}
                     {post.tags && (
                       <div className="theme-tags blog-tag-link tags-links">
-                        {t('blog.tags')}: 
+                        {t('blog.tags')}:
                         {(() => {
                           try {
                             const tagsArray = JSON.parse(post.tags);
@@ -308,76 +318,98 @@ export default function BlogDetailPage() {
               </Col>
 
               {/* Sidebar */}
-              <Col lg={4} md={12} className="mt-7 mt-lg-0 ps-lg-10">
+              <Col lg={4} md={12} className="mt-4 mt-lg-0 ps-lg-4">
                 <div className="themeht-sidebar">
-                  {/* Search Widget */}
-                  <div 
-                    className="widget widget-search"
+                  {/* Animated Activity Images Widget */}
+                  <div
+                    className="widget animated-widget clickable-widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
                       padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
-                      background: 'var(--themeht-white-color)'
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      color: 'white',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      cursor: 'pointer'
                     }}
+                    onClick={() => window.location.href = '/library'}
                   >
-                    <h4 className="widget-title mb-3 fw-bold">{t('blog.searchTitle')}</h4>
-                    <div className="widget-search">
-                      <form onSubmit={handleSearch}>
-                        <div className="widget-searchbox">
-                          <input 
-                            type="text" 
-                            placeholder={t('blog.searchPlaceholder')} 
-                            className="form-control"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                          />
-                          <button type="submit" className="search-btn">
-                            <i className="bi bi-search"></i>
-                          </button>
-                        </div>
-                      </form>
+                    <div
+                      className="animated-bg"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+                        animation: 'pulse 3s ease-in-out infinite'
+                      }}
+                    />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <h4 className="widget-title mb-3 fw-bold text-white">
+                        <i className="bi bi-images me-2"></i>
+                        {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
+                      </h4>
+                      <p className="text-white-50 mb-0">
+                        {language === 'vi'
+                          ? 'Khám phá những hình ảnh hoạt động tại viện'
+                          : 'Explore activity images at the institute'
+                        }
+                      </p>
                     </div>
                   </div>
 
-                  {/* Recent Posts Widget */}
-                  <div 
-                    className="widget"
+                  {/* Animated Products & Services Widget */}
+                  <div
+                    className="widget animated-widget clickable-widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
                       padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
-                      background: 'var(--themeht-white-color)'
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      color: 'white',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      cursor: 'pointer'
                     }}
+                    onClick={() => window.location.href = '/products'}
                   >
-                    <h5 className="widget-title">{t('blog.recentPosts')}</h5>
-                    <div className="recent-post">
-                      <ul className="list-unstyled">
-                        {relatedPosts.slice(0, 3).map((relatedPost) => (
-                          <li key={relatedPost.id} className="mb-3">
-                            <div className="recent-post-thumb">
-                              <OptimizedImage 
-                                src={relatedPost.image_url || "/images/blog/01.jpg"} 
-                                className="img-fluid" 
-                                alt={relatedPost.title}
-                                width={80}
-                                height={60}
-                                context="blog-thumb"
-                              />
-                            </div>
-                            <div className="recent-post-desc">
-                              <a href={`/blog/${relatedPost.slug}`}>{relatedPost.title}</a>
-                              <div className="post-date-small">{formatDate(relatedPost.created_at)}</div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                    <div
+                      className="animated-bg"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+                        animation: 'pulse 3s ease-in-out infinite'
+                      }}
+                    />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <h4 className="widget-title mb-3 fw-bold text-white">
+                        <i className="bi bi-box-seam me-2"></i>
+                        {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
+                      </h4>
+                      <p className="text-white-50 mb-0">
+                        {language === 'vi'
+                          ? 'Tìm hiểu về các sản phẩm và dịch vụ của chúng tôi'
+                          : 'Learn about our products and services'
+                        }
+                      </p>
                     </div>
                   </div>
 
                   {/* Categories Widget */}
-                  <div 
+                  <div
                     className="widget widget-categories"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
@@ -387,7 +419,10 @@ export default function BlogDetailPage() {
                       background: 'var(--themeht-white-color)'
                     }}
                   >
-                    <h4 className="widget-title mb-3 fw-bold">{t('blog.categories')}</h4>
+                    <h4 className="widget-title mb-3 fw-bold">
+                      <i className="bi bi-tags me-2"></i>
+                      {language === 'vi' ? 'Danh mục bài viết' : 'Article Categories'}
+                    </h4>
                     <ul className="widget-categories list-unstyled">
                       <li>
                         <a
@@ -409,11 +444,11 @@ export default function BlogDetailPage() {
                           }}
                         >
                           <div className="d-flex align-items-center">
-                            <span 
-                              style={{ 
-                                width: '6px', 
-                                height: '6px', 
-                                borderRadius: '50%', 
+                            <span
+                              style={{
+                                width: '6px',
+                                height: '6px',
+                                borderRadius: '50%',
                                 backgroundColor: '#1253be',
                                 marginRight: '10px',
                                 flexShrink: 0
@@ -445,11 +480,11 @@ export default function BlogDetailPage() {
                             }}
                           >
                             <div className="d-flex align-items-center">
-                              <span 
-                                style={{ 
-                                  width: '6px', 
-                                  height: '6px', 
-                                  borderRadius: '50%', 
+                              <span
+                                style={{
+                                  width: '6px',
+                                  height: '6px',
+                                  borderRadius: '50%',
                                   backgroundColor: '#1253be',
                                   marginRight: '10px',
                                   flexShrink: 0
@@ -464,8 +499,8 @@ export default function BlogDetailPage() {
                     </ul>
                   </div>
 
-                  {/* Popular Tags Widget */}
-                  <div 
+                  {/* Recent Posts Widget */}
+                  <div
                     className="widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
@@ -475,15 +510,32 @@ export default function BlogDetailPage() {
                       background: 'var(--themeht-white-color)'
                     }}
                   >
-                    <h5 className="widget-title">{t('blog.popularTags')}</h5>
-                    <ul className="widget-tags list-inline">
-                      <li><a href="#">{t('blog.tags.laboratory')}</a></li>
-                      <li><a href="#">{t('blog.tags.research')}</a></li>
-                      <li><a href="#">{t('blog.tags.technology')}</a></li>
-                      <li><a href="#">{t('blog.tags.science')}</a></li>
-                      <li><a href="#">{t('blog.tags.innovation')}</a></li>
-                      <li><a href="#">{t('blog.tags.development')}</a></li>
-                    </ul>
+                    <h5 className="widget-title">
+                      <i className="bi bi-clock-history me-2"></i>
+                      {language === 'vi' ? 'Bài viết gần đây' : 'Recent Posts'}
+                    </h5>
+                    <div className="recent-post">
+                      <ul className="list-unstyled">
+                        {relatedPosts.slice(0, 3).map((relatedPost) => (
+                          <li key={relatedPost.id} className="mb-3">
+                            <div className="recent-post-thumb">
+                              <OptimizedImage
+                                src={relatedPost.image_url || "/images/blog/01.jpg"}
+                                className="img-fluid"
+                                alt={relatedPost.title}
+                                width={80}
+                                height={60}
+                                context="blog-thumb"
+                              />
+                            </div>
+                            <div className="recent-post-desc">
+                              <a href={`/blog/${relatedPost.slug}`}>{relatedPost.title}</a>
+                              <div className="post-date-small">{formatDate(relatedPost.created_at)}</div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </Col>
@@ -493,6 +545,30 @@ export default function BlogDetailPage() {
       </div>
 
       <style jsx>{`
+        @keyframes pulse {
+          0% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.02);
+          }
+          100% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+        }
+
+        .animated-widget {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .animated-widget:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px 10px rgba(115, 113, 255, .15) !important;
+        }
+
         .post-card {
           margin-bottom: 2rem;
           border: 1px solid #e9ecef;
@@ -500,21 +576,39 @@ export default function BlogDetailPage() {
           overflow: hidden;
           background: white;
         }
-        
+
         .post-desc {
           padding: 2rem;
         }
-        
-        .post-bottom ul {
-          margin-bottom: 1rem;
+
+        .post-title h1 {
+          font-size: 2rem;
+          font-weight: 700;
+          color: #212529;
+          line-height: 1.3;
+        }
+
+        .post-meta ul {
           color: #6c757d;
           font-size: 0.875rem;
         }
-        
-        .post-bottom .list-inline-item {
+
+        .post-meta .list-inline-item {
           margin-right: 1.5rem;
         }
-        
+
+        .post-meta .badge {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.75rem;
+        }
+
+        .post-content .lead {
+          font-size: 1.125rem;
+          font-weight: 400;
+          line-height: 1.6;
+          color: #495057;
+        }
+
         .ht-first-letter:first-letter {
           font-size: 3em;
           font-weight: bold;
@@ -524,13 +618,13 @@ export default function BlogDetailPage() {
           margin-top: 4px;
           color: var(--themeht-primary-color);
         }
-        
+
         .theme-tags {
           margin-top: 2rem;
           padding-top: 1rem;
           border-top: 1px solid #e9ecef;
         }
-        
+
         .theme-tags a {
           display: inline-block;
           margin: 0 0.5rem 0.5rem 0;
@@ -542,42 +636,42 @@ export default function BlogDetailPage() {
           font-size: 0.875rem;
           transition: all 0.3s ease;
         }
-        
+
         .theme-tags a:hover {
           background: var(--themeht-primary-color);
           color: white;
         }
-        
+
         .post-comment {
           margin-top: 2rem;
           padding-top: 2rem;
           border-top: 1px solid #e9ecef;
         }
-        
+
         .comments-title {
           font-size: 1.5rem;
           margin-bottom: 2rem;
         }
-        
+
         .post-comments {
           background: white;
           box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
-        
+
         .comment-reply-title {
           margin-bottom: 1.5rem;
         }
-        
+
         .form-group {
           margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
         }
-        
+
         .themeht-btn.primary-btn {
           background-color: var(--themeht-primary-color);
           border-color: var(--themeht-primary-color);
@@ -589,13 +683,13 @@ export default function BlogDetailPage() {
           border: 1px solid transparent;
           transition: all 0.3s ease;
         }
-        
+
         .themeht-btn.primary-btn:hover {
           background-color: transparent;
           border-color: var(--themeht-primary-color);
           color: var(--themeht-primary-color);
         }
-        
+
         .widget {
           margin-bottom: 2rem;
           background: white;
@@ -603,31 +697,13 @@ export default function BlogDetailPage() {
           border-radius: 8px;
           padding: 1.5rem;
         }
-        
+
         .widget-title {
           margin-bottom: 1rem;
           color: #212529;
           font-weight: 600;
         }
-        
-        .widget-searchbox {
-          position: relative;
-        }
-        
-        .widget-searchbox input {
-          padding-right: 3rem;
-        }
-        
-        .search-btn {
-          position: absolute;
-          right: 0.5rem;
-          top: 50%;
-          transform: translateY(-50%);
-          background: none;
-          border: none;
-          color: var(--themeht-primary-color);
-        }
-        
+
         .recent-post-thumb {
           width: 80px;
           height: 60px;
@@ -635,17 +711,17 @@ export default function BlogDetailPage() {
           border-radius: 4px;
           flex-shrink: 0;
         }
-        
+
         .recent-post {
           margin-top: 1rem;
         }
-        
+
         .recent-post li {
           display: flex;
           gap: 1rem;
           align-items: flex-start;
         }
-        
+
         .recent-post-desc a {
           color: #212529;
           text-decoration: none;
@@ -654,53 +730,22 @@ export default function BlogDetailPage() {
           display: block;
           margin-bottom: 0.5rem;
         }
-        
+
         .recent-post-desc a:hover {
           color: var(--themeht-primary-color);
         }
-        
+
         .post-date-small {
           color: #6c757d;
           font-size: 0.875rem;
         }
-        
+
         .widget-categories li {
           padding: 0.5rem 0;
         }
-        
+
         .widget-categories li:last-child {
           border-bottom: none;
-        }
-        
-        .widget-categories a {
-          color: #212529;
-          text-decoration: none;
-          transition: color 0.3s ease;
-        }
-        
-        .widget-categories a:hover {
-          color: var(--themeht-primary-color);
-        }
-        
-        .widget-tags li {
-          margin-bottom: 0.5rem;
-          margin-right: 0.5rem;
-        }
-        
-        .widget-tags a {
-          display: inline-block;
-          padding: 0.25rem 0.75rem;
-          background: #f8f9fa;
-          color: #6c757d;
-          text-decoration: none;
-          border-radius: 4px;
-          font-size: 0.875rem;
-          transition: all 0.3s ease;
-        }
-        
-        .widget-tags a:hover {
-          background: var(--themeht-primary-color);
-          color: white;
         }
       `}</style>
     </>
