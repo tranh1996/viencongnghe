@@ -1081,9 +1081,9 @@ export default function HomePage() {
           </Row>
 
           {/* Three Categories Section */}
-          <Row className="mt-5">
+          {/* <Row className="mt-5"> */}
             {/* Science & Technology News */}
-            <Col lg={4} className="mb-4">
+            {/* <Col lg={4} className="mb-4">
               <div className="news-category-section">
                 <div className="category-header-simple category-blue-container mb-3">
                   <h4 className="category-title-simple category-blue">
@@ -1119,10 +1119,10 @@ export default function HomePage() {
                   </ul>
                 </div>
               </div>
-            </Col>
+            </Col> */}
 
             {/* Training Activities */}
-            <Col lg={4} className="mb-4">
+            {/* <Col lg={4} className="mb-4">
               <div className="news-category-section">
                 <div className="category-header-simple category-orange-container mb-3">
                   <h4 className="category-title-simple category-orange">
@@ -1158,10 +1158,10 @@ export default function HomePage() {
                   </ul>
                 </div>
               </div>
-            </Col>
+            </Col> */}
 
             {/* Professional Articles */}
-            <Col lg={4} className="mb-4">
+            {/* <Col lg={4} className="mb-4">
               <div className="news-category-section">
                 <div className="category-header-simple category-green-container mb-3">
                   <h4 className="category-title-simple category-green">
@@ -1237,10 +1237,10 @@ export default function HomePage() {
                   </ul>
                 </div>
               </div>
-            </Col>
-          </Row>
+            </Col> */}
+          {/* </Row>*/}
         </Container>
-      </section>
+      </section> 
 
       {/* Activity Images Section */}
       <section className="activity-images-section py-5">

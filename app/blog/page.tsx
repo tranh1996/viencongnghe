@@ -285,272 +285,66 @@ export default function BlogPage() {
         <section className="themeht-blogs">
           <Container>
             <Row>
-              {/* Sidebar */}
-              <Col lg={4} md={12} className="mt-7 mt-lg-0 pe-lg-10">
-                <div className="themeht-sidebar">
-                  {/* Search Widget */}
-                  <div 
-                    className="widget widget-search"
-                    style={{
-                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
-                      borderRadius: '24px',
-                      marginBottom: '50px',
-                      background: 'var(--themeht-white-color)'
-                    }}
-                  >
-                    <h4 className="widget-title mb-3 fw-bold">{t('blog.searchTitle')}</h4>
-                    <div className="widget-search">
-                      <form onSubmit={handleSearchSubmit}>
-                        <div className="widget-searchbox">
-                          <input 
-                            type="text" 
-                            placeholder={t('blog.searchPlaceholder')} 
-                            className="form-control"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                          />
-                          <button type="submit" className="search-btn">
-                            <i className="bi bi-search"></i>
-                          </button>
-                        </div>
-                      </form>
-                      {isSearchMode && (
-                        <div className="search-info mt-2">
-                          <small className="text-muted">
-                            {t('blog.search.results')}: {searchTotal} {t('blog.search.found')} &ldquo;{currentSearch}&rdquo;
-                          </small>
-                          <button 
-                            type="button" 
-                            className="btn btn-link btn-sm p-0 ms-2"
-                            onClick={clearSearch}
-                          >
-                            <i className="bi bi-x-circle"></i> {t('blog.search.clear')}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Recent Posts Widget */}
-                  <div 
-                    className="widget"
-                    style={{
-                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
-                      borderRadius: '24px',
-                      marginBottom: '50px',
-                      background: 'var(--themeht-white-color)'
-                    }}
-                  >
-                    <h5 className="widget-title">{t('blog.recentPosts')}</h5>
-                    <div className="recent-post">
-                      <ul className="list-unstyled">
-                        {(!isSearchMode ? posts : []).slice(0, 3).map((post) => (
-                          <li key={post.id} className="mb-3">
-                            <div className="recent-post-thumb">
-                              <OptimizedImage 
-                                src={post.image_url || "/images/blog/01.jpg"} 
-                                className="img-fluid" 
-                                alt={post.title}
-                                width={80}
-                                height={60}
-                                context="blog-thumb"
-                              />
-                            </div>
-                            <div className="recent-post-desc">
-                              <a href={`/blog/${post.slug}`}>{post.title}</a>
-                              <div className="post-date-small">{formatDate(post.created_at)}</div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Categories Widget */}
-                  <div 
-                    className="widget widget-categories"
-                    style={{
-                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
-                      borderRadius: '24px',
-                      marginBottom: '50px',
-                      background: 'var(--themeht-white-color)'
-                    }}
-                  >
-                    <h4 className="widget-title mb-3 fw-bold">{t('blog.categories')}</h4>
-                    <ul className="widget-categories list-unstyled">
-                      <li>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleCategoryChange('');
-                          }}
-                          className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
-                            !selectedCategory ? 'active' : ''
-                          }`}
-                          style={{
-                            borderBottom: '1px dashed #e0e0e0',
-                            color: !selectedCategory ? '#1253be' : '#6c757d',
-                            transition: 'all 0.3s ease',
-                            fontWeight: !selectedCategory ? '700' : '600'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (selectedCategory) {
-                              const linkElement = e.currentTarget as HTMLElement;
-                              linkElement.style.color = '#1253be';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (selectedCategory) {
-                              const linkElement = e.currentTarget as HTMLElement;
-                              linkElement.style.color = '#6c757d';
-                            }
-                          }}
-                        >
-                          <div className="d-flex align-items-center">
-                            <span 
-                              style={{ 
-                                width: '6px', 
-                                height: '6px', 
-                                borderRadius: '50%', 
-                                backgroundColor: '#1253be',
-                                marginRight: '10px',
-                                flexShrink: 0
-                              }}
-                            ></span>
-                            <span>{t('blog.allCategories')}</span>
-                          </div>
-                          <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
-                        </a>
-                      </li>
-                      {categories.map((category) => (
-                        <li key={category.id}>
-                          <a
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleCategoryChange(category.slug);
-                            }}
-                            className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
-                              selectedCategory === category.slug ? 'active' : ''
-                            }`}
-                            style={{
-                              borderBottom: '1px dashed #e0e0e0',
-                              color: selectedCategory === category.slug ? '#1253be' : '#6c757d',
-                              transition: 'all 0.3s ease',
-                              fontWeight: selectedCategory === category.slug ? '700' : '600'
-                            }}
-                            onMouseEnter={(e) => {
-                              if (selectedCategory !== category.slug) {
-                                const linkElement = e.currentTarget as HTMLElement;
-                                linkElement.style.color = '#1253be';
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (selectedCategory !== category.slug) {
-                                const linkElement = e.currentTarget as HTMLElement;
-                                linkElement.style.color = '#6c757d';
-                              }
-                            }}
-                          >
-                            <div className="d-flex align-items-center">
-                              <span 
-                                style={{ 
-                                  width: '6px', 
-                                  height: '6px', 
-                                  borderRadius: '50%', 
-                                  backgroundColor: '#1253be',
-                                  marginRight: '10px',
-                                  flexShrink: 0
-                                }}
-                              ></span>
-                              <span>{language === 'vi' ? category.name : (category.name_en || category.name)}</span>
-                            </div>
-                            <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Popular Tags Widget */}
-                  <div 
-                    className="widget"
-                    style={{
-                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
-                      borderRadius: '24px',
-                      marginBottom: '50px',
-                      background: 'var(--themeht-white-color)'
-                    }}
-                  >
-                    <h5 className="widget-title">{t('blog.popularTags')}</h5>
-                    <ul className="widget-tags list-inline">
-                      <li><a href="#">{t('blog.tags.laboratory')}</a></li>
-                      <li><a href="#">{t('blog.tags.research')}</a></li>
-                      <li><a href="#">{t('blog.tags.technology')}</a></li>
-                      <li><a href="#">{t('blog.tags.science')}</a></li>
-                      <li><a href="#">{t('blog.tags.innovation')}</a></li>
-                      <li><a href="#">{t('blog.tags.development')}</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </Col>
-
-              {/* Main Content */}
-              <Col lg={8} md={12} className="order-lg-1">
+              {/* Main Content - Posts List */}
+              <Col lg={8} md={12}>
                 {(isSearchMode ? searchResults : posts).length > 0 ? (
                   <>
                     {(isSearchMode ? searchResults : posts).map((post) => (
-                      <div key={post.id} className="post-card post-classic">
-                        <div className="post-image">
-                          <OptimizedImage 
-                            src={post.image_url || "/images/blog/01.jpg"} 
-                            className="img-fluid w-100" 
-                            alt={post.title}
-                            width={800}
-                            height={400}
-                            context="blog-large"
-                          />
-                        </div>
-                        <div className="post-desc">
-                          <div className="post-bottom">
-                            <ul className="list-inline">
-                              <li className="list-inline-item">
-                                <i className="bi bi-person"></i> {t('blog.admin')}
-                              </li>
-                              <li className="list-inline-item">
-                                <i className="bi bi-calendar3"></i> {formatDate(post.created_at)}
-                              </li>
-                              <li className="list-inline-item">
-                                <i className="bi bi-tag"></i> 
-                                {post.categories && post.categories.length > 0 ? (
-                                  post.categories.map((category, index) => (
-                                    <span key={category.id}>
-                                      {language === 'vi' ? category.name : (category.name_en || category.name)}
-                                      {index < post.categories.length - 1 ? ', ' : ''}
+                      <div key={post.id} className="post-card post-horizontal">
+                        <div className="row g-3 align-items-center">
+                          <div className="col-md-4">
+                            <div className="post-image">
+                              <OptimizedImage
+                                src={post.image_url || "/images/blog/01.jpg"}
+                                className="img-fluid w-100"
+                                alt={post.title}
+                                width={300}
+                                height={200}
+                                context="blog-thumb"
+                                style={{
+                                  borderRadius: '8px',
+                                  objectFit: 'cover',
+                                  height: '180px'
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-8">
+                            <div className="post-content">
+                              <div className="post-title mb-2">
+                                <h4 className="mb-2">
+                                  <a href={`/blog/${post.slug}`} className="text-decoration-none">{post.title}</a>
+                                </h4>
+                              </div>
+                              <div className="post-meta mb-2">
+                                <ul className="list-inline mb-0 text-muted small">
+                                  <li className="list-inline-item">
+                                    <i className="bi bi-person-circle me-1"></i>
+                                    <span>{t('blog.admin')}</span>
+                                  </li>
+                                  <li className="list-inline-item">
+                                    <i className="bi bi-calendar3 me-1"></i>
+                                    <span>{formatDate(post.created_at)}</span>
+                                  </li>
+                                  <li className="list-inline-item">
+                                    <span className="badge bg-primary">
+                                      {post.categories && post.categories.length > 0 ? (
+                                        language === 'vi' ? post.categories[0].name : (post.categories[0].name_en || post.categories[0].name)
+                                      ) : (
+                                        t('blog.noCategory')
+                                      )}
                                     </span>
-                                  ))
-                                ) : (
-                                  t('blog.noCategory')
-                                )}
-                              </li>
-                            </ul>
+                                  </li>
+                                </ul>
+                              </div>
+                              <p className="post-excerpt mb-2 text-muted">
+                                {post.description ? truncateText(post.description, 120) : ''}
+                              </p>
+                              <a href={`/blog/${post.slug}`} className="read-more-link text-primary text-decoration-none fw-semibold">
+                                {t('blog.readMore')} <i className="bi bi-arrow-right ms-1"></i>
+                              </a>
+                            </div>
                           </div>
-                          <div className="post-title">
-                            <h4>
-                              <a href={`/blog/${post.slug}`}>{post.title}</a>
-                            </h4>
-                          </div>
-                          <p>
-                            {post.description ? truncateText(post.description, 200) : ''}
-                          </p>
-                          <a className="themeht-btn primary-btn" href={`/blog/${post.slug}`}>
-                            {t('blog.readMore')}
-                          </a>
                         </div>
                       </div>
                     ))}
@@ -622,46 +416,336 @@ export default function BlogPage() {
                   </div>
                 )}
               </Col>
+
+              {/* Right Sidebar */}
+              <Col lg={4} md={12} className="mt-4 mt-lg-0 ps-lg-4">
+                <div className="themeht-sidebar">
+                  {/* Animated Activity Images Widget */}
+                  <div
+                    className="widget animated-widget clickable-widget"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      color: 'white',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => window.location.href = '/library'}
+                  >
+                    <div
+                      className="animated-bg"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+                        animation: 'pulse 3s ease-in-out infinite'
+                      }}
+                    />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <h4 className="widget-title mb-3 fw-bold text-white">
+                        <i className="bi bi-images me-2"></i>
+                        {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
+                      </h4>
+                      <p className="text-white-50 mb-0">
+                        {language === 'vi'
+                          ? 'Khám phá những hình ảnh hoạt động tại viện'
+                          : 'Explore activity images at the institute'
+                        }
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Animated Products & Services Widget */}
+                  <div
+                    className="widget animated-widget clickable-widget"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      color: 'white',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => window.location.href = '/products'}
+                  >
+                    <div
+                      className="animated-bg"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+                        animation: 'pulse 3s ease-in-out infinite'
+                      }}
+                    />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <h4 className="widget-title mb-3 fw-bold text-white">
+                        <i className="bi bi-box-seam me-2"></i>
+                        {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
+                      </h4>
+                      <p className="text-white-50 mb-0">
+                        {language === 'vi'
+                          ? 'Tìm hiểu về các sản phẩm và dịch vụ của chúng tôi'
+                          : 'Learn about our products and services'
+                        }
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Categories Widget */}
+                  <div
+                    className="widget widget-categories"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'var(--themeht-white-color)'
+                    }}
+                  >
+                    <h4 className="widget-title mb-3 fw-bold">
+                      <i className="bi bi-tags me-2"></i>
+                      {language === 'vi' ? 'Danh mục bài viết' : 'Article Categories'}
+                    </h4>
+                    <ul className="widget-categories list-unstyled">
+                      <li>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCategoryChange('');
+                          }}
+                          className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                            !selectedCategory ? 'active' : ''
+                          }`}
+                          style={{
+                            borderBottom: '1px dashed #e0e0e0',
+                            color: !selectedCategory ? '#1253be' : '#6c757d',
+                            transition: 'all 0.3s ease',
+                            fontWeight: !selectedCategory ? '700' : '600'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedCategory) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#1253be';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedCategory) {
+                              const linkElement = e.currentTarget as HTMLElement;
+                              linkElement.style.color = '#6c757d';
+                            }
+                          }}
+                        >
+                          <div className="d-flex align-items-center">
+                            <span
+                              style={{
+                                width: '6px',
+                                height: '6px',
+                                borderRadius: '50%',
+                                backgroundColor: '#1253be',
+                                marginRight: '10px',
+                                flexShrink: 0
+                              }}
+                            ></span>
+                            <span>{t('blog.allCategories')}</span>
+                          </div>
+                          <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                        </a>
+                      </li>
+                      {categories.map((category) => (
+                        <li key={category.id}>
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleCategoryChange(category.slug);
+                            }}
+                            className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
+                              selectedCategory === category.slug ? 'active' : ''
+                            }`}
+                            style={{
+                              borderBottom: '1px dashed #e0e0e0',
+                              color: selectedCategory === category.slug ? '#1253be' : '#6c757d',
+                              transition: 'all 0.3s ease',
+                              fontWeight: selectedCategory === category.slug ? '700' : '600'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (selectedCategory !== category.slug) {
+                                const linkElement = e.currentTarget as HTMLElement;
+                                linkElement.style.color = '#1253be';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (selectedCategory !== category.slug) {
+                                const linkElement = e.currentTarget as HTMLElement;
+                                linkElement.style.color = '#6c757d';
+                              }
+                            }}
+                          >
+                            <div className="d-flex align-items-center">
+                              <span
+                                style={{
+                                  width: '6px',
+                                  height: '6px',
+                                  borderRadius: '50%',
+                                  backgroundColor: '#1253be',
+                                  marginRight: '10px',
+                                  flexShrink: 0
+                                }}
+                              ></span>
+                              <span>{language === 'vi' ? category.name : (category.name_en || category.name)}</span>
+                            </div>
+                            <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Recent Posts Widget */}
+                  <div
+                    className="widget"
+                    style={{
+                      boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                      padding: '30px',
+                      borderRadius: '24px',
+                      marginBottom: '50px',
+                      background: 'var(--themeht-white-color)'
+                    }}
+                  >
+                    <h5 className="widget-title">
+                      <i className="bi bi-clock-history me-2"></i>
+                      {language === 'vi' ? 'Bài viết gần đây' : 'Recent Posts'}
+                    </h5>
+                    <div className="recent-post">
+                      <ul className="list-unstyled">
+                        {(!isSearchMode ? posts : []).slice(0, 3).map((post) => (
+                          <li key={post.id} className="mb-3">
+                            <div className="recent-post-thumb">
+                              <OptimizedImage
+                                src={post.image_url || "/images/blog/01.jpg"}
+                                className="img-fluid"
+                                alt={post.title}
+                                width={80}
+                                height={60}
+                                context="blog-thumb"
+                              />
+                            </div>
+                            <div className="recent-post-desc">
+                              <a href={`/blog/${post.slug}`}>{post.title}</a>
+                              <div className="post-date-small">{formatDate(post.created_at)}</div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </Col>
             </Row>
           </Container>
         </section>
       </div>
 
       <style jsx>{`
+        @keyframes pulse {
+          0% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.02);
+          }
+          100% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+        }
+
+        .animated-widget {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .animated-widget:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px 10px rgba(115, 113, 255, .15) !important;
+        }
+
         .post-card {
           margin-bottom: 2rem;
           border: 1px solid #e9ecef;
           border-radius: 8px;
           overflow: hidden;
           background: white;
+          padding: 1.5rem;
+          transition: all 0.3s ease;
         }
-        
-        .post-desc {
-          padding: 2rem;
+
+        .post-card:hover {
+          box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+          transform: translateY(-2px);
         }
-        
-        .post-bottom ul {
-          margin-bottom: 1rem;
-          color: #6c757d;
-          font-size: 0.875rem;
+
+        .post-horizontal .post-image {
+          height: 180px;
+          overflow: hidden;
+          border-radius: 8px;
         }
-        
-        .post-bottom .list-inline-item {
-          margin-right: 1.5rem;
-        }
-        
+
         .post-title h4 {
-          margin-bottom: 1rem;
-          line-height: 1.3;
+          font-size: 1.2rem;
+          line-height: 1.4;
+          font-weight: 600;
         }
-        
+
         .post-title h4 a {
           color: #212529;
           text-decoration: none;
         }
-        
+
         .post-title h4 a:hover {
           color: var(--themeht-primary-color);
+        }
+
+        .post-meta {
+          font-size: 0.875rem;
+        }
+
+        .post-meta .list-inline-item {
+          margin-right: 1rem;
+        }
+
+        .post-excerpt {
+          font-size: 0.925rem;
+          line-height: 1.5;
+        }
+
+        .read-more-link {
+          font-size: 0.9rem;
+          transition: all 0.3s ease;
+        }
+
+        .read-more-link:hover {
+          color: var(--themeht-primary-color) !important;
+          transform: translateX(3px);
         }
         
         .themeht-btn.primary-btn {

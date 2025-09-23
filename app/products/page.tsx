@@ -25,7 +25,7 @@ export default function ProductsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<string>('default');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortOption, setSortOption] = useState<string>('');
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -75,7 +75,7 @@ export default function ProductsPage() {
   useEffect(() => {
     // Get URL parameters
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const limit = parseInt(searchParams.get('limit') || '10');
     const category = searchParams.get('category') || null;
     const sort = searchParams.get('sort') || 'default';
     const search = searchParams.get('search') || '';
@@ -320,9 +320,14 @@ export default function ProductsPage() {
     };
   }, []);
 
+  // Function to get product count for a category
+  const getProductCountForCategory = (categorySlug: string): number => {
+    return products.filter(product => product.product_category.slug === categorySlug).length;
+  };
+
   // Determine which products to display
   let displayProducts: Product[] = [];
-  
+
   if (isSearchSubmitted && searchResults.length > 0) {
     // Show search results
     displayProducts = searchResults;
@@ -386,6 +391,78 @@ export default function ProductsPage() {
         items={breadcrumbItems}
       />
       
+      {/* Product Categories Section */}
+      <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
+        <Container>
+          <div className="text-center mb-5">
+            <h4 className="fw-bold mb-3 category-section-title">{t('products.categories.title')}</h4>
+            <div className="category-title-underline mx-auto"></div>
+          </div>
+          <Row className="g-4">
+            {categories.map((category) => (
+              <Col key={category.id} lg={3} md={6} sm={6} xs={12}>
+                <div
+                  className="category-card position-relative overflow-hidden rounded-3"
+                  onClick={() => handleCategorySelect(category.slug)}
+                  style={{
+                    height: '250px',
+                    cursor: 'pointer',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    const card = e.currentTarget;
+                    card.style.transform = 'translateY(-10px)';
+                    card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const card = e.currentTarget;
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                  }}
+                >
+                  {/* Background Image */}
+                  <OptimizedImage
+                    src={category.image_url || '/images/categories/default.jpg'}
+                    alt={category.name}
+                    width={300}
+                    height={250}
+                    className="w-100 h-100"
+                    style={{
+                      objectFit: 'cover',
+                      objectPosition: 'center'
+                    }}
+                    sizes="(max-width: 576px) 100vw, (max-width: 768px) 50vw, (max-width: 992px) 50vw, 25vw"
+                  />
+
+                  {/* Overlay */}
+                  <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{
+                      background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%)'
+                    }}
+                  ></div>
+
+                  {/* Category Name */}
+                  <div className="position-absolute bottom-0 start-0 w-100 p-4">
+                    <h6 className="text-white fw-bold mb-0 text-center text-uppercase category-name" style={{ fontSize: '0.9rem' }}>
+                      {language === 'vi' ? category.name : (category.name_en || category.name)}
+                    </h6>
+                    <div className="text-white text-center category-count" style={{
+                      fontSize: '0.75rem',
+                      opacity: 0,
+                      transition: 'opacity 0.3s ease',
+                      marginTop: '5px'
+                    }}>
+                      {getProductCountForCategory(category.slug)} {t('products.categories.productCount')}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      </section>
+
       <section>
         <Container>
           {/* Filter/Sort Toolbar */}
@@ -395,33 +472,17 @@ export default function ProductsPage() {
                 <Row className="align-items-center">
                   <Col md={5} className="mb-3 mb-md-0">
                     <span>
-                      {t('products.results.showing')} {pagination.from} {t('products.results.to')} {pagination.to} {t('products.results.of')} {pagination.total} {t('products.results.total')}
+                      {t('products.results.showing')} {pagination.from}-{pagination.to} {t('products.results.of')} {pagination.total} {t('products.results.total')}
                     </span>
                   </Col>
                   <Col md={7} className="d-flex align-items-center justify-content-md-end">
-                    <div className="view-filter me-3">
-                      <button 
-                        className={`align-middle me-2 ${viewMode === 'grid' ? 'text-theme' : 'text-black'}`}
-                        onClick={() => setViewMode('grid')}
-                        style={{ background: 'none', border: 'none' }}
-                      >
-                        <i className="fs-3 bi bi-grid-3x2"></i>
-                      </button>
-                      <button 
-                        className={`align-middle ${viewMode === 'list' ? 'text-theme' : 'text-black'}`}
-                        onClick={() => setViewMode('list')}
-                        style={{ background: 'none', border: 'none' }}
-                      >
-                        <i className="fs-3 bi bi-card-list"></i>
-                      </button>
-                    </div>
-                    <div className="sort-filter ms-3 d-flex align-items-center">
-                      <select 
+                    <div className="sort-filter d-flex align-items-center">
+                      <select
                         className="form-select"
                         value={sortOption}
                         onChange={(e) => setSortOption(e.target.value)}
                       >
-                        <option value="">{t('products.sort.sortBy')}</option>
+                        <option value="">{t('products.sort.default')}</option>
                         <option value="newest">{t('products.sort.newest')}</option>
                         <option value="popular">{t('products.sort.popular')}</option>
                         <option value="name">{t('products.sort.name')}</option>
@@ -434,7 +495,7 @@ export default function ProductsPage() {
           </Row>
           
           <Row>
-            <Col lg={9} md={12} className="order-lg-1">
+            <Col xs={12}>
               {loading ? (
                 <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
                   <div className="spinner-border text-theme" role="status">
@@ -451,133 +512,131 @@ export default function ProductsPage() {
                 </div>
               ) : (
                 <>
-                  {viewMode === 'list' ? (
-                    // List View - Template Style
-                    products.map((product) => (
-                      <div key={product.id} className="product-item mb-5">
-                        <Row className="align-items-stretch">
-                          <Col lg={4} md={5} className="d-flex">
-                            <div className="product-img w-100">
-                              <OptimizedImage 
-                                className="img-fluid product-image-fixed" 
-                                src={product.primary_image || '/images/product/01.jpg'} 
+                  {/* Product Grid */}
+                  <Row className="g-4">
+                    {sortedProducts.map((product) => (
+                      <Col key={product.id} lg={3} md={6} sm={6} xs={12}>
+                        <div className="product-card-new h-100 border rounded-3 overflow-hidden shadow-sm">
+                          {/* Product Image */}
+                          <div className="product-image-container">
+                            <Link href={`/products/${product.slug}`}>
+                              <OptimizedImage
+                                src={product.primary_image || '/images/product/01.jpg'}
+                                className="w-100 product-image-new"
                                 alt={product.name}
-                                context="product-list-view"
-                                width={300}
-                                height={250}
-                                style={{
-                                  width: '100%',
-                                  height: '250px',
-                                  objectFit: 'cover'
-                                }}
-                                sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
-                                priority={false}
-                              />
-                            </div>
-                          </Col>
-                          <Col lg={8} md={7}>
-                            <div className="product-desc">
-                              <Link href={`/products/${product.slug}`} className="product-name">
-                                {product.name}
-                              </Link>
-                              {product.brand && (
-                                <span className="product-price d-block mt-2">
-                                  {t('products.brand')}: {product.brand}
-                                </span>
-                              )}
-                              <p className="my-3">
-                                {product.description && product.description.length > 200 
-                                  ? `${product.description.substring(0, 200)}...` 
-                                  : product.description || t('products.noDescription')}
-                              </p>
-                              <div className="product-link mt-3">
-                                <Link href={`/products/${product.slug}`} className="add-cart btn-primary-custom">
-                                  <i className="bi bi-eye me-2"></i>{t('products.viewDetails')}
-                                </Link>
-                              </div>
-                            </div>
-                          </Col>
-                        </Row>
-                      </div>
-                    ))
-                  ) : (
-                    // Grid View - Existing Style
-                    <Row>
-                      {products.map((product) => (
-                        <Col key={product.id} lg={4} md={6} className="mb-4">
-                          <div className="card product-card h-100">
-                            <div className="position-relative overflow-hidden">
-                              <OptimizedImage 
-                                src={product.primary_image || '/images/product/01.jpg'} 
-                                className="card-img-top product-image" 
-                                alt={product.name}
-                                context="product-grid-view"
+                                context="product-grid-new"
                                 width={300}
                                 height={200}
                                 style={{
                                   width: '100%',
                                   height: '200px',
-                                  objectFit: 'cover'
+                                  objectFit: 'cover',
+                                  cursor: 'pointer'
                                 }}
-                                sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
+                                sizes="(max-width: 576px) 100vw, (max-width: 768px) 50vw, (max-width: 992px) 50vw, 25vw"
                                 priority={false}
                               />
+                            </Link>
+                          </div>
+
+                          {/* Product Content */}
+                          <div className="p-3 d-flex flex-column">
+                            {/* Category Tag */}
+                            <div className="mb-2">
+                              <span className="badge bg-primary px-2 py-1 small text-white rounded-2">
+                                {language === 'vi' ? product.product_category.name : (product.product_category.name_en || product.product_category.name)}
+                              </span>
                             </div>
-                            <div className="card-body d-flex flex-column">
-                              <h6 className="card-title product-title mb-2">{product.name}</h6>
-                              {product.brand && (
-                                <p className="text-muted small mb-2">{t('products.brand')}: {product.brand}</p>
-                              )}
-                              <p className="card-text text-muted small flex-grow-1">
-                                {product.description && product.description.length > 100 
-                                  ? `${product.description.substring(0, 100)}...` 
-                                  : product.description || t('products.noDescription')}
-                              </p>
-                              <div className="mt-auto">
-                                <Link 
-                                  href={`/products/${product.slug}`}
-                                  className="btn btn-sm btn-outline-primary w-100"
-                                >
-                                  {t('products.viewDetails')}
-                                </Link>
-                              </div>
+
+                            {/* Product Title */}
+                            <Link href={`/products/${product.slug}`} className="text-decoration-none">
+                              <h6 className="product-title-new fw-bold mb-2 text-dark">
+                                {language === 'vi' ? product.name : (product.name_en || product.name)}
+                              </h6>
+                            </Link>
+
+                            {/* Product Subtitle */}
+                            <p className="product-subtitle text-muted small mb-3">
+                               {language === 'vi' ? product.description : (product.description_en || product.description)}
+                            </p>
+
+                            {/* View Details Button */}
+                            <div className="mt-auto">
+                              <Link
+                                href={`/products/${product.slug}`}
+                                className="btn btn-primary btn-sm product-detail-btn"
+                              >
+                                {t('products.viewDetails')}
+                              </Link>
                             </div>
                           </div>
-                        </Col>
-                      ))}
-                    </Row>
-                  )}
+                        </div>
+                      </Col>
+                    ))}
+                  </Row>
 
                   {/* Pagination */}
                   {pagination.totalPages > 1 && (
-                    <nav aria-label="Page navigation" className="mt-8 text-center">
+                    <nav aria-label="Page navigation" className="mt-5">
                       <ul className="pagination justify-content-center">
                         <li className={`page-item ${pagination.currentPage === 1 ? 'disabled' : ''}`}>
-                          <button 
+                          <button
                             className="page-link"
                             onClick={() => updateURL({ page: pagination.currentPage - 1 })}
                             disabled={pagination.currentPage === 1}
                           >
-                            <i className="bi bi-arrow-left"></i>
+                            <i className="bi bi-chevron-left"></i>
                           </button>
                         </li>
-                        {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
-                          <li key={page} className={`page-item ${page === pagination.currentPage ? 'active' : ''}`}>
-                            <button 
-                              className="page-link"
-                              onClick={() => updateURL({ page })}
-                            >
-                              {page}
-                            </button>
-                          </li>
-                        ))}
+
+                        {/* Show page numbers */}
+                        {(() => {
+                          const pages = [];
+                          const totalPages = pagination.totalPages;
+                          const currentPage = pagination.currentPage;
+
+                          // Always show first page
+                          if (currentPage > 3) {
+                            pages.push(1);
+                            if (currentPage > 4) pages.push('...');
+                          }
+
+                          // Show pages around current page
+                          for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                            pages.push(i);
+                          }
+
+                          // Always show last page
+                          if (currentPage < totalPages - 2) {
+                            if (currentPage < totalPages - 3) pages.push('...');
+                            pages.push(totalPages);
+                          }
+
+                          return pages.map((page, index) => (
+                            page === '...' ? (
+                              <li key={`ellipsis-${index}`} className="page-item disabled">
+                                <span className="page-link">...</span>
+                              </li>
+                            ) : (
+                              <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
+                                <button
+                                  className="page-link"
+                                  onClick={() => updateURL({ page: page as number })}
+                                >
+                                  {page}
+                                </button>
+                              </li>
+                            )
+                          ));
+                        })()}
+
                         <li className={`page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}`}>
-                          <button 
+                          <button
                             className="page-link"
                             onClick={() => updateURL({ page: pagination.currentPage + 1 })}
                             disabled={pagination.currentPage === pagination.totalPages}
                           >
-                            <i className="bi bi-arrow-right"></i>
+                            <i className="bi bi-chevron-right"></i>
                           </button>
                         </li>
                       </ul>
@@ -586,154 +645,138 @@ export default function ProductsPage() {
                 </>
               )}
             </Col>
-            
-            {/* Sidebar */}
-            <Col lg={3} md={12} className="mt-8 mt-lg-0">
-              <div className="themeht-sidebar">
-                {/* Categories Filter */}
-                <div 
-                  className="widget widget-categories"
-                  style={{
-                    boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                    padding: '30px',
-                    borderRadius: '24px',
-                    marginBottom: '50px',
-                    background: 'var(--themeht-white-color)'
-                  }}
-                >
-                  <h4 className="widget-title mb-3 fw-bold">{t('products.categories.title')}</h4>
-                  <ul className="widget-categories list-unstyled">
-                    <li>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleCategorySelect(null);
-                        }}
-                        className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
-                          !selectedCategory ? 'active' : ''
-                        }`}
-                        style={{
-                          borderBottom: '1px dashed #e0e0e0',
-                          color: !selectedCategory ? '#1253be' : '#6c757d',
-                          transition: 'all 0.3s ease',
-                          fontWeight: !selectedCategory ? '700' : '600'
-                        }}
-                        onMouseEnter={(e) => {
-                          if (selectedCategory) {
-                            const linkElement = e.currentTarget as HTMLElement;
-                            linkElement.style.color = '#1253be';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (selectedCategory) {
-                            const linkElement = e.currentTarget as HTMLElement;
-                            linkElement.style.color = '#6c757d';
-                          }
-                        }}
-                      >
-                        <div className="d-flex align-items-center">
-                          <span 
-                            style={{ 
-                              width: '6px', 
-                              height: '6px', 
-                              borderRadius: '50%', 
-                              backgroundColor: '#1253be',
-                              marginRight: '10px',
-                              flexShrink: 0
-                            }}
-                          ></span>
-                          <span>{t('products.categories.all')}</span>
-                        </div>
-                        <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
-                      </a>
-                    </li>
-                    {categories.map((category) => (
-                      <li key={category.id}>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleCategorySelect(category.slug);
-                          }}
-                          className={`d-flex align-items-center justify-content-between text-decoration-none py-2 ${
-                            selectedCategory === category.slug ? 'active' : ''
-                          }`}
-                          style={{
-                            borderBottom: '1px dashed #e0e0e0',
-                            color: selectedCategory === category.slug ? '#1253be' : '#6c757d',
-                            transition: 'all 0.3s ease',
-                            fontWeight: selectedCategory === category.slug ? '700' : '600'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (selectedCategory !== category.slug) {
-                              const linkElement = e.currentTarget as HTMLElement;
-                              linkElement.style.color = '#1253be';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (selectedCategory !== category.slug) {
-                              const linkElement = e.currentTarget as HTMLElement;
-                              linkElement.style.color = '#6c757d';
-                            }
-                          }}
-                        >
-                          <div className="d-flex align-items-center">
-                            <span 
-                              style={{ 
-                                width: '6px', 
-                                height: '6px', 
-                                borderRadius: '50%', 
-                                backgroundColor: '#1253be',
-                                marginRight: '10px',
-                                flexShrink: 0
-                              }}
-                            ></span>
-                            <span>{category.name}</span>
-                          </div>
-                          <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Search Widget */}
-                <div 
-                  className="widget widget-search"
-                  style={{
-                    boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                    padding: '30px',
-                    borderRadius: '24px',
-                    marginBottom: '50px',
-                    background: 'var(--themeht-white-color)'
-                  }}
-                >
-                  <h4 className="widget-title mb-3 fw-bold">{t('products.search.title')}</h4>
-                  <form onSubmit={handleSearchSubmit} className="d-flex">
-                    <input
-                      ref={searchInputRef}
-                      type="search"
-                      className="form-control"
-                      placeholder={t('products.search.placeholder')}
-                      value={searchQuery}
-                      onChange={handleSearchInputChange}
-                    />
-                    <button
-                      type="submit"
-                      className="btn btn-primary ms-2"
-                    >
-                      <i className="bi bi-search"></i>
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </Col>
           </Row>
         </Container>
       </section>
 
       <style jsx global>{`
+        /* Category Section Title Styles */
+        .category-section-title {
+          color: #333;
+          font-size: 1.5rem;
+          position: relative;
+        }
+
+        .category-title-underline {
+          width: 60px;
+          height: 3px;
+          background-color: var(--themeht-primary-color);
+          border-radius: 2px;
+        }
+
+        /* Category Cards Styles */
+        .category-card {
+          box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+          border-radius: 20px !important;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .category-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+          z-index: 1;
+          transition: opacity 0.3s ease;
+        }
+
+        .category-card:hover::before {
+          opacity: 0.9;
+        }
+
+        .category-card:hover .category-count {
+          opacity: 1 !important;
+        }
+
+        .category-card h6 {
+          position: relative;
+          z-index: 2;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+          letter-spacing: 1px;
+        }
+
+        .category-count {
+          position: relative;
+          z-index: 2;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+        /* Product Cards Styles */
+        .product-card-new {
+          transition: all 0.3s ease;
+          background: white;
+          border: 1px solid #e0e0e0 !important;
+        }
+
+        .product-card-new:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
+          border-color: var(--themeht-primary-color) !important;
+        }
+
+        .product-image-new {
+          transition: transform 0.3s ease;
+        }
+
+        .product-card-new:hover .product-image-new {
+          transform: scale(1.05);
+        }
+
+        .product-title-new {
+          color: #333;
+          font-size: 1rem;
+          line-height: 1.3;
+          min-height: 2.6em;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .product-subtitle {
+          font-size: 0.85rem;
+          color: #666;
+        }
+
+        .product-description {
+          line-height: 1.4;
+          color: #777;
+        }
+
+        .product-detail-btn {
+          background-color: var(--themeht-primary-color);
+          border-color: var(--themeht-primary-color);
+          font-weight: 500;
+          padding: 8px 16px;
+          border-radius: 6px;
+          transition: all 0.3s ease;
+          width: auto;
+          display: inline-block;
+        }
+
+        .product-detail-btn:hover {
+          background-color: transparent;
+          color: var(--themeht-primary-color);
+          border-color: var(--themeht-primary-color);
+          transform: translateY(-1px);
+        }
+
+        .badge.bg-primary {
+          background-color: var(--themeht-primary-color) !important;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .product-title-new:hover {
+          color: var(--themeht-primary-color) !important;
+          transition: color 0.3s ease;
+        }
+
+        /* Product Cards Styles */
         .btn-primary-custom {
           display: inline-flex;
           align-items: center;
@@ -798,7 +841,7 @@ export default function ProductsPage() {
           padding: 1rem 0;
         }
 
-        .btn-primary, 
+        .btn-primary,
         button[type="submit"] {
           background-color: var(--themeht-primary-color) !important;
           border-color: var(--themeht-primary-color) !important;
@@ -822,6 +865,57 @@ export default function ProductsPage() {
           background-color: transparent !important;
           border-color: var(--themeht-primary-color) !important;
           color: var(--themeht-primary-color) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .category-card {
+            height: 200px !important;
+          }
+
+          .category-card h6 {
+            font-size: 0.8rem !important;
+          }
+
+          .category-count {
+            font-size: 0.65rem !important;
+          }
+
+          .product-title-new {
+            font-size: 0.9rem;
+            min-height: 2.4em;
+          }
+
+          .product-subtitle {
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .category-card {
+            height: 180px !important;
+          }
+
+          .category-card h6 {
+            font-size: 0.75rem !important;
+          }
+
+          .category-count {
+            font-size: 0.6rem !important;
+          }
+
+          .product-title-new {
+            font-size: 0.85rem;
+            min-height: 2.2em;
+          }
+
+          .product-subtitle {
+            font-size: 0.75rem;
+          }
+
+          .product-description {
+            font-size: 0.75rem !important;
+          }
         }
       `}</style>
     </>

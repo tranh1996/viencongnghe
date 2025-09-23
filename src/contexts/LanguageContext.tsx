@@ -237,6 +237,26 @@ const viTranslations: Record<string, string> = {
   'products.category.casting': 'Đúc',
   'products.category.machining': 'Gia công cơ khí',
   'products.viewDetails': 'Xem chi tiết',
+
+  // Product detail page
+  'products.productDescription': 'Mô tả',
+  'products.specifications': 'Thông số khác',
+  'products.weight': 'Trọng lượng',
+  'products.dimensions': 'Kích thước',
+  'products.specs': 'Thông số',
+  'products.contactAdvice': 'LIÊN HỆ TƯ VẤN',
+  'products.mainOffice': 'Trụ sở chính',
+  'products.phone': 'Điện thoại',
+  'products.callPhone': 'Gọi điện',
+  'products.sendEmail': 'Gửi Email',
+  'products.loadingContact': 'Đang tải thông tin liên hệ...',
+  'products.otherProducts': 'CÁC SẢN PHẨM KHÁC',
+  'products.activityGallery': 'Thư viện Hình ảnh hoạt động',
+  'products.errorLoading': 'Không thể tải thông tin sản phẩm. Vui lòng thử lại sau.',
+  'products.notFound': 'Không tìm thấy sản phẩm',
+  'products.notFoundDescription': 'Sản phẩm không tồn tại hoặc đã bị xóa.',
+  'products.backToList': 'Quay lại danh sách sản phẩm',
+
   'products.special.title': 'Sản phẩm đặc biệt',
   'products.services.title': 'Dịch vụ của chúng tôi',
   'products.brand': 'Thương hiệu',
@@ -259,6 +279,7 @@ const viTranslations: Record<string, string> = {
   
   // Product categories
   'products.categories.title': 'Danh mục sản phẩm',
+  'products.categories.productCount': 'sản phẩm',
   'products.categories.all': 'Tất cả',
   'products.categories.showAll': 'Hiển thị tất cả',
   
@@ -622,6 +643,26 @@ const enTranslations: Record<string, string> = {
   'products.category.casting': 'Casting',
   'products.category.machining': 'Mechanical Processing',
   'products.viewDetails': 'View Details',
+
+  // Product detail page
+  'products.productDescription': 'Description',
+  'products.specifications': 'Specifications',
+  'products.weight': 'Weight',
+  'products.dimensions': 'Dimensions',
+  'products.specs': 'Specifications',
+  'products.contactAdvice': 'CONTACT FOR ADVICE',
+  'products.mainOffice': 'Main Office',
+  'products.phone': 'Phone',
+  'products.callPhone': 'Call Phone',
+  'products.sendEmail': 'Send Email',
+  'products.loadingContact': 'Loading contact information...',
+  'products.otherProducts': 'OTHER PRODUCTS',
+  'products.activityGallery': 'Activity Gallery',
+  'products.errorLoading': 'Unable to load product information. Please try again later.',
+  'products.notFound': 'Product Not Found',
+  'products.notFoundDescription': 'Product does not exist or has been removed.',
+  'products.backToList': 'Back to Product List',
+
   'products.special.title': 'Special Products',
   'products.services.title': 'Our Services',
   'products.brand': 'Brand',
@@ -644,6 +685,7 @@ const enTranslations: Record<string, string> = {
   
   // Product categories
   'products.categories.title': 'Product Categories',
+  'products.categories.productCount': 'products',
   'products.categories.all': 'All',
   'products.categories.showAll': 'Show All',
   
