@@ -86,12 +86,12 @@ export default function ProductDetailPage() {
     {
       label: {
         vi: product.product_category.name,
-        en: product.product_category.name_en || product.product_category.name
+        en: product.product_category.name || product.product_category.name
       },
       href: `/products?category=${product.product_category.slug}`
     },
     {
-      label: { vi: product.name, en: product.name_en || product.name },
+      label: { vi: product.name, en: product.name || product.name },
       active: true
     }
   ];
@@ -99,7 +99,7 @@ export default function ProductDetailPage() {
   return (
     <>
       <Breadcrumb
-        title={{ vi: product.name, en: product.name_en || product.name }}
+        title={{ vi: product.name, en: product.name || product.name }}
         items={breadcrumbItems}
       />
 
@@ -142,7 +142,7 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Product Title */}
-              <h2 className="mb-3">{language === 'vi' ? product.name : (product.name_en || product.name)}</h2>
+              <h2 className="mb-3">{language === 'vi' ? product.name : (product.name || product.name)}</h2>
 
               {/* Social Share Buttons */}
               <div className="mb-4">
@@ -171,10 +171,10 @@ export default function ProductDetailPage() {
                 <div className="card">
                   <div className="card-body">
                     {product.description && (
-                      <p className="mb-3">{language === 'vi' ? product.description : (product.description_en || product.description)}</p>
+                      <p className="mb-3">{ product.description}</p>
                     )}
                     {product.content && (
-                      <div dangerouslySetInnerHTML={{ __html: language === 'vi' ? product.content : (product.content_en || product.content) }} />
+                      <div dangerouslySetInnerHTML={{ __html: product.content }} />
                     )}
                   </div>
                 </div>
@@ -200,7 +200,7 @@ export default function ProductDetailPage() {
                         {product.specifications && (
                           <Col md={12}>
                             <p><strong>{t('products.specs')}:</strong></p>
-                            <div dangerouslySetInnerHTML={{ __html: language === 'vi' ? product.specifications : (product.specifications_en || product.specifications) }} />
+                            <div dangerouslySetInnerHTML={{ __html:  product.specifications }} />
                           </Col>
                         )}
                       </Row>
@@ -306,13 +306,13 @@ export default function ProductDetailPage() {
                     <div key={relatedProduct.id} className="d-flex gap-3 mb-3">
                       <img
                         src={relatedProduct.primary_image || relatedProduct.product_category.image_url || '/images/product/01.jpg'}
-                        alt={language === 'vi' ? relatedProduct.name : (relatedProduct.name_en || relatedProduct.name)}
+                        alt={relatedProduct.name}
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                       />
                       <div className="flex-grow-1">
                         <h6 className="mb-1">
                           <a href={`/products/${relatedProduct.slug}`} className="text-decoration-none text-dark">
-                            {language === 'vi' ? relatedProduct.name : (relatedProduct.name_en || relatedProduct.name)}
+                            { relatedProduct.name}
                           </a>
                         </h6>
                         <p className="text-muted small mb-0">

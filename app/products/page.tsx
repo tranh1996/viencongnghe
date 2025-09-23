@@ -445,7 +445,7 @@ export default function ProductsPage() {
                   {/* Category Name */}
                   <div className="position-absolute bottom-0 start-0 w-100 p-4">
                     <h6 className="text-white fw-bold mb-0 text-center text-uppercase category-name" style={{ fontSize: '0.9rem' }}>
-                      {language === 'vi' ? category.name : (category.name_en || category.name)}
+                      {category.name}
                     </h6>
                     <div className="text-white text-center category-count" style={{
                       fontSize: '0.75rem',
@@ -544,20 +544,20 @@ export default function ProductsPage() {
                             {/* Category Tag */}
                             <div className="mb-2">
                               <span className="badge bg-primary px-2 py-1 small text-white rounded-2">
-                                {language === 'vi' ? product.product_category.name : (product.product_category.name_en || product.product_category.name)}
+                                {language === 'vi' ? product.product_category.name : (product.product_category.name || product.product_category.name)}
                               </span>
                             </div>
 
                             {/* Product Title */}
                             <Link href={`/products/${product.slug}`} className="text-decoration-none">
                               <h6 className="product-title-new fw-bold mb-2 text-dark">
-                                {language === 'vi' ? product.name : (product.name_en || product.name)}
+                                {language === 'vi' ? product.name : (product.name || product.name)}
                               </h6>
                             </Link>
 
                             {/* Product Subtitle */}
                             <p className="product-subtitle text-muted small mb-3">
-                               {language === 'vi' ? product.description : (product.description_en || product.description)}
+                               {language === 'vi' ? product.description : (product.description || product.description)}
                             </p>
 
                             {/* View Details Button */}
