@@ -201,7 +201,7 @@ export default function BlogDetailPage() {
                         {post.categories && post.categories.length > 0 && (
                           <li className="list-inline-item">
                             <span className="badge bg-primary">
-                              {language === 'vi' ? post.categories[0].name : (post.categories[0].name_en || post.categories[0].name)}
+                              { post.categories[0].name }
                             </span>
                           </li>
                         )}
@@ -490,7 +490,7 @@ export default function BlogDetailPage() {
                                   flexShrink: 0
                                 }}
                               ></span>
-                              <span>{language === 'vi' ? category.name : (category.name_en || category.name)}</span>
+                              <span>{category.name}</span>
                             </div>
                             <i className="bi bi-chevron-right ms-1" style={{ fontSize: '14px', color: '#1253be' }}></i>
                           </a>
