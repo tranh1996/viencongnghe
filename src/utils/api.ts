@@ -204,14 +204,14 @@ export interface ProductCategory {
 }
 
 export interface Product {
+  image_url: string;
   id: number;
   name: string;
   slug: string;
   code: string | null;
   description: string | null;
   content: string | null;
-  primary_image: string | null;
-  gallery_images: string[];
+  gallery_images: any[];
   videos: string[];
   brand: string | null;
   weight: string | null;

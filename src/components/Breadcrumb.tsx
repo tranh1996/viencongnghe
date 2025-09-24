@@ -25,7 +25,7 @@ interface BreadcrumbProps {
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({
   title,
-  backgroundImage = '/images/bg/02.jpg',
+  backgroundImage = '/images/bg/banner-04.webp',
   items,
   showParticles = true
 }) => {

@@ -1572,7 +1572,7 @@ export default function HomePage() {
                                     <div className="product-card">
                                       <div className="product-image">
                                         <OptimizedImage
-                                          src={product.primary_image || '/images/products/default-product.jpg'}
+                                          src={product.image_url || '/images/products/default-product.jpg'}
                                           alt={product.name}
                                           context={`Sản phẩm - ${product.name}`}
                                           className="product-img"

@@ -144,6 +144,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
     <>
       <Breadcrumb
         title={{ vi: department?.name || '', en: department?.name || '' }}
+        backgroundImage="/images/bg/bg__banner-02.webp"
         items={breadcrumbItems}
       />
 

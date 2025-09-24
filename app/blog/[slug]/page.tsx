@@ -93,6 +93,7 @@ export default function BlogDetailPage() {
       <>
         <Breadcrumb
           title={{ vi: t('blog.breadcrumb.loading'), en: t('blog.breadcrumb.loading') }}
+          backgroundImage="/images/bg/banner-04.webp"
           items={[
             { label: { vi: 'Trang chủ', en: 'Home' }, href: '/' },
             { label: { vi: 'Tin tức', en: 'News' }, href: '/blog' },
@@ -328,7 +329,7 @@ export default function BlogDetailPage() {
                       padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
-                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-01.webp")',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       color: 'white',
@@ -355,12 +356,6 @@ export default function BlogDetailPage() {
                         <i className="bi bi-images me-2"></i>
                         {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
                       </h4>
-                      <p className="text-white-50 mb-0">
-                        {language === 'vi'
-                          ? 'Khám phá những hình ảnh hoạt động tại viện'
-                          : 'Explore activity images at the institute'
-                        }
-                      </p>
                     </div>
                   </div>
 
@@ -372,7 +367,7 @@ export default function BlogDetailPage() {
                       padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
-                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-02.webp")',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       color: 'white',
@@ -399,12 +394,6 @@ export default function BlogDetailPage() {
                         <i className="bi bi-box-seam me-2"></i>
                         {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
                       </h4>
-                      <p className="text-white-50 mb-0">
-                        {language === 'vi'
-                          ? 'Tìm hiểu về các sản phẩm và dịch vụ của chúng tôi'
-                          : 'Learn about our products and services'
-                        }
-                      </p>
                     </div>
                   </div>
 

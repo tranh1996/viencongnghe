@@ -72,7 +72,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  const allImages = [product.primary_image, ...product.gallery_images].filter(Boolean);
+  const allImages = [product.image_url, ...(product?.gallery_images || [])].filter(Boolean);
 
   const breadcrumbItems = [
     {
@@ -305,7 +305,7 @@ export default function ProductDetailPage() {
                   {relatedProducts.map((relatedProduct) => (
                     <div key={relatedProduct.id} className="d-flex gap-3 mb-3">
                       <img
-                        src={relatedProduct.primary_image || relatedProduct.product_category.image_url || '/images/product/01.jpg'}
+                        src={relatedProduct.image_url || relatedProduct.product_category.image_url || '/images/product/01.jpg'}
                         alt={relatedProduct.name}
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                       />
