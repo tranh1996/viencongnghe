@@ -178,89 +178,88 @@ export default function BlogDetailPage() {
               {/* Main Content */}
               <Col lg={8} md={12}>
                 <div className="post-card">
-                  <div className="post-desc">
-                    {/* Post Title */}
-                    <div className="post-title mb-4">
-                      <h1 className="mb-3">{post.title}</h1>
-                    </div>
-
-                    {/* Post Meta */}
-                    <div className="post-meta mb-4">
-                      <ul className="list-inline mb-0">
-                        <li className="list-inline-item">
-                          <i className="bi bi-person-circle me-1"></i>
-                          <span>{t('blog.admin')}</span>
-                        </li>
-                        <li className="list-inline-item">
-                          <i className="bi bi-calendar3 me-1"></i>
-                          <span>{formatDate(post.created_at)}</span>
-                        </li>
-                        <li className="list-inline-item">
-                          <i className="bi bi-eye me-1"></i>
-                          <span>0 {language === 'vi' ? 'bình luận' : 'comments'}</span>
-                        </li>
-                        {post.categories && post.categories.length > 0 && (
-                          <li className="list-inline-item">
+                    <div className="post-desc">
+                        {/* Post Title */}
+                        <div className="post-title mb-4">
+                            <h1 className="mb-3">{post.title}</h1>
+                        </div>
+                        {/* Post Meta */}
+                        <div className="post-meta mb-4">
+                            <ul className="list-inline mb-0">
+                                <li className="list-inline-item">
+                                    <i className="bi bi-person-circle me-1"></i>
+                                    <span>{(post.tags)}</span>
+                                </li>
+                                <li className="list-inline-item">
+                                    <i className="bi bi-calendar3 me-1"></i>
+                                    <span>{formatDate(post.created_at)}</span>
+                                </li>
+                                <li className="list-inline-item">
+                                    <i className="bi bi-eye me-1"></i>
+                                    <span>0 {language === 'vi' ? 'bình luận' : 'comments'}</span>
+                                </li>
+                                {post.categories && post.categories.length > 0 && (
+                                    <li className="list-inline-item">
                             <span className="badge bg-primary">
-                              { post.categories[0].name }
+                              {post.categories[0].name}
                             </span>
-                          </li>
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
+                        <hr></hr>
+                        {/* Post Content */}
+                        {post.description && (
+                            <div className="post-content mb-4">
+                                <p className="lead">
+                                    {post.description}
+                                </p>
+                            </div>
                         )}
-                      </ul>
+
+                        {post.content && (
+                            <div
+                                className="content-body mb-4"
+                                dangerouslySetInnerHTML={{__html: post.content}}
+                            />
+                        )}
+
+                        {/* Post Image - moved to bottom */}
+                        {post.image_url && (
+                            <div className="post-image mb-4">
+                                <OptimizedImage
+                                    src={post.image_url}
+                                    className="img-fluid w-100"
+                                    alt={post.title}
+                                    width={800}
+                                    height={400}
+                                    context="blog-detail"
+                                    style={{
+                                        borderRadius: '8px'
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        {/* Tags */}
+                        {post.tags && (
+                            <div className="theme-tags blog-tag-link tags-links">
+                                {t('blog.tags')}:
+                                {(() => {
+                                    try {
+                                        const tagsArray = JSON.parse(post.tags);
+                                        return Array.isArray(tagsArray) ? tagsArray.map((tag, index) => (
+                                            <a key={index} href="#">{tag}</a>
+                                        )) : null;
+                                    } catch (e) {
+                                        return post.tags.split(',').map((tag, index) => (
+                                            <a key={index} href="#">{tag.trim()}</a>
+                                        ));
+                                    }
+                                })()}
+                            </div>
+                        )}
                     </div>
-
-                    {/* Post Content */}
-                    {post.description && (
-                      <div className="post-content mb-4">
-                        <p className="lead">
-                          {post.description}
-                        </p>
-                      </div>
-                    )}
-
-                    {post.content && (
-                      <div
-                        className="content-body mb-4"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                      />
-                    )}
-
-                    {/* Post Image - moved to bottom */}
-                    {post.image_url && (
-                      <div className="post-image mb-4">
-                        <OptimizedImage
-                          src={post.image_url}
-                          className="img-fluid w-100"
-                          alt={post.title}
-                          width={800}
-                          height={400}
-                          context="blog-detail"
-                          style={{
-                            borderRadius: '8px'
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Tags */}
-                    {post.tags && (
-                      <div className="theme-tags blog-tag-link tags-links">
-                        {t('blog.tags')}:
-                        {(() => {
-                          try {
-                            const tagsArray = JSON.parse(post.tags);
-                            return Array.isArray(tagsArray) ? tagsArray.map((tag, index) => (
-                              <a key={index} href="#">{tag}</a>
-                            )) : null;
-                          } catch (e) {
-                            return post.tags.split(',').map((tag, index) => (
-                              <a key={index} href="#">{tag.trim()}</a>
-                            ));
-                          }
-                        })()}
-                      </div>
-                    )}
-                  </div>
                 </div>
 
                 {/* Comments Section */}
@@ -326,9 +325,8 @@ export default function BlogDetailPage() {
                     className="widget animated-widget clickable-widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
                       borderRadius: '24px',
-                      marginBottom: '50px',
+                      marginBottom: '10px',
                       background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-01.webp")',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
@@ -352,7 +350,7 @@ export default function BlogDetailPage() {
                       }}
                     />
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <h4 className="widget-title mb-3 fw-bold text-white">
+                      <h4 className="widget-title mb-0 fw-bold text-white">
                         <i className="bi bi-images me-2"></i>
                         {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
                       </h4>
@@ -364,7 +362,6 @@ export default function BlogDetailPage() {
                     className="widget animated-widget clickable-widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
                       background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-02.webp")',
@@ -390,10 +387,10 @@ export default function BlogDetailPage() {
                       }}
                     />
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <h4 className="widget-title mb-3 fw-bold text-white">
+                      <h5 className="widget-title mb-0 fw-bold text-white">
                         <i className="bi bi-box-seam me-2"></i>
                         {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
-                      </h4>
+                      </h5>
                     </div>
                   </div>
 
@@ -408,10 +405,10 @@ export default function BlogDetailPage() {
                       background: 'var(--themeht-white-color)'
                     }}
                   >
-                    <h4 className="widget-title mb-3 fw-bold">
+                    <h5 className="widget-title mb-3 fw-bold">
                       <i className="bi bi-tags me-2"></i>
                       {language === 'vi' ? 'Danh mục bài viết' : 'Article Categories'}
-                    </h4>
+                    </h5>
                     <ul className="widget-categories list-unstyled">
                       <li>
                         <a

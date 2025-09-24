@@ -142,6 +142,23 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
 
   return (
     <>
+      <style jsx>{`
+        .animated-widget {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .animated-widget:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px 10px rgba(115, 113, 255, .15) !important;
+        }
+        .widget {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            align-items: center;
+        }
+      `}</style>
       <Breadcrumb
         title={{ vi: department?.name || '', en: department?.name || '' }}
         backgroundImage="/images/bg/bg__banner-02.webp"
@@ -165,6 +182,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                 }}
               >
                 <h4 className="widget-title mb-3 fw-bold">{t('organization.title')}</h4>
+                  <hr/>
                 {departmentsLoading ? (
                   <div className="text-center py-3">
                     <Spinner animation="border" size="sm" />
@@ -219,36 +237,78 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
               </div>
 
               {/* Library Sections */}
-              <div className="mt-4">
-                <a href="/library" className="text-decoration-none">
-                  <div className="page-title dark-bg text-white p-3 mb-3">
-                    <h6 className="mb-0 text-white">{t('nav.library')}</h6>
-                  </div>
-                </a>
+              <div
+                  className="widget animated-widget clickable-widget"
+                  style={{
+                    boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                    borderRadius: '24px',
+                    marginBottom: '10px',
+                    background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-01.webp")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => window.location.href = '/library'}
+              >
+                <div
+                    className="animated-bg"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+                      animation: 'pulse 3s ease-in-out infinite'
+                    }}
+                />
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <h6 className="widget-title fw-bold text-white mb-0">
+                    <i className="bi bi-images me-2"></i>
+                    {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
+                  </h6>
+                </div>
+              </div>
 
-                <div className="row g-2">
-                  <div className="col-6">
-                    <div className="text-center">
-                      <img
-                        src="/images/product/01.jpg"
-                        alt={t('library.activities.research')}
-                        className="img-fluid rounded mb-2"
-                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                      />
-                      <div className="small">{t('library.activities.research')}</div>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="text-center">
-                      <img
-                        src="/images/product/02.jpg"
-                        alt={t('library.activities.production')}
-                        className="img-fluid rounded mb-2"
-                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                      />
-                      <div className="small">{t('library.activities.production')}</div>
-                    </div>
-                  </div>
+              {/* Animated Products & Services Widget */}
+              <div
+                  className="widget animated-widget clickable-widget"
+                  style={{
+                    boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
+                    borderRadius: '24px',
+                    marginBottom: '50px',
+                    background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-02.webp")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: 'white',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => window.location.href = '/products'}
+              >
+                <div
+                    className="animated-bg"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+                      animation: 'pulse 3s ease-in-out infinite'
+                    }}
+                />
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <h6 className="widget-title fw-bold text-white mb-0">
+                    <i className="bi bi-box-seam me-2"></i>
+                    {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
+                  </h6>
+                  <p className="text-white-50 mb-0">
+                  </p>
                 </div>
               </div>
             </Col>
@@ -256,80 +316,68 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
             {/* Right Main Content */}
             <Col lg={9} md={8}>
               <div className="bg-white border rounded p-4 shadow-sm h-100">
-              {/* Department Header with Contact Button */}
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h4 className="mb-0 fw-bold text-uppercase">{department.name}</h4>
-              </div>
-
-              {/* Department Image */}
-              {department.image_url && (
-                <div className="mb-4">
-                  <OptimizedImage
-                    src={department.image_url}
-                    alt={department.name}
-                    className="img-fluid rounded"
-                    style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
-                  />
+                {/* Department Header with Contact Button */}
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <h4 className="mb-0 fw-bold text-uppercase">{department.name}</h4>
                 </div>
-              )}
 
-              {/* Department Content */}
-              {department.content && (
+                {/* Department Image */}
+                {department.image_url && (
+                    <div className="mb-4">
+                      <OptimizedImage
+                          src={department.image_url}
+                          alt={department.name}
+                          className="img-fluid rounded"
+                          style={{width: '100%', maxHeight: '400px', objectFit: 'cover'}}
+                      />
+                    </div>
+                )}
+
+                {/* Department Content */}
+                {department.content && (
+                    <div className="mb-4">
+                      <div
+                          dangerouslySetInnerHTML={{__html: department.content}}
+                          className="department-content"
+                      />
+                    </div>
+                )}
+
+                {/* Achievements Section */}
                 <div className="mb-4">
-                  <div 
-                    dangerouslySetInnerHTML={{ __html: department.content }}
-                    className="department-content"
-                  />
+                  <h5 className="mb-3">
+                    {t('organization.achievements.title')}
+                  </h5>
+                  <ul className="list-unstyled">
+                    <li className="mb-2">
+                      <i className="bi bi-check-circle text-success me-2"></i>
+                      {t('organization.achievements.award1')}
+                    </li>
+                    <li className="mb-2">
+                      <i className="bi bi-check-circle text-success me-2"></i>
+                      {t('organization.achievements.award2')}
+                    </li>
+                  </ul>
                 </div>
-              )}
 
-              {/* Achievements Section */}
-              <div className="mb-4">
-                <h5 className="mb-3">
-                  {t('organization.achievements.title')}
-                </h5>
-                <ul className="list-unstyled">
-                  <li className="mb-2">
-                    <i className="bi bi-check-circle text-success me-2"></i>
-                    {t('organization.achievements.award1')}
-                  </li>
-                  <li className="mb-2">
-                    <i className="bi bi-check-circle text-success me-2"></i>
-                    {t('organization.achievements.award2')}
-                  </li>
-                </ul>
-              </div>
-
-              {/* Activity Images Section */}
-              <div className="mb-4">
-                <h5 className="mb-3">{t('organization.activityImages.title')}</h5>
-                <Row className="g-3">
-                  <Col md={4}>
-                    <img
-                      src="/images/service/01.jpg"
-                      alt={t('organization.activityImages.activity1')}
-                      className="img-fluid rounded"
-                      style={{ width: '100%', height: '150px', objectFit: 'cover' }}
-                    />
-                  </Col>
-                  <Col md={4}>
-                    <img
-                      src="/images/service/02.jpg"
-                      alt={t('organization.activityImages.activity2')}
-                      className="img-fluid rounded"
-                      style={{ width: '100%', height: '150px', objectFit: 'cover' }}
-                    />
-                  </Col>
-                  <Col md={4}>
-                    <img
-                      src="/images/service/03.jpg"
-                      alt={t('organization.activityImages.activity3')}
-                      className="img-fluid rounded"
-                      style={{ width: '100%', height: '150px', objectFit: 'cover' }}
-                    />
-                  </Col>
-                </Row>
-              </div>
+                {/* Activity Images Section */}
+                {department.gallery_images && department.gallery_images.length > 0 && (
+                    <div className="mb-4">
+                      <h5 className="mb-3">{t('organization.activityImages.title')}</h5>
+                      <Row className="g-3">
+                        {department.gallery_images.map((image: string, index: number) => (
+                            <Col md={4} key={index}>
+                              <OptimizedImage
+                                  src={image}
+                                  alt={`${department.name} ${t('organization.activityImages.title')} ${index + 1}`}
+                                  className="img-fluid rounded"
+                                  style={{width: '100%', height: '150px', objectFit: 'cover'}}
+                              />
+                            </Col>
+                        ))}
+                      </Row>
+                    </div>
+                )}
               </div>
             </Col>
           </Row>
@@ -347,7 +395,7 @@ const DepartmentDetail: React.FC<DepartmentDetailProps> = ({ departmentSlug }) =
                   <div className="d-flex align-items-start mb-3">
                     <i className="bi bi-geo-alt text-primary me-3 mt-1"></i>
                     <div>
-                      <strong>{t('contact.info.address')}:</strong>
+                    <strong>{t('contact.info.address')}:</strong>
                       <span className="text-muted ms-2">{contactSettings?.company_info.address_main || 'Tòa nhà 8 tầng, số 25, Vũ Ngọc Phan, Hà Nội'}</span>
                     </div>
                   </div>

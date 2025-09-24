@@ -12,6 +12,7 @@ export interface Department {
   contact_email: string | null;
   contact_phone: string | null;
   contact_address: string | null;
+  gallery_images: string[] | null;
   is_active: number;
   sort_order: number | null;
   created_at: string;
