@@ -425,9 +425,8 @@ export default function BlogPage() {
                     className="widget animated-widget clickable-widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
                       borderRadius: '24px',
-                      marginBottom: '50px',
+                      marginBottom: '10px',
                       background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-01.webp")',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
@@ -451,10 +450,10 @@ export default function BlogPage() {
                       }}
                     />
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <h4 className="widget-title mb-3 fw-bold text-white">
+                      <h5 className="widget-title fw-bold text-white">
                         <i className="bi bi-images me-2"></i>
                         {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
-                      </h4>
+                      </h5>
                       <p className="text-white-50 mb-0">
                       </p>
                     </div>
@@ -465,7 +464,6 @@ export default function BlogPage() {
                     className="widget animated-widget clickable-widget"
                     style={{
                       boxShadow: '0 10px 30px 5px rgba(115, 113, 255, .06)',
-                      padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
                       background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-02.webp")',
@@ -491,10 +489,10 @@ export default function BlogPage() {
                       }}
                     />
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <h4 className="widget-title mb-3 fw-bold text-white">
+                      <h5 className="widget-title mb-0 fw-bold text-white">
                         <i className="bi bi-box-seam me-2"></i>
                         {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
-                      </h4>
+                      </h5>
                     </div>
                   </div>
 
@@ -509,7 +507,7 @@ export default function BlogPage() {
                       background: 'var(--themeht-white-color)'
                     }}
                   >
-                    <h4 className="widget-title mb-3 fw-bold">
+                    <h4 className="widget-title mb-1 fw-bold">
                       <i className="bi bi-tags me-2"></i>
                       {language === 'vi' ? 'Danh mục bài viết' : 'Article Categories'}
                     </h4>
@@ -766,7 +764,7 @@ export default function BlogPage() {
         }
         
         .widget-title {
-          margin-bottom: 1rem;
+          margin-bottom: 0rem;
           color: #212529;
           font-weight: 600;
         }
