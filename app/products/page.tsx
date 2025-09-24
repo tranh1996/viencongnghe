@@ -388,6 +388,7 @@ export default function ProductsPage() {
     <>
       <Breadcrumb
         title={{ vi: 'Sản phẩm', en: 'Products' }}
+        backgroundImage="/images/bg/bg__banner-05.webp"
         items={breadcrumbItems}
       />
       
@@ -521,7 +522,7 @@ export default function ProductsPage() {
                           <div className="product-image-container">
                             <Link href={`/products/${product.slug}`}>
                               <OptimizedImage
-                                src={product.primary_image || '/images/product/01.jpg'}
+                                src={product.image_url || '/images/product/01.jpg'}
                                 className="w-100 product-image-new"
                                 alt={product.name}
                                 context="product-grid-new"

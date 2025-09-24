@@ -107,6 +107,7 @@ export default function LibraryPage() {
     <>
       <Breadcrumb
         title={{ vi: 'Hình ảnh hoạt động', en: 'Activity Images' }}
+        backgroundImage="/images/bg/bg-05.webp"
         items={breadcrumbItems}
       />
 

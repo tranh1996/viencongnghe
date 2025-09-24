@@ -116,6 +116,7 @@ export default function OrganizationPage() {
     <>
       <Breadcrumb
         title={{ vi: 'Cơ cấu tổ chức', en: 'Organizational Structure' }}
+        backgroundImage="/images/bg/bg__banner-02.webp"
         items={breadcrumbItems}
       />
 

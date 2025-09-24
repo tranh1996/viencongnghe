@@ -161,6 +161,7 @@ export default function AboutPage() {
     <>
       <Breadcrumb
         title={{ vi: 'Giới thiệu', en: 'About Us' }}
+        backgroundImage="/images/bg/bg-03.webp"
         items={breadcrumbItems}
       />
 

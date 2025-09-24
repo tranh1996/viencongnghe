@@ -428,7 +428,7 @@ export default function BlogPage() {
                       padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
-                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-01.webp")',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       color: 'white',
@@ -456,10 +456,6 @@ export default function BlogPage() {
                         {language === 'vi' ? 'Hình ảnh hoạt động' : 'Activity Gallery'}
                       </h4>
                       <p className="text-white-50 mb-0">
-                        {language === 'vi'
-                          ? 'Khám phá những hình ảnh hoạt động tại viện'
-                          : 'Explore activity images at the institute'
-                        }
                       </p>
                     </div>
                   </div>
@@ -472,7 +468,7 @@ export default function BlogPage() {
                       padding: '30px',
                       borderRadius: '24px',
                       marginBottom: '50px',
-                      background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url("/images/bg/02.jpg")',
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5)), url("/images/blog/bg-02.webp")',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       color: 'white',
@@ -499,12 +495,6 @@ export default function BlogPage() {
                         <i className="bi bi-box-seam me-2"></i>
                         {language === 'vi' ? 'Sản phẩm & Dịch vụ' : 'Products & Services'}
                       </h4>
-                      <p className="text-white-50 mb-0">
-                        {language === 'vi'
-                          ? 'Tìm hiểu về các sản phẩm và dịch vụ của chúng tôi'
-                          : 'Learn about our products and services'
-                        }
-                      </p>
                     </div>
                   </div>
 
@@ -634,6 +624,7 @@ export default function BlogPage() {
                       <i className="bi bi-clock-history me-2"></i>
                       {language === 'vi' ? 'Bài viết gần đây' : 'Recent Posts'}
                     </h5>
+
                     <div className="recent-post">
                       <ul className="list-unstyled">
                         {(!isSearchMode ? posts : []).slice(0, 3).map((post) => (
